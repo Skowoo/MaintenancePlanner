@@ -9,28 +9,28 @@ namespace IdentityServiceAPI.Controllers
     public class IdentityController(IIdentityService identityService) : ControllerBase
     {
         [HttpGet]
-        public async Task<IActionResult> GetUserByEmail(string email)
+        public async Task<IActionResult> getUserByEmail(string email)
         {
             var user = await identityService.FindUserByEmail(email);
             return Ok(user);
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllRoles()
+        public async Task<IActionResult> getAllRoles()
         {
             var roles = await identityService.GetAllRoles();
             return Ok(roles);
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetRoleByName(string roleName)
+        public async Task<IActionResult> getRoleByName(string roleName)
         {
             var role = await identityService.FindRoleByName(roleName);
             return Ok(role);
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddUserToRole(string email, string roleName)
+        public async Task<IActionResult> addUserToRole(string email, string roleName)
         {
             var user = await identityService.FindUserByEmail(email);
             if (user is null)
@@ -48,7 +48,7 @@ namespace IdentityServiceAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> RemoveUserFromRole(string email, string roleName)
+        public async Task<IActionResult> removeUserFromRole(string email, string roleName)
         {
             var user = await identityService.FindUserByEmail(email);
             if (user is null)

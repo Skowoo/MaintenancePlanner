@@ -29,7 +29,7 @@ namespace IdentityServiceAPI
             var app = builder.Build();
 
             // Map default Identity Endpoints
-            app.MapGroup("api/v1")
+            app.MapGroup("api/v1/Identity")
                .MapIdentityApi<IdentityUser>();
 
             // Configure the HTTP request pipeline.
