@@ -1,4 +1,5 @@
 using IdentityServiceAPI.Infrastructure;
+using IdentityServiceAPI.Models;
 using IdentityServiceAPI.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -19,18 +20,12 @@ namespace IdentityServiceAPI
             builder.Services.AddDbContext<IdentityContext>(
                 options => options.UseInMemoryDatabase("MemoIdentityDb"));
 
-            // Default Identity Endpoints Registration
-            builder.Services.AddIdentityApiEndpoints<IdentityUser>()
-                .AddRoles<IdentityRole>()
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<IdentityContext>();
 
             builder.Services.AddScoped<IIdentityService, IdentityService>();
 
             var app = builder.Build();
-
-            // Map default Identity Endpoints
-            app.MapGroup("api/v1/Identity")
-               .MapIdentityApi<IdentityUser>();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
