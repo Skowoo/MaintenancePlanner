@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServiceAPI", "src\I
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{5A36BE35-E125-41E0-B865-5937249EB84C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WarehouseServiceAPI", "WarehouseServiceAPI\WarehouseServiceAPI.csproj", "{D8A20A30-4DEF-404C-9379-FE9CCF2E0CEA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,12 +19,17 @@ Global
 		{D68091C8-F562-42D6-8877-A5A55BD332C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D68091C8-F562-42D6-8877-A5A55BD332C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D68091C8-F562-42D6-8877-A5A55BD332C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8A20A30-4DEF-404C-9379-FE9CCF2E0CEA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8A20A30-4DEF-404C-9379-FE9CCF2E0CEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8A20A30-4DEF-404C-9379-FE9CCF2E0CEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8A20A30-4DEF-404C-9379-FE9CCF2E0CEA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{D68091C8-F562-42D6-8877-A5A55BD332C5} = {5A36BE35-E125-41E0-B865-5937249EB84C}
+		{D8A20A30-4DEF-404C-9379-FE9CCF2E0CEA} = {5A36BE35-E125-41E0-B865-5937249EB84C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F0441398-1390-4B25-B591-680557E93204}
