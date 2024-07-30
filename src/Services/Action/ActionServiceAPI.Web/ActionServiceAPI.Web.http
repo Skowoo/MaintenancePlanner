@@ -1,0 +1,6 @@
+@ActionServiceAPI.Web_HostAddress = http://localhost:5191
+
+GET {{ActionServiceAPI.Web_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
