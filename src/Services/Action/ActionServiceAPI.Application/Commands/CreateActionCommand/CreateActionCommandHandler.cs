@@ -1,4 +1,4 @@
-﻿using ActionServiceAPI.Application.Interfaces;
+﻿using ActionServiceAPI.Application.Interfaces.DataRepositories;
 using ActionServiceAPI.Domain.Models;
 using MediatR;
 
@@ -24,8 +24,6 @@ namespace ActionServiceAPI.Application.Commands.CreateActionCommand
                 context.Employees.Add(conductor);
                 await context.SaveChangesAsync(cancellationToken);
             }
-
-            // Refactor
 
             ActionEntity newItem = new(request.Name, request.Description, request.StartDate, request.EndDate, creator, conductor);
 

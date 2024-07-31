@@ -1,4 +1,4 @@
-﻿using ActionServiceAPI.Application.Interfaces;
+﻿using ActionServiceAPI.Application.Interfaces.DataRepositories;
 using ActionServiceAPI.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 

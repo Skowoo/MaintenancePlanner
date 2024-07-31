@@ -1,4 +1,4 @@
-﻿using ActionServiceAPI.Application.Interfaces;
+﻿using ActionServiceAPI.Application.Interfaces.DataRepositories;
 using ActionServiceAPI.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;

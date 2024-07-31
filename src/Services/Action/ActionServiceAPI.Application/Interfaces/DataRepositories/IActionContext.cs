@@ -1,7 +1,7 @@
 ﻿using ActionServiceAPI.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace ActionServiceAPI.Application.Interfaces
+namespace ActionServiceAPI.Application.Interfaces.DataRepositories
 {
     public interface IActionContext
     {
