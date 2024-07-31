@@ -1,3 +1,5 @@
+using ActionServiceAPI.Infrastructure;
+using ActionServiceAPI.Application;
 
 namespace ActionServiceAPI.Web
 {
@@ -11,6 +13,9 @@ namespace ActionServiceAPI.Web
             
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            builder.Services.RegisterInfrastructureServices();
+            builder.Services.RegisterApplicationServices();
 
             var app = builder.Build();
 

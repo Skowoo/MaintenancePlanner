@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ActionServiceAPI.Application\ActionServiceAPI.Application.csproj" />
+    <ProjectReference Include="..\ActionServiceAPI.Infrastructure\ActionServiceAPI.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

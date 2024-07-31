@@ -4,6 +4,8 @@ namespace ActionServiceAPI.Domain.Models
 {
     public class Employee(string id) : Entity
     {
+        protected Employee() : this("") { } // Refactor
+
         public string UserId { get; set; } = id;
     }
 }
