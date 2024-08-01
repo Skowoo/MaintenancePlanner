@@ -1,14 +1,18 @@
 ﻿using ActionServiceAPI.Application.Interfaces.DataRepositories;
-using ActionServiceAPI.Domain.Events;
 using ActionServiceAPI.Domain.Models;
 using MediatR;
 
-namespace ActionServiceAPI.Application.Commands.CreateActionCommand
+namespace ActionServiceAPI.Application.Commands.UpdateActionCommand
 {
-    public class CreateActionCommandHandler(IActionContext context, IMediator mediator) : IRequestHandler<CreateActionCommand, int>
+    public class UpdateActionCommandHandler(IActionContext context) : IRequestHandler<UpdateActionCommand, bool>
     {
-        public async Task<int> Handle(CreateActionCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(UpdateActionCommand request, CancellationToken cancellationToken)
         {
+            var target = await context.Actions.FindAsync(request.Id, cancellationToken);
+
+            if (target is null)
+                return false;
+
             // Refactor - Validation and cretion should be moved
             var creator = context.Employees.FirstOrDefault(e => e.UserId == request.CreatedBy);
             if (creator is null)
@@ -16,7 +20,7 @@ namespace ActionServiceAPI.Application.Commands.CreateActionCommand
                 creator = new Employee(request.CreatedBy);
                 context.Employees.Add(creator);
                 await context.SaveChangesAsync(cancellationToken);
-            }                
+            }
 
             var conductor = context.Employees.FirstOrDefault(e => e.UserId == request.ConductedBy);
             if (conductor is null && request.ConductedBy is not null)
@@ -26,18 +30,18 @@ namespace ActionServiceAPI.Application.Commands.CreateActionCommand
                 await context.SaveChangesAsync(cancellationToken);
             }
 
-            ActionEntity newItem = new(request.Name, request.Description, request.StartDate, request.EndDate, creator, conductor);
+            target.Name = request.Name;
+            target.Description = request.Description;
+            target.StartDate = request.StartDate;
+            target.EndDate = request.EndDate;
+            target.CreatedBy = creator;
+            target.ConductedBy = conductor;
+            target.UpdatePartsList(request.Parts);
 
-            // Refactor - Publishing can be refactorized to avoid changes in future
-            await mediator.Publish(new NewActionCreatedDomainEvent(request.Parts), cancellationToken);
-
-            foreach (var part in request.Parts)
-                newItem.AddPart(part);
-
-            context.Actions.Add(newItem);
+            context.Actions.Update(target);
             await context.SaveChangesAsync(cancellationToken);
 
-            return newItem.Id;
+            return true;
         }
     }
 }

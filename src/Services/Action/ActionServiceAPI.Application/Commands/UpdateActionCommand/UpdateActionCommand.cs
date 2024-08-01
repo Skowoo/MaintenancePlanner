@@ -1,12 +1,13 @@
 ﻿using ActionServiceAPI.Domain.Models;
 using MediatR;
 
-namespace ActionServiceAPI.Application.Commands.CreateActionCommand
+namespace ActionServiceAPI.Application.Commands.UpdateActionCommand
 {
-    public class CreateActionCommand : IRequest<int>
+    public class UpdateActionCommand : IRequest<bool>
     {
-        public CreateActionCommand(string name, string description, DateTime startDate, DateTime endDate, string createdBy, string conductedBy, IEnumerable<UsedPart> parts)
+        public UpdateActionCommand(int id, string name, string description, DateTime startDate, DateTime endDate, string createdBy, string conductedBy, IEnumerable<UsedPart> parts)
         {
+            Id = id;
             Name = name;
             Description = description;
             StartDate = startDate;
@@ -15,6 +16,8 @@ namespace ActionServiceAPI.Application.Commands.CreateActionCommand
             ConductedBy = conductedBy;
             Parts = parts;
         }
+
+        public int Id { get; init; }
 
         public string Name { get; init; }
 

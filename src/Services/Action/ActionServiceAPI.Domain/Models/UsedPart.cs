@@ -2,10 +2,13 @@
 
 namespace ActionServiceAPI.Domain.Models
 {
-    public class UsedPart : Entity
+    public class UsedPart(int partId, int quantity) : Entity
     {
-        public int PartId { get; set; }
+        // Refactor
+        protected UsedPart() : this(0, 0) { }
 
-        public int Quantity { get; set; }
+        public int PartId { get; set; } = partId;
+
+        public int Quantity { get; set; } = quantity;
     }
 }

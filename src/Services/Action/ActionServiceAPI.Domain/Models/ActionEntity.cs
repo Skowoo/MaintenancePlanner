@@ -22,6 +22,15 @@ namespace ActionServiceAPI.Domain.Models
         public Employee? ConductedBy { get; set; } = conductedBy;
         private int? ConductedById { get; set; } = conductedBy?.Id;
 
-        public IEnumerable<UsedPart> Parts { get; set; } = [];
+        private readonly List<UsedPart> _usedParts = [];
+        public IReadOnlyCollection<UsedPart> Parts => _usedParts;
+
+        public void AddPart(UsedPart part) => _usedParts.Add(part);
+
+        public void UpdatePartsList(IEnumerable<UsedPart> parts)
+        {
+            _usedParts.Clear();
+            _usedParts.AddRange(parts);
+        }
     }
 }
