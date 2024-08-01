@@ -4,11 +4,11 @@ using ActionServiceAPI.Domain.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace ActionServiceAPI.Application.Queries.GetActionById
+namespace ActionServiceAPI.Application.Action.Queries.GetActionById
 {
     public class GetActionByIdQueryHandler(IActionContext context) : IRequestHandler<GetActionByIdQuery, ActionEntity>
     {
-        public async Task<ActionEntity> Handle(GetActionByIdQuery request, CancellationToken cancellationToken) => 
+        public async Task<ActionEntity> Handle(GetActionByIdQuery request, CancellationToken cancellationToken) =>
             await context.Actions
                 .Include(x => x.Parts)
                 .Include(x => x.CreatedBy)

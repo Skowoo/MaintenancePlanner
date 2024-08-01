@@ -3,11 +3,11 @@ using ActionServiceAPI.Domain.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace ActionServiceAPI.Application.Queries.GetAllActions
+namespace ActionServiceAPI.Application.Action.Queries.GetAllActions
 {
     public class GetAllActionsQueryHandler(IActionContext context) : IRequestHandler<GetAllActionsQuery, IEnumerable<ActionEntity>>
     {
-        public async Task<IEnumerable<ActionEntity>> Handle(GetAllActionsQuery request, CancellationToken cancellationToken) 
+        public async Task<IEnumerable<ActionEntity>> Handle(GetAllActionsQuery request, CancellationToken cancellationToken)
             => [.. await context.Actions
                 .Include(x => x.Parts)
                 .Include(x => x.CreatedBy)

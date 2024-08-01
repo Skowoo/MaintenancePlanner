@@ -2,7 +2,7 @@
 using ActionServiceAPI.Domain.Models;
 using MediatR;
 
-namespace ActionServiceAPI.Application.Commands.UpdateActionCommand
+namespace ActionServiceAPI.Application.Action.Commands.UpdateActionCommand
 {
     public class UpdateActionCommandHandler(IActionContext context) : IRequestHandler<UpdateActionCommand, bool>
     {

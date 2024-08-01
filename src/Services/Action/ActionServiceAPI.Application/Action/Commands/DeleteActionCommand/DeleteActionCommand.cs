@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace ActionServiceAPI.Application.Commands.DeleteActionCommand
+namespace ActionServiceAPI.Application.Action.Commands.DeleteActionCommand
 {
     public class DeleteActionCommand(int id) : IRequest<bool>
     {

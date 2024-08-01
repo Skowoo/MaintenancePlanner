@@ -11,7 +11,7 @@ namespace ActionServiceAPI.Application.DomainEventHandlers
         {
             foreach (var requestedPart in notification.Parts)
             {
-                var storedPart = context.UsedParts.FirstOrDefault(p => p.PartId == requestedPart.PartId) 
+                var storedPart = context.UsedParts.FirstOrDefault(p => p.PartId == requestedPart.PartId)
                     ?? throw new ActionDomainException("Part not found");
 
                 if (storedPart.Quantity < requestedPart.Quantity)

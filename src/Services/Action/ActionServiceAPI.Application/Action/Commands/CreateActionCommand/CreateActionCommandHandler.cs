@@ -1,30 +1,19 @@
 ﻿using ActionServiceAPI.Application.Interfaces.DataRepositories;
 using ActionServiceAPI.Domain.Events;
+using ActionServiceAPI.Domain.Exceptions;
 using ActionServiceAPI.Domain.Models;
 using MediatR;
 
-namespace ActionServiceAPI.Application.Commands.CreateActionCommand
+namespace ActionServiceAPI.Application.Action.Commands.CreateActionCommand
 {
     public class CreateActionCommandHandler(IActionContext context, IMediator mediator) : IRequestHandler<CreateActionCommand, int>
     {
         public async Task<int> Handle(CreateActionCommand request, CancellationToken cancellationToken)
         {
-            // Refactor - Validation and cretion should be moved
-            var creator = context.Employees.FirstOrDefault(e => e.UserId == request.CreatedBy);
-            if (creator is null)
-            {
-                creator = new Employee(request.CreatedBy);
-                context.Employees.Add(creator);
-                await context.SaveChangesAsync(cancellationToken);
-            }                
+            var creator = context.Employees.FirstOrDefault(e => e.UserId == request.CreatedBy)
+                ?? throw new ActionDomainException("Creator not found in database!");
 
             var conductor = context.Employees.FirstOrDefault(e => e.UserId == request.ConductedBy);
-            if (conductor is null && request.ConductedBy is not null)
-            {
-                conductor = new Employee(request.ConductedBy);
-                context.Employees.Add(conductor);
-                await context.SaveChangesAsync(cancellationToken);
-            }
 
             ActionEntity newItem = new(request.Name, request.Description, request.StartDate, request.EndDate, creator, conductor);
 

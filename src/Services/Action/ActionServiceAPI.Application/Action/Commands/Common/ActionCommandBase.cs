@@ -1,11 +1,10 @@
 ﻿using ActionServiceAPI.Domain.Models;
-using MediatR;
 
-namespace ActionServiceAPI.Application.Commands.CreateActionCommand
+namespace ActionServiceAPI.Application.Action.Commands.Common
 {
-    public class CreateActionCommand : IRequest<int>
+    public abstract class ActionCommandBase
     {
-        public CreateActionCommand(string name, string description, DateTime startDate, DateTime endDate, string createdBy, string conductedBy, IEnumerable<UsedPart> parts)
+        public ActionCommandBase(string name, string description, DateTime startDate, DateTime endDate, string createdBy, string conductedBy, IEnumerable<UsedPart> parts)
         {
             Name = name;
             Description = description;

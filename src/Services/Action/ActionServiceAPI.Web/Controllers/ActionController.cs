@@ -1,11 +1,11 @@
-using ActionServiceAPI.Application.Commands.CreateActionCommand;
-using ActionServiceAPI.Application.Commands.DeleteActionCommand;
-using ActionServiceAPI.Application.Commands.UpdateActionCommand;
-using ActionServiceAPI.Application.Queries.GetActionById;
-using ActionServiceAPI.Application.Queries.GetAllActions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using ActionServiceAPI.Application.Action.Commands.CreateActionCommand;
+using ActionServiceAPI.Application.Action.Commands.UpdateActionCommand;
+using ActionServiceAPI.Application.Action.Commands.DeleteActionCommand;
+using ActionServiceAPI.Application.Action.Queries.GetActionById;
+using ActionServiceAPI.Application.Action.Queries.GetAllActions;
 
 namespace ActionServiceAPI.Web.Controllers
 {

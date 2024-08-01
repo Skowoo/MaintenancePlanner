@@ -1,7 +1,7 @@
 ﻿using ActionServiceAPI.Domain.Models;
 using MediatR;
 
-namespace ActionServiceAPI.Application.Queries.GetActionById
+namespace ActionServiceAPI.Application.Action.Queries.GetActionById
 {
     public class GetActionByIdQuery(int id) : IRequest<ActionEntity>
     {
