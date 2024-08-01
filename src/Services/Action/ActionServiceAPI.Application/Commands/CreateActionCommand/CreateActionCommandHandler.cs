@@ -1,14 +1,15 @@
 ﻿using ActionServiceAPI.Application.Interfaces.DataRepositories;
+using ActionServiceAPI.Domain.Events;
 using ActionServiceAPI.Domain.Models;
 using MediatR;
 
 namespace ActionServiceAPI.Application.Commands.CreateActionCommand
 {
-    public class CreateActionCommandHandler(IActionContext context) : IRequestHandler<CreateActionCommand>
+    public class CreateActionCommandHandler(IActionContext context, IMediator mediator) : IRequestHandler<CreateActionCommand>
     {
         public async Task Handle(CreateActionCommand request, CancellationToken cancellationToken)
         {
-            // Refactor
+            // Refactor - Validation and cretion should be moved
             var creator = context.Employees.FirstOrDefault(e => e.UserId == request.CreatedBy);
             if (creator is null)
             {
@@ -29,6 +30,9 @@ namespace ActionServiceAPI.Application.Commands.CreateActionCommand
 
             context.Actions.Add(newItem);
             await context.SaveChangesAsync(cancellationToken);
+
+            // Refactor - Publishing can be refactorized to avoid changes in future
+            await mediator.Publish(new NewActionCreatedDomainEvent(request.Parts), cancellationToken);
         }
     }
 }
