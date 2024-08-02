@@ -1,11 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WarehouseServiceAPI.Infrastructure;
+using WarehouseServiceAPI.IntegrationEvents;
+using WarehouseServiceAPI.IntegrationEvents.Events;
 using WarehouseServiceAPI.Models;
 using WarehouseServiceAPI.Utilities;
 
 namespace WarehouseServiceAPI.Services
 {
-    public class PartService(WarehouseContext context) : IPartService
+    public class PartService(WarehouseContext context, IIntegrationEventService integrationEventService) : IPartService
     {
         public async Task<DbActionResult> AddPart(Part part)
         {
@@ -13,6 +15,13 @@ namespace WarehouseServiceAPI.Services
             {
                 await context.AddAsync(part);
                 await context.SaveChangesAsync();
+
+                var integrationEvent = new NewPartAddedIntegrationEvent()
+                {
+                    PartId = part.Id,
+                    Quantity = part.QuantityOnStock
+                };
+                await integrationEventService.PublishIntegrationEventAsync(integrationEvent);
             }
             catch (Exception ex)
             {
