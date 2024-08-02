@@ -14,20 +14,29 @@ namespace ActionServiceAPI.Web.Controllers
     public class ActionController(IMediator mediator) : ControllerBase
     {
         [HttpGet]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetAllActions() 
             => Ok(await mediator.Send(new GetAllActionsQuery()));
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetActionById(int id) 
-            => Ok(await mediator.Send(new GetActionByIdQuery(id)));
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        public async Task<IActionResult> GetActionById(int id)
+        {
+            var result = await mediator.Send(new GetActionByIdQuery(id));
+            return result is not null ? Ok(result) : NotFound(id);
+        }
 
         [HttpPost]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> CreateAction([FromBody] CreateActionCommand command) 
             => Ok(await mediator.Send(command));
 
         [HttpPut]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> UpdateAction([FromBody] UpdateActionCommand command)
         {
             var result = await mediator.Send(command);

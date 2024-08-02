@@ -1,5 +1,6 @@
 using ActionServiceAPI.Infrastructure;
 using ActionServiceAPI.Application;
+using ActionServiceAPI.Web.Middleware;
 
 namespace ActionServiceAPI.Web
 {
@@ -27,9 +28,9 @@ namespace ActionServiceAPI.Web
             }
 
             app.UseHttpsRedirection();
-
             app.UseAuthorization();
 
+            app.UseMiddleware<DomainExceptionHandlingMiddleware>();
 
             app.MapControllers();
 
