@@ -1,4 +1,5 @@
 ﻿using ActionServiceAPI.Application.Interfaces.DataRepositories;
+using ActionServiceAPI.Domain.Exceptions;
 using ActionServiceAPI.Domain.Models;
 using MediatR;
 
@@ -13,22 +14,10 @@ namespace ActionServiceAPI.Application.Action.Commands.UpdateActionCommand
             if (target is null)
                 return false;
 
-            // Refactor - Validation and cretion should be moved
-            var creator = context.Employees.FirstOrDefault(e => e.UserId == request.CreatedBy);
-            if (creator is null)
-            {
-                creator = new Employee(request.CreatedBy);
-                context.Employees.Add(creator);
-                await context.SaveChangesAsync(cancellationToken);
-            }
+            var creator = context.Employees.FirstOrDefault(e => e.UserId == request.CreatedBy)
+                ?? throw new ActionDomainException("Creator not found in database!");
 
             var conductor = context.Employees.FirstOrDefault(e => e.UserId == request.ConductedBy);
-            if (conductor is null && request.ConductedBy is not null)
-            {
-                conductor = new Employee(request.ConductedBy);
-                context.Employees.Add(conductor);
-                await context.SaveChangesAsync(cancellationToken);
-            }
 
             target.Name = request.Name;
             target.Description = request.Description;

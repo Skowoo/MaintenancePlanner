@@ -4,7 +4,7 @@ namespace ActionServiceAPI.Domain.Models
 {
     public class ActionEntity(string name, string description, DateTime startDate, DateTime endDate, Employee createdBy, Employee? conductedBy) : Entity
     {
-        protected ActionEntity() : this("", "", DateTime.Now, DateTime.Now, new Employee(""), null) { } // Refactor
+        protected ActionEntity() : this("", "", DateTime.Now, DateTime.Now, new Employee(""), null) { }
 
         public string Name { get; set; } = name;
 
