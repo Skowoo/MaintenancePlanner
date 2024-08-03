@@ -1,4 +1,4 @@
-using EventBus;
+using EventBus.Abstractions;
 using EventBusRabbitMQ;
 using Microsoft.EntityFrameworkCore;
 using WarehouseServiceAPI.Infrastructure;
@@ -22,7 +22,7 @@ namespace WarehouseServiceAPI
 
             builder.Services.AddScoped<IPartService, PartService>(); // Refactor - check lifetimes
             builder.Services.AddSingleton<IIntegrationEventService, IntegrationEventService>();
-            builder.Services.AddSingleton<IEventBus, EvenBusRabbitMQ>();
+            builder.Services.AddSingleton<IEventBus, EventBusService>();
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();

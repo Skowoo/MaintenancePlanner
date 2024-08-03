@@ -1,6 +1,10 @@
 using ActionServiceAPI.Infrastructure;
 using ActionServiceAPI.Application;
 using ActionServiceAPI.Web.Middleware;
+using EventBusRabbitMQ;
+using ActionServiceAPI.Application.IntegrationEvents.Events;
+using ActionServiceAPI.Application.IntegrationEvents.EventHandling;
+using EventBus.Abstractions;
 
 namespace ActionServiceAPI.Web
 {
@@ -18,6 +22,8 @@ namespace ActionServiceAPI.Web
             builder.Services.RegisterInfrastructureServices();
             builder.Services.RegisterApplicationServices();
 
+            builder.Services.AddSingleton<IEventBus, EventBusService>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -26,6 +32,9 @@ namespace ActionServiceAPI.Web
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            var eventBus = app.Services.GetRequiredService<IEventBus>();
+            eventBus.Subscribe<NewPartAddedIntegrationEvent, NewPartAddedIntegrationEventHandler>();
 
             app.UseHttpsRedirection();
             app.UseAuthorization();

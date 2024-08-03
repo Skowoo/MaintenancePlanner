@@ -18,6 +18,8 @@ namespace WarehouseServiceAPI.Services
 
                 var integrationEvent = new NewPartAddedIntegrationEvent()
                 {
+                    Id = Guid.NewGuid(),
+                    CreationDate = DateTime.Now,
                     PartId = part.Id,
                     Quantity = part.QuantityOnStock
                 };

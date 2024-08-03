@@ -1,4 +1,4 @@
-﻿using EventBus;
+﻿using EventBus.Abstractions;
 using EventBus.Events;
 
 namespace WarehouseServiceAPI.IntegrationEvents
