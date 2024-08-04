@@ -2,7 +2,7 @@
 {
     public class SubscriptionInfo(bool isDynamic, Type handler)
     {
-        public bool IsDybamic { get; } = isDynamic;
+        public bool IsDynamic { get; } = isDynamic;
 
         public Type HandlerType { get; } = handler;
 
