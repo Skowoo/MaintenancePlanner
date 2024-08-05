@@ -9,6 +9,8 @@ namespace ActionServiceAPI.Application.IntegrationEvents.EventHandling
     {
         public Task Handle(NewPartAddedIntegrationEvent evt)
         {
+            throw new Exception("Dotarło");
+
             UsedPart part = new(evt.PartId, evt.Quantity);
             context.UsedParts.Add(part);
             context.SaveChangesAsync(new CancellationToken()); // Refactor

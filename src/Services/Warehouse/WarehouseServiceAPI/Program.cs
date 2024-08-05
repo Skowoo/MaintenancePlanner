@@ -1,4 +1,3 @@
-using EventBus.Abstractions;
 using EventBusRabbitMQ;
 using Microsoft.EntityFrameworkCore;
 using WarehouseServiceAPI.Infrastructure;
@@ -20,9 +19,10 @@ namespace WarehouseServiceAPI
             builder.Services.AddDbContext<WarehouseContext>(
                 options => options.UseInMemoryDatabase("WarehouseMemoryDb"));
 
-            builder.Services.AddScoped<IPartService, PartService>(); // Refactor - check lifetimes
-            builder.Services.AddSingleton<IIntegrationEventService, IntegrationEventService>();
-            builder.Services.AddSingleton<IEventBus, EventBusService>();
+            builder.Services.AddRabbitMQEventBus();
+
+            builder.Services.AddScoped<IIntegrationEventService, IntegrationEventService>();
+            builder.Services.AddScoped<IPartService, PartService>();
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();

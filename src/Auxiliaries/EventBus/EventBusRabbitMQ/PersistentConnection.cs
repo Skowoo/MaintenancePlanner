@@ -10,7 +10,7 @@ namespace EventBusRabbitMQ
         public bool IsConnected => _connection is not null && _connection.IsOpen && !Disposed;
         readonly object connectionLock = new();
 
-        public IModel Create()
+        public IModel CreateModel()
         {
             if (!IsConnected)
                 throw new InvalidOperationException("Not connected!");

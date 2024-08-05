@@ -22,7 +22,7 @@ namespace ActionServiceAPI.Web
             builder.Services.RegisterInfrastructureServices();
             builder.Services.RegisterApplicationServices();
 
-            builder.Services.AddSingleton<IEventBus, EventBusService>();
+            builder.Services.AddRabbitMQEventBus();
 
             var app = builder.Build();
 

@@ -1,7 +1,7 @@
-﻿using Autofac;
-using EventBus;
+﻿using EventBus;
 using EventBus.Abstractions;
 using EventBus.Events;
+using Microsoft.Extensions.DependencyInjection;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Text;
@@ -9,21 +9,25 @@ using System.Text.Json;
 
 namespace EventBusRabbitMQ
 {
-    public class EventBusService(
-        IPersistentConnection persistentConnection, 
-        ISubscriptionManager subscriptionManager,
-        ILifetimeScope autofac,
-        string queueName = "event_bus_queue") : IEventBus
+    public class EventBusService : IEventBus
     {
         const string BROKER_NAME = "event_bus";
-        const string AUTOFAC_SCOPE_NAME = "eshop_event_bus";
+        const string AUTOFAC_SCOPE_NAME = "maintenance_planner_event_bus";
 
-        readonly IPersistentConnection _persistentConnection = persistentConnection;
-        readonly ISubscriptionManager _subscriptionManager = subscriptionManager;
-        readonly ILifetimeScope _autofac = autofac;
+        readonly IPersistentConnection _persistentConnection;
+        readonly ISubscriptionManager _subscriptionManager;
+        readonly IServiceProvider _serviceProvider;
+        readonly string _queueName;
+        IModel _consumerChannel;        
 
-        IModel _consumerChannel;
-        string _queueName = queueName;
+        public EventBusService(IPersistentConnection persistentConnection, ISubscriptionManager subscriptionManager, IServiceProvider serviceProvider, string queueName = "event_bus_queue")
+        {
+            _persistentConnection = persistentConnection;
+            _subscriptionManager = subscriptionManager;
+            _serviceProvider = serviceProvider;
+            _queueName = queueName;
+            _consumerChannel = CreateConsumerChannel();
+        }
 
         public void Publish(IntegrationEventBase evt)
         {
@@ -32,7 +36,7 @@ namespace EventBusRabbitMQ
             
             var eventName = evt.GetType().Name;
 
-            using var channel = _persistentConnection.Create();
+            using var channel = _persistentConnection.CreateModel();
 
             channel.ExchangeDeclare(exchange: BROKER_NAME, type: "direct");
 
@@ -40,7 +44,7 @@ namespace EventBusRabbitMQ
 
             var properties = channel.CreateBasicProperties();
 
-            //properties.DeliveryMode = 2; // persistent
+            properties.DeliveryMode = 2; // persistent
 
             channel.BasicPublish(
                 exchange: BROKER_NAME,
@@ -67,17 +71,7 @@ namespace EventBusRabbitMQ
 
             _subscriptionManager.AddSubscription<T, TH>();
 
-            if (_consumerChannel != null)
-            {
-                var consumer = new AsyncEventingBasicConsumer(_consumerChannel);
-
-                //consumer.Received += Consumer_Received;
-
-                _consumerChannel.BasicConsume(
-                    queue: _queueName,
-                    autoAck: false,
-                    consumer: consumer);
-            }
+            StartBasicConsume();
         }
 
         private IModel CreateConsumerChannel()
@@ -85,7 +79,7 @@ namespace EventBusRabbitMQ
             if (!_persistentConnection.IsConnected)
                 _persistentConnection.TryConnect();
             
-            var channel = _persistentConnection.Create();
+            var channel = _persistentConnection.CreateModel();
 
             channel.ExchangeDeclare(exchange: BROKER_NAME,
                                     type: "direct");
@@ -96,12 +90,12 @@ namespace EventBusRabbitMQ
                                     autoDelete: false,
                                     arguments: null);
 
-            channel.CallbackException += (sender, ea) =>
-            {
-                _consumerChannel.Dispose();
-                _consumerChannel = CreateConsumerChannel();
-                StartBasicConsume();
-            };
+            //channel.CallbackException += (sender, ea) =>
+            //{
+            //    _consumerChannel.Dispose();
+            //    _consumerChannel = CreateConsumerChannel();
+            //    StartBasicConsume();
+            //};
 
             return channel;
         }
@@ -143,21 +137,26 @@ namespace EventBusRabbitMQ
         {
             if (_subscriptionManager.HasSubscriptionsForEvent(eventName))
             {
-                await using var scope = _autofac.BeginLifetimeScope(AUTOFAC_SCOPE_NAME);
+                await using var scope = _serviceProvider.CreateAsyncScope();
                 var subscriptions = _subscriptionManager.GetHandlersForEvent(eventName);
                 foreach (var subscription in subscriptions)
                 {
                     if (subscription.IsDynamic)
                     {
-                        if (scope.ResolveOptional(subscription.HandlerType) is not IDynamicIntegrationEventHandler handler) continue;
+                        if (scope.ServiceProvider.GetService(subscription.HandlerType) is not IDynamicIntegrationEventHandler handler) 
+                            continue;
+
                         using dynamic eventData = JsonDocument.Parse(message);
                         await Task.Yield();
                         await handler.Handle(eventData);
                     }
                     else
                     {
-                        var handler = scope.ResolveOptional(subscription.HandlerType);
-                        if (handler == null) continue;
+                        var handler = scope.ServiceProvider.GetService(subscription.HandlerType);
+
+                        if (handler == null) 
+                            continue;
+
                         var eventType = _subscriptionManager.GetEventTypeByName(eventName);
                         var integrationEvent = JsonSerializer.Deserialize(message, eventType, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
                         var concreteType = typeof(IIntegrationEventHandler<>).MakeGenericType(eventType);

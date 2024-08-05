@@ -27,6 +27,9 @@ namespace EventBus
 
         void DoAddSubscription(Type eventType, string eventName, bool isDynamic)
         {
+            if (!_handlers.ContainsKey(eventName))
+                _handlers.Add(eventName, []);
+
             if (isDynamic)
                 _handlers[eventName].Add(SubscriptionInfo.Dynamic(eventType));
             else
