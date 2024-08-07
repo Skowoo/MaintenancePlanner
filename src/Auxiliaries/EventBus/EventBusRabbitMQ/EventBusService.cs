@@ -17,8 +17,8 @@ namespace EventBusRabbitMQ
         readonly IPersistentConnection _persistentConnection;
         readonly ISubscriptionManager _subscriptionManager;
         readonly IServiceProvider _serviceProvider;
+        readonly IModel _consumerChannel;
         readonly string _queueName;
-        IModel _consumerChannel;        
 
         public EventBusService(IPersistentConnection persistentConnection, ISubscriptionManager subscriptionManager, IServiceProvider serviceProvider, string queueName = "event_bus_queue")
         {
@@ -26,111 +26,54 @@ namespace EventBusRabbitMQ
             _subscriptionManager = subscriptionManager;
             _serviceProvider = serviceProvider;
             _queueName = queueName;
-            _consumerChannel = CreateConsumerChannel();
+
+            _persistentConnection.TryConnect();
+            _consumerChannel = _persistentConnection.CreateModel();
         }
 
         public void Publish(IntegrationEventBase evt)
         {
-            if (!_persistentConnection.IsConnected)
-                _persistentConnection.TryConnect();
-            
             var eventName = evt.GetType().Name;
 
-            using var channel = _persistentConnection.CreateModel();
-
-            channel.ExchangeDeclare(exchange: BROKER_NAME, type: "direct");
+            _consumerChannel.ExchangeDeclare(exchange: eventName, type: "fanout");
 
             var body = JsonSerializer.SerializeToUtf8Bytes(evt, evt.GetType());
 
-            var properties = channel.CreateBasicProperties();
-
-            properties.DeliveryMode = 2; // persistent
-
-            channel.BasicPublish(
-                exchange: BROKER_NAME,
-                routingKey: eventName,
-                mandatory: true,
-                basicProperties: properties,
-                body: body);
+            _consumerChannel.BasicPublish(
+                exchange: eventName,
+                routingKey: string.Empty);
         }
 
         public void Subscribe<T, TH>()
             where T : IntegrationEventBase
             where TH : IIntegrationEventHandler<T>
         {
-            var eventName = _subscriptionManager.GetEventKey<T>();
-
-            var containsKey = _subscriptionManager.HasSubscriptionsForEvent(eventName);
-            if (!containsKey)
-                if (!_persistentConnection.IsConnected)
-                    _persistentConnection.TryConnect();
-
-            _consumerChannel.QueueBind(queue: _queueName,
-                    exchange: BROKER_NAME,
-                    routingKey: eventName);
-
-            _subscriptionManager.AddSubscription<T, TH>();
-
-            StartBasicConsume();
-        }
-
-        private IModel CreateConsumerChannel()
-        {
             if (!_persistentConnection.IsConnected)
                 _persistentConnection.TryConnect();
-            
-            var channel = _persistentConnection.CreateModel();
 
-            channel.ExchangeDeclare(exchange: BROKER_NAME,
-                                    type: "direct");
+            var eventName = _subscriptionManager.GetEventKey<T>();
 
-            channel.QueueDeclare(queue: _queueName,
-                                    durable: true,
-                                    exclusive: false,
-                                    autoDelete: false,
-                                    arguments: null);
+            _consumerChannel.ExchangeDeclare(exchange: eventName, type: "fanout");
 
-            //channel.CallbackException += (sender, ea) =>
-            //{
-            //    _consumerChannel.Dispose();
-            //    _consumerChannel = CreateConsumerChannel();
-            //    StartBasicConsume();
-            //};
+            var subscriberQueueName = _consumerChannel.QueueDeclare().QueueName;
+            _consumerChannel.QueueBind(
+                queue: subscriberQueueName, 
+                exchange: eventName, 
+                routingKey: string.Empty);
 
-            return channel;
-        }
-
-        private void StartBasicConsume()
-        {
-            if (_consumerChannel != null)
+            var consumer = new EventingBasicConsumer(_consumerChannel);
+            consumer.Received += async (model, ea) =>
             {
-                var consumer = new AsyncEventingBasicConsumer(_consumerChannel);
+                var message = Encoding.UTF8.GetString(ea.Body.ToArray());
+                await ProcessEvent(eventName, message);
+            };
 
-                consumer.Received += Consumer_Received;
+            _consumerChannel.BasicConsume(
+                queue: subscriberQueueName, 
+                autoAck: true, 
+                consumer: consumer);
 
-                _consumerChannel.BasicConsume(
-                    queue: _queueName,
-                    autoAck: false,
-                    consumer: consumer);
-            }
-        }
-
-        private async Task Consumer_Received(object sender, BasicDeliverEventArgs eventArgs)
-        {
-            var eventName = eventArgs.RoutingKey;
-            var message = Encoding.UTF8.GetString(eventArgs.Body.Span);
-
-            if (message.ToLowerInvariant().Contains("throw-fake-exception"))
-            {
-                throw new InvalidOperationException($"Fake exception requested: \"{message}\"");
-            }
-
-            await ProcessEvent(eventName, message);
-
-            // Even on exception we take the message off the queue.
-            // in a REAL WORLD app this should be handled with a Dead Letter Exchange (DLX). 
-            // For more information see: https://www.rabbitmq.com/dlx.html
-            _consumerChannel.BasicAck(eventArgs.DeliveryTag, multiple: false);
+            _subscriptionManager.AddSubscription<T, TH>();
         }
 
         private async Task ProcessEvent(string eventName, string message)
@@ -154,7 +97,7 @@ namespace EventBusRabbitMQ
                     {
                         var handler = scope.ServiceProvider.GetService(subscription.HandlerType);
 
-                        if (handler == null) 
+                        if (handler is null) 
                             continue;
 
                         var eventType = _subscriptionManager.GetEventTypeByName(eventName);
