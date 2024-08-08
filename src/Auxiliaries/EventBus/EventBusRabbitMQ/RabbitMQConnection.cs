@@ -2,17 +2,17 @@
 
 namespace EventBusRabbitMQ
 {
-    public class PersistentConnection : IPersistentConnection
+    public class RabbitMQConnection : IRabbitMQConnection
     {
         readonly IConnectionFactory _connectionFactory;
-        IConnection _connection;        
         readonly object connectionLock = new();
+        IConnection _connection;
 
         public bool IsConnected => _connection is not null && _connection.IsOpen && !Disposed;
 
         public bool Disposed;
 
-        public PersistentConnection(IConnectionFactory factory)
+        public RabbitMQConnection(IConnectionFactory factory)
         {
             _connectionFactory = factory;
             _connection = _connectionFactory.CreateConnection();

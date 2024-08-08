@@ -2,7 +2,7 @@
 
 namespace EventBusRabbitMQ
 {
-    public interface IPersistentConnection
+    public interface IRabbitMQConnection
     {
         bool IsConnected { get; }
 

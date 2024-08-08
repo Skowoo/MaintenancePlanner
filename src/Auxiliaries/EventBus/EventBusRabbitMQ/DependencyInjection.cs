@@ -9,20 +9,31 @@ namespace EventBusRabbitMQ
     {
         public static IServiceCollection AddRabbitMQEventBus(this IServiceCollection services)
         {
-            services.AddSingleton<IPersistentConnection, PersistentConnection>(sp =>
+            // Register all integration event handlers
+            var handlerType = typeof(IIntegrationEventHandler<>);
+            var handlers = AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(s => s.GetTypes())
+                .Where(p => p.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == handlerType))
+                .ToList();
+
+            foreach (var handler in handlers)
+                services.AddTransient(handler);
+
+            // Register event bus services
+            services.AddSingleton<IRabbitMQConnection, RabbitMQConnection>(sp =>
             {
                 var factory = new ConnectionFactory()
                 {
                     HostName = "localhost"
                 };
-                return new PersistentConnection(factory);
+                return new RabbitMQConnection(factory);
             });
-            services.AddSingleton<ISubscriptionManager, SubscriptionManager>();
+            services.AddSingleton<IHandlersManager, HandlersManager>();
             services.AddSingleton<IEventBus, EventBusService>(sp =>
             {
-                var rabbitMQPersistentConnection = sp.GetRequiredService<IPersistentConnection>();
+                var rabbitMQPersistentConnection = sp.GetRequiredService<IRabbitMQConnection>();
                 var iLifetimeScope = sp.GetRequiredService<IServiceProvider>();
-                var eventBusSubscriptionsManager = sp.GetRequiredService<ISubscriptionManager>();
+                var eventBusSubscriptionsManager = sp.GetRequiredService<IHandlersManager>();
 
                 return new EventBusService(rabbitMQPersistentConnection, eventBusSubscriptionsManager, iLifetimeScope);
             });
