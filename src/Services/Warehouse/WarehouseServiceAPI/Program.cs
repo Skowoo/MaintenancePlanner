@@ -1,7 +1,10 @@
+using EventBus.Abstractions;
 using EventBusRabbitMQ;
 using Microsoft.EntityFrameworkCore;
 using WarehouseServiceAPI.Infrastructure;
 using WarehouseServiceAPI.IntegrationEvents;
+using WarehouseServiceAPI.IntegrationEvents.EventHandlers;
+using WarehouseServiceAPI.IntegrationEvents.Events;
 using WarehouseServiceAPI.Services;
 
 namespace WarehouseServiceAPI
@@ -28,6 +31,9 @@ namespace WarehouseServiceAPI
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
+
+            var eventBus = app.Services.GetRequiredService<IEventBus>();
+            eventBus.Subscribe<SparePartsUsedInActionIntegrationEvent, SparePartsUsedInActionIntegrationEventHandler>();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

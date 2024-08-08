@@ -5,6 +5,7 @@ using EventBusRabbitMQ;
 using ActionServiceAPI.Application.IntegrationEvents.Events;
 using ActionServiceAPI.Application.IntegrationEvents.EventHandling;
 using EventBus.Abstractions;
+using ActionServiceAPI.Application.IntegrationEvents;
 
 namespace ActionServiceAPI.Web
 {
@@ -21,6 +22,8 @@ namespace ActionServiceAPI.Web
 
             builder.Services.RegisterInfrastructureServices();
             builder.Services.RegisterApplicationServices();
+
+            builder.Services.AddTransient<IIntegrationEventService, IntegrationEventService>();
 
             builder.Services.AddRabbitMQEventBus();
 

@@ -6,13 +6,17 @@ using ActionServiceAPI.Application.Action.Commands.UpdateActionCommand;
 using ActionServiceAPI.Application.Action.Commands.DeleteActionCommand;
 using ActionServiceAPI.Application.Action.Queries.GetActionById;
 using ActionServiceAPI.Application.Action.Queries.GetAllActions;
+using ActionServiceAPI.Application.Interfaces.DataRepositories;
 
 namespace ActionServiceAPI.Web.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]/[action]")]
-    public class ActionController(IMediator mediator) : ControllerBase
+    public class ActionController(IMediator mediator, IActionContext ctx) : ControllerBase
     {
+        [HttpGet]
+        public IActionResult Get() => Ok(ctx.UsedParts.ToList()); // Refactor - remove diagnostic endpoint
+
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetAllActions() 

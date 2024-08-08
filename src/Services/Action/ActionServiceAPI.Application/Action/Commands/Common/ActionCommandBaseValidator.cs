@@ -7,9 +7,9 @@ namespace ActionServiceAPI.Application.Action.Commands.Common
     {
         public ActionCommandBaseValidator(IActionContext context)
         {
-            RuleFor(x => x.CreatedBy)
-                .Must(id => context.Employees.Any(x => x.UserId == id))
-                .WithMessage("Creator not found in database!");
+            //RuleFor(x => x.CreatedBy)                                 // Refactor - bring back control
+            //    .Must(id => context.Employees.Any(x => x.UserId == id))
+            //    .WithMessage("Creator not found in database!");
 
             When(x => !string.IsNullOrEmpty(x.ConductedBy), () =>
             {

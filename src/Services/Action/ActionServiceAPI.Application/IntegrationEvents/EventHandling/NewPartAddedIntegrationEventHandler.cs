@@ -9,8 +9,17 @@ namespace ActionServiceAPI.Application.IntegrationEvents.EventHandling
     {
         public Task Handle(NewPartAddedIntegrationEvent evt)
         {
-            UsedPart part = new(evt.PartId, evt.Quantity);
-            context.UsedParts.Add(part);
+            var part = context.UsedParts.SingleOrDefault(x => x.PartId == evt.PartId);
+            if (part is null)
+            {
+                part = new UsedPart(evt.PartId, evt.Quantity);
+                context.UsedParts.Add(part);
+            }
+            else
+            {
+                part.Quantity += evt.Quantity;
+            }
+            
             context.SaveChangesAsync(new CancellationToken()); // Refactor
             return Task.CompletedTask;
         }

@@ -18,8 +18,9 @@
         public bool IsSuccess { get; init; } = result;
 
         /// <summary>
-        /// List of exceptions that occured during the operation
+        /// Exception that occured during the operation
         /// </summary>
-        public Exception? Exception { get; init; } = error ??= new Exception();
+        public Exception Exception { get; init; } = error 
+            ??= new Exception("Action failed but no exception was passed");
     }
 }

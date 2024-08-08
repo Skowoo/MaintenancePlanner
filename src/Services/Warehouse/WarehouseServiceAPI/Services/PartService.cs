@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using WarehouseServiceAPI.Exceptions;
 using WarehouseServiceAPI.Infrastructure;
 using WarehouseServiceAPI.IntegrationEvents;
 using WarehouseServiceAPI.IntegrationEvents.Events;
@@ -30,6 +31,21 @@ namespace WarehouseServiceAPI.Services
                 return new DbActionResult(false, ex);
             }
 
+            return new DbActionResult(true);
+        }
+
+        public async Task<DbActionResult> DecreasePartQuantity(int partId, int quantity)
+        {
+            var part = context.Parts.SingleOrDefault(p => p.Id == partId);
+
+            if (part is null)
+                return new DbActionResult(false, new WarehouseDomainException("Part not found!"));
+
+            if (!(part.QuantityOnStock - quantity >= 0))
+                return new DbActionResult(false, new Exception("Not enough parts on stock!"));
+
+            part.QuantityOnStock -= quantity;
+            await context.SaveChangesAsync();
             return new DbActionResult(true);
         }
 
