@@ -1,6 +1,6 @@
 ﻿namespace ActionServiceAPI.Domain.Models
 {
-    public class UsedPart : SparePart
+    public class AvailablePart : SparePart
     {
 
     }

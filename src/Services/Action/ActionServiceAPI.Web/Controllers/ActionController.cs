@@ -15,9 +15,6 @@ namespace ActionServiceAPI.Web.Controllers
     public class ActionController(IMediator mediator, IActionContext ctx) : ControllerBase
     {
         [HttpGet]
-        public IActionResult Get() => Ok(ctx.UsedParts.ToList()); // Refactor - remove diagnostic endpoint
-
-        [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetAllActions() 
             => Ok(await mediator.Send(new GetAllActionsQuery()));

@@ -9,11 +9,15 @@ namespace ActionServiceAPI.Application.IntegrationEvents.EventHandling
     {
         public Task Handle(NewPartAddedIntegrationEvent evt)
         {
-            var part = context.UsedParts.SingleOrDefault(x => x.PartId == evt.PartId);
+            var part = context.AvailableParts.SingleOrDefault(x => x.PartId == evt.PartId);
             if (part is null)
             {
-                part = new UsedPart(evt.PartId, evt.Quantity);
-                context.UsedParts.Add(part);
+                part = new AvailablePart()
+                {
+                    PartId = evt.PartId,
+                    Quantity = evt.Quantity
+                };
+                context.AvailableParts.Add(part);
             }
             else
             {

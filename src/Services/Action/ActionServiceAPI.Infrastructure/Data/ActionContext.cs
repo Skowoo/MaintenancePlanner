@@ -11,5 +11,7 @@ namespace ActionServiceAPI.Infrastructure.Data
         public DbSet<Employee> Employees { get; set; }
 
         public DbSet<UsedPart> UsedParts { get; set; }
+
+        public DbSet<AvailablePart> AvailableParts { get; set; }
     }
 }

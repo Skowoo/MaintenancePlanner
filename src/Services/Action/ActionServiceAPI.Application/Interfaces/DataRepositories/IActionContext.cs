@@ -11,6 +11,8 @@ namespace ActionServiceAPI.Application.Interfaces.DataRepositories
 
         public DbSet<UsedPart> UsedParts { get; set; }
 
+        public DbSet<AvailablePart> AvailableParts { get; set; }
+
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
 }
