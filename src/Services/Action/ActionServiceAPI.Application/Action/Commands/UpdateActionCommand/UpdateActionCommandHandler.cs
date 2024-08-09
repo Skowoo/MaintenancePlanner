@@ -9,15 +9,15 @@ namespace ActionServiceAPI.Application.Action.Commands.UpdateActionCommand
     {
         public async Task<bool> Handle(UpdateActionCommand request, CancellationToken cancellationToken)
         {
-            var target = await context.Actions.FindAsync(request.Id, cancellationToken);
+            var target = context.Actions.SingleOrDefault(x => x.Id == request.Id);
 
             if (target is null)
                 return false;
 
-            var creator = context.Employees.FirstOrDefault(e => e.UserId == request.CreatedBy)
+            var creator = context.Employees.SingleOrDefault(e => e.UserId == request.CreatedBy)
                 ?? throw new ActionDomainException("Creator not found in database!");
 
-            var conductor = context.Employees.FirstOrDefault(e => e.UserId == request.ConductedBy);
+            var conductor = context.Employees.SingleOrDefault(e => e.UserId == request.ConductedBy);
 
             target.Name = request.Name;
             target.Description = request.Description;

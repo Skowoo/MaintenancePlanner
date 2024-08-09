@@ -8,6 +8,10 @@ namespace ActionServiceAPI.Application.Action.Commands.UpdateActionCommand
     {
         public UpdateActionCommandValidator(IActionContext context)
         {
+            RuleFor(x => x.Id)
+                .Must(x => context.Actions.Any(action => action.Id == x))
+                .WithMessage($"Action with given id not found");
+
             Include(new ActionCommandBaseValidator(context));
         }
     }

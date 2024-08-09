@@ -12,6 +12,6 @@ namespace ActionServiceAPI.Application.Action.Queries.GetActionById
                 .Include(x => x.Parts)
                 .Include(x => x.CreatedBy)
                 .Include(x => x.ConductedBy)
-                .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+                .SingleOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
     }
 }

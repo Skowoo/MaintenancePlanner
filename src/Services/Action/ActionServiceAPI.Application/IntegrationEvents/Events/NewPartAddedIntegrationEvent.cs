@@ -2,10 +2,10 @@
 
 namespace ActionServiceAPI.Application.IntegrationEvents.Events
 {
-    public record NewPartAddedIntegrationEvent : IntegrationEventBase
+    public record NewPartAddedIntegrationEvent(int PartId, int Quantity) : IntegrationEventBase
     {
-        public int PartId { get; init; }
+        public int PartId { get; init; } = PartId;
 
-        public int Quantity { get; init; }
+        public int Quantity { get; init; } = Quantity;
     }
 }

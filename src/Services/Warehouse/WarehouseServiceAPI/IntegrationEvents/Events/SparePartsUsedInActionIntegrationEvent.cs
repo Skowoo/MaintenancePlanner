@@ -2,11 +2,14 @@
 
 namespace WarehouseServiceAPI.IntegrationEvents.Events
 {
-    public record SparePartsUsedInActionIntegrationEvent : IntegrationEventBase
+    public record SparePartsUsedInActionIntegrationEvent(List<UsedPart> UsedParts) : IntegrationEventBase
     {
-        public List<UsedPart> UsedParts { get; init; } = [];
+        public List<UsedPart> UsedParts { get; init; } = UsedParts;
     }
 
+    /// <summary>
+    /// DTO class for easier handling of SparePartsUsedInActionIntegrationEvent
+    /// </summary>
     public class UsedPart
     {
         public int Id { get; set; }

@@ -8,7 +8,7 @@ namespace ActionServiceAPI.Application.Action.Commands.DeleteActionCommand
     {
         public async Task<bool> Handle(DeleteActionCommand request, CancellationToken cancellationToken)
         {
-            var target = await context.Actions.FindAsync(request.Id, cancellationToken);
+            var target = context.Actions.SingleOrDefault(x => x.Id == request.Id);
 
             if (target is null)
                 return false;

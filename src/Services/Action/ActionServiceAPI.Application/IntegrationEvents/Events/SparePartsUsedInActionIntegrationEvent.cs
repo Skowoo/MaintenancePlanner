@@ -3,8 +3,8 @@ using EventBus.Events;
 
 namespace ActionServiceAPI.Application.IntegrationEvents.Events
 {
-    public record SparePartsUsedInActionIntegrationEvent : IntegrationEventBase
+    public record SparePartsUsedInActionIntegrationEvent(List<UsedPart> UsedParts) : IntegrationEventBase
     {
-        public List<UsedPart> UsedParts { get; init; } = [];
+        public List<UsedPart> UsedParts { get; init; } = UsedParts;
     }
 }
