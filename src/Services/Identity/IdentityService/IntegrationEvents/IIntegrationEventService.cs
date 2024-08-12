@@ -1,6 +1,6 @@
 ﻿using EventBus.Events;
 
-namespace ActionServiceAPI.Application.IntegrationEvents
+namespace IdentityServiceAPI.IntegrationEvents
 {
     public interface IIntegrationEventService
     {

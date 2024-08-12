@@ -1,7 +1,7 @@
 ﻿using EventBus.Abstractions;
 using EventBus.Events;
 
-namespace ActionServiceAPI.Application.IntegrationEvents
+namespace IdentityServiceAPI.IntegrationEvents
 {
     public class IntegrationEventService(IEventBus eventBus) : IIntegrationEventService
     {

@@ -5,10 +5,8 @@ namespace WarehouseServiceAPI.IntegrationEvents
 {
     public class IntegrationEventService(IEventBus eventBus) : IIntegrationEventService
     {
-        public Task PublishIntegrationEventAsync(IntegrationEventBase evt)
-        {
-            eventBus.Publish(evt);
-            return Task.CompletedTask;
-        }
+        readonly IEventBus _eventBus = eventBus;
+
+        public void PublishIntegrationEvent(IntegrationEventBase evt) => _eventBus.Publish(evt);
     }
 }

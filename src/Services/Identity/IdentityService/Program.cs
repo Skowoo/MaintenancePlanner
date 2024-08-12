@@ -3,6 +3,8 @@ using IdentityServiceAPI.Models;
 using IdentityServiceAPI.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using EventBusRabbitMQ;
+using IdentityServiceAPI.IntegrationEvents;
 
 namespace IdentityServiceAPI
 {
@@ -24,6 +26,9 @@ namespace IdentityServiceAPI
                 .AddEntityFrameworkStores<IdentityContext>();
 
             builder.Services.AddScoped<IIdentityService, IdentityService>();
+
+            builder.Services.AddTransient<IIntegrationEventService, IntegrationEventService>();
+            builder.Services.AddRabbitMQEventBus();
 
             var app = builder.Build();
 

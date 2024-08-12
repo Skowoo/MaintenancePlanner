@@ -1,4 +1,6 @@
-﻿using IdentityServiceAPI.Models;
+﻿using IdentityServiceAPI.IntegrationEvents;
+using IdentityServiceAPI.IntegrationEvents.Events;
+using IdentityServiceAPI.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,7 +8,8 @@ namespace IdentityServiceAPI.Services
 {
     public class IdentityService(
         UserManager<ApplicationUser> userManager, 
-        RoleManager<IdentityRole> roleManager
+        RoleManager<IdentityRole> roleManager,
+        IIntegrationEventService integrationEventService
         ) : IIdentityService
     {
         public async Task<IdentityResult> RegisterNewUser (RegisterModel user, string password)
@@ -17,7 +20,12 @@ namespace IdentityServiceAPI.Services
                 Email = user.Email
             };
 
-            return await userManager.CreateAsync(newUser, password);
+            var result = await userManager.CreateAsync(newUser, password);
+
+            if (result.Succeeded) // Refactor - move to event handler
+                integrationEventService.PublishIntegrationEvent(new NewUserCreatedIntegrationEvent(newUser.Id));
+
+            return result;
         }
 
         public async Task<IdentityResult> LoginUser(string login, string password)

@@ -17,7 +17,7 @@ namespace WarehouseServiceAPI.Services
                 await context.AddAsync(part);
                 await context.SaveChangesAsync();
 
-                await integrationEventService.PublishIntegrationEventAsync(new NewPartAddedIntegrationEvent(part.Id, part.QuantityOnStock));
+                integrationEventService.PublishIntegrationEvent(new NewPartAddedIntegrationEvent(part.Id, part.QuantityOnStock));
             }
             catch (Exception ex)
             {

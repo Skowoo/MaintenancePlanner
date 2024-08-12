@@ -25,7 +25,7 @@ namespace ActionServiceAPI.Application.DomainEventHandlers
             await context.SaveChangesAsync(cancellationToken);
 
             // Refactor - Publishing can be refactorized to avoid changes in future
-            integrationEventService.Publish(new SparePartsUsedInActionIntegrationEvent(notification.Parts.ToList()));
+            integrationEventService.PublishIntegrationEvent(new SparePartsUsedInActionIntegrationEvent(notification.Parts.ToList()));
         }
     }
 }

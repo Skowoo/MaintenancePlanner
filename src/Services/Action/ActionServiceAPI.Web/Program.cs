@@ -38,6 +38,7 @@ namespace ActionServiceAPI.Web
 
             var eventBus = app.Services.GetRequiredService<IEventBus>();
             eventBus.Subscribe<NewPartAddedIntegrationEvent, NewPartAddedIntegrationEventHandler>();
+            eventBus.Subscribe<NewUserCreatedIntegrationEvent, NewUserCreatedIntegrationEventHandler>();
 
             app.UseHttpsRedirection();
             app.UseAuthorization();
