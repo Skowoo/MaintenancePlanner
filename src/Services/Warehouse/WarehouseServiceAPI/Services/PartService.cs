@@ -8,19 +8,27 @@ using WarehouseServiceAPI.Utilities;
 
 namespace WarehouseServiceAPI.Services
 {
-    public class PartService(WarehouseContext context, IIntegrationEventService integrationEventService) : IPartService
+    public class PartService(
+        WarehouseContext context,
+        IIntegrationEventService integrationEventService,
+        ILogger<PartService> logger) : IPartService
     {
+        readonly WarehouseContext _context = context;
+        readonly IIntegrationEventService _integrationEventService = integrationEventService;
+        readonly ILogger<PartService> _logger = logger;
+
         public async Task<DbActionResult> AddPart(Part part)
         {
             try
             {
-                await context.AddAsync(part);
-                await context.SaveChangesAsync();
+                await _context.AddAsync(part);
+                await _context.SaveChangesAsync();
 
-                integrationEventService.PublishIntegrationEvent(new NewPartAddedIntegrationEvent(part.Id, part.QuantityOnStock));
+                _integrationEventService.PublishIntegrationEvent(new NewPartAddedIntegrationEvent(part.Id, part.QuantityOnStock));
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Error while adding new part to the database.");
                 return new DbActionResult(false, ex);
             }
 
@@ -29,7 +37,7 @@ namespace WarehouseServiceAPI.Services
 
         public async Task<DbActionResult> DecreasePartQuantity(int partId, int quantity)
         {
-            var part = context.Parts.SingleOrDefault(p => p.Id == partId);
+            var part = _context.Parts.SingleOrDefault(p => p.Id == partId);
 
             if (part is null)
                 return new DbActionResult(false, new WarehouseDomainException("Part not found!"));
@@ -38,7 +46,7 @@ namespace WarehouseServiceAPI.Services
                 return new DbActionResult(false, new Exception("Not enough parts on stock!"));
 
             part.QuantityOnStock -= quantity;
-            await context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
             return new DbActionResult(true);
         }
 
@@ -46,31 +54,32 @@ namespace WarehouseServiceAPI.Services
         {
             try
             {
-                var part = await context.Parts.FindAsync(id);
+                var part = await _context.Parts.FindAsync(id);
 
                 if (part is null)
                     return new DbActionResult(false, new Exception("Part not found!"));
 
-                context.Parts.Remove(part);
-                await context.SaveChangesAsync();
+                _context.Parts.Remove(part);
+                await _context.SaveChangesAsync();
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Error while deleting part from the database.");
                 return new DbActionResult(false, ex);
             }
 
             return new DbActionResult(true);
         }
 
-        public async Task<IEnumerable<Part>> GetAllParts() => await context.Parts.ToArrayAsync();
+        public async Task<IEnumerable<Part>> GetAllParts() => await _context.Parts.ToArrayAsync();
 
-        public async Task<Part?> GetPartById(int id) => await context.Parts.FindAsync(id);
+        public async Task<Part?> GetPartById(int id) => await _context.Parts.FindAsync(id);
 
         public async Task<DbActionResult> UpdatePart(Part part)
         {
             try
             {
-                var existingPart = await context.Parts.FindAsync(part.Id);
+                var existingPart = await _context.Parts.FindAsync(part.Id);
 
                 if (existingPart is null)
                     return new DbActionResult(false, new Exception("Part not found!"));
@@ -79,11 +88,12 @@ namespace WarehouseServiceAPI.Services
                     if (prop.Name != "Id")
                         prop.SetValue(existingPart, prop.GetValue(part));
 
-                context.Parts.Update(existingPart);
-                await context.SaveChangesAsync();
+                _context.Parts.Update(existingPart);
+                await _context.SaveChangesAsync();
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Error while updating part in the database.");
                 return new DbActionResult(false, ex);
             }
 

@@ -21,6 +21,6 @@
         /// Exception that occured during the operation
         /// </summary>
         public Exception Exception { get; init; } = error
-            ??= new Exception("Action failed but no exception was passed");
+            ??= new Exception("No exception passed!");
     }
 }
