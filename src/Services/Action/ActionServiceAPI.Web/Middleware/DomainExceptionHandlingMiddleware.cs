@@ -4,7 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ActionServiceAPI.Web.Middleware
 {
-    public class DomainExceptionHandlingMiddleware(RequestDelegate next)
+    public class DomainExceptionHandlingMiddleware(
+        RequestDelegate next,
+        ILogger<DomainExceptionHandlingMiddleware> logger)
     {
         public async Task InvokeAsync(HttpContext context)
         {
@@ -23,12 +25,16 @@ namespace ActionServiceAPI.Web.Middleware
 
                 if (ex.InnerException is ValidationException)
                 {
+                    logger.LogTrace("Validation failed!");
                     details.Detail = "One or more validation errors has occurred";
                     var validationException = ex.InnerException as ValidationException;
                     details.Extensions.Add("ValidationErrors", validationException!.Errors);
                 }
                 else
+                {
+                    logger.LogError(ex, "Domain Exception thrown!");
                     details.Detail = ex.Message;
+                }
 
                 context.Response.StatusCode = StatusCodes.Status400BadRequest;
 
