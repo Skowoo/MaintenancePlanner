@@ -1,5 +1,4 @@
 ﻿using ActionServiceAPI.Application.Interfaces.DataRepositories;
-using ActionServiceAPI.Domain.Exceptions;
 using MediatR;
 
 namespace ActionServiceAPI.Application.Action.Commands.DeleteActionCommand

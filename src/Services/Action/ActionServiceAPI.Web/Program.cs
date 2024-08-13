@@ -1,11 +1,11 @@
-using ActionServiceAPI.Infrastructure;
 using ActionServiceAPI.Application;
-using ActionServiceAPI.Web.Middleware;
-using EventBusRabbitMQ;
-using ActionServiceAPI.Application.IntegrationEvents.Events;
-using ActionServiceAPI.Application.IntegrationEvents.EventHandling;
-using EventBus.Abstractions;
 using ActionServiceAPI.Application.IntegrationEvents;
+using ActionServiceAPI.Application.IntegrationEvents.EventHandling;
+using ActionServiceAPI.Application.IntegrationEvents.Events;
+using ActionServiceAPI.Infrastructure;
+using ActionServiceAPI.Web.Middleware;
+using EventBus.Abstractions;
+using EventBusRabbitMQ;
 
 namespace ActionServiceAPI.Web
 {
@@ -14,9 +14,9 @@ namespace ActionServiceAPI.Web
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            
+
             builder.Services.AddControllers();
-            
+
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 

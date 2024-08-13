@@ -1,11 +1,11 @@
+using ActionServiceAPI.Application.Action.Commands.CreateActionCommand;
+using ActionServiceAPI.Application.Action.Commands.DeleteActionCommand;
+using ActionServiceAPI.Application.Action.Commands.UpdateActionCommand;
+using ActionServiceAPI.Application.Action.Queries.GetActionById;
+using ActionServiceAPI.Application.Action.Queries.GetAllActions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
-using ActionServiceAPI.Application.Action.Commands.CreateActionCommand;
-using ActionServiceAPI.Application.Action.Commands.UpdateActionCommand;
-using ActionServiceAPI.Application.Action.Commands.DeleteActionCommand;
-using ActionServiceAPI.Application.Action.Queries.GetActionById;
-using ActionServiceAPI.Application.Action.Queries.GetAllActions;
 
 namespace ActionServiceAPI.Web.Controllers
 {
@@ -15,7 +15,7 @@ namespace ActionServiceAPI.Web.Controllers
     {
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetAllActions() 
+        public async Task<IActionResult> GetAllActions()
             => Ok(await mediator.Send(new GetAllActionsQuery()));
 
         [HttpGet("{id}")]
@@ -30,7 +30,7 @@ namespace ActionServiceAPI.Web.Controllers
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> CreateAction([FromBody] CreateActionCommand command) 
+        public async Task<IActionResult> CreateAction([FromBody] CreateActionCommand command)
             => Ok(await mediator.Send(command));
 
         [HttpPut]
@@ -40,7 +40,7 @@ namespace ActionServiceAPI.Web.Controllers
         public async Task<IActionResult> UpdateAction([FromBody] UpdateActionCommand command)
         {
             var result = await mediator.Send(command);
-            return result? Ok(command.Id) : NotFound(command.Id);
+            return result ? Ok(command.Id) : NotFound(command.Id);
         }
 
         [HttpDelete("{id}")]

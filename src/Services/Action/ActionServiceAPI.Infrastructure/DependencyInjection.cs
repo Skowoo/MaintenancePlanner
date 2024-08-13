@@ -9,7 +9,7 @@ namespace ActionServiceAPI.Infrastructure
     {
         public static IServiceCollection RegisterInfrastructureServices(this IServiceCollection services)
         {
-            services.AddDbContext<ActionContext>(options 
+            services.AddDbContext<ActionContext>(options
                 => options.UseInMemoryDatabase("MemoActionDb"));
 
             services.AddScoped<IActionContext, ActionContext>();

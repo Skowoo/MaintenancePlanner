@@ -17,10 +17,10 @@ namespace ActionServiceAPI.Domain.Models
         public DateTime CreatedAt { get; init; } = DateTime.Now;
 
         public Employee CreatedBy { get; set; } = createdBy;
-        private int CreatedById { get; set; } = createdBy.Id;
+        public int CreatedById { get; set; } = createdBy.Id;
 
         public Employee? ConductedBy { get; set; } = conductedBy;
-        private int? ConductedById { get; set; } = conductedBy?.Id;
+        public int? ConductedById { get; set; } = conductedBy?.Id;
 
         private readonly List<UsedPart> _usedParts = [];
         public IReadOnlyCollection<UsedPart> Parts => _usedParts;

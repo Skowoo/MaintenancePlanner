@@ -1,7 +1,7 @@
 ﻿using ActionServiceAPI.Application.Behaviors;
+using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
-using FluentValidation;
 
 namespace ActionServiceAPI.Application
 {
@@ -11,7 +11,8 @@ namespace ActionServiceAPI.Application
         {
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
-            services.AddMediatR(cfg => {
+            services.AddMediatR(cfg =>
+            {
                 cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
                 cfg.AddOpenBehavior(typeof(ValidatorBehavior<,>));
             });

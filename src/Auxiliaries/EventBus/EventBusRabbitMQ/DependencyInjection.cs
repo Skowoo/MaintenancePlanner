@@ -1,5 +1,5 @@
-﻿using EventBus.Abstractions;
-using EventBus;
+﻿using EventBus;
+using EventBus.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 using RabbitMQ.Client;
 

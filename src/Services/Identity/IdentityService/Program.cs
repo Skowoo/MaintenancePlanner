@@ -1,10 +1,10 @@
+using EventBusRabbitMQ;
 using IdentityServiceAPI.Infrastructure;
+using IdentityServiceAPI.IntegrationEvents;
 using IdentityServiceAPI.Models;
 using IdentityServiceAPI.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using EventBusRabbitMQ;
-using IdentityServiceAPI.IntegrationEvents;
 
 namespace IdentityServiceAPI
 {
@@ -15,9 +15,9 @@ namespace IdentityServiceAPI
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddControllers();
-            
+
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();            
+            builder.Services.AddSwaggerGen();
 
             builder.Services.AddDbContext<IdentityContext>(
                 options => options.UseInMemoryDatabase("MemoIdentityDb"));

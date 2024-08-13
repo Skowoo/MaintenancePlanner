@@ -19,6 +19,6 @@ namespace IdentityServiceAPI.Services
 
         Task<IdentityResult> AddUserToRole(ApplicationUser user, string roleName);
 
-        Task<IdentityResult> RemoveUserFromRole(ApplicationUser user, string roleName);        
+        Task<IdentityResult> RemoveUserFromRole(ApplicationUser user, string roleName);
     }
 }

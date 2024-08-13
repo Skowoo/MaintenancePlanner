@@ -14,7 +14,7 @@ namespace IdentityServiceAPI.Controllers
             var result = await identityService.RegisterNewUser(user, user.Password);
             if (result.Succeeded)
                 return Ok();
-            
+
             return BadRequest(result);
         }
 
@@ -24,7 +24,7 @@ namespace IdentityServiceAPI.Controllers
             var result = await identityService.LoginUser(login, password);
             if (result.Succeeded)
                 return Ok();
-            
+
             return BadRequest(result);
         }
 
@@ -46,19 +46,19 @@ namespace IdentityServiceAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllRoles() => Ok(await identityService.GetAllRoles());        
+        public async Task<IActionResult> GetAllRoles() => Ok(await identityService.GetAllRoles());
 
         [HttpPost]
         public async Task<IActionResult> AddUserToRole(string email, string roleName)
         {
             var user = await identityService.FindUserByName(email);
             if (user is null)
-                return NotFound(email);            
+                return NotFound(email);
 
             var role = await identityService.FindRoleByName(roleName);
             if (role is null)
                 return NotFound(roleName);
-            
+
             var result = await identityService.AddUserToRole(user, roleName);
             return result.Succeeded ? Ok() : BadRequest(result);
         }
@@ -68,12 +68,12 @@ namespace IdentityServiceAPI.Controllers
         {
             var user = await identityService.FindUserByName(email);
             if (user is null)
-                return NotFound(email);            
+                return NotFound(email);
 
             var role = await identityService.FindRoleByName(roleName);
             if (role is null)
                 return NotFound(roleName);
-            
+
             var result = await identityService.RemoveUserFromRole(user, roleName);
             return result.Succeeded ? Ok() : BadRequest(result);
         }

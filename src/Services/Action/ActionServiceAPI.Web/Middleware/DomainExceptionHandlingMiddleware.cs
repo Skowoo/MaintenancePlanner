@@ -18,7 +18,7 @@ namespace ActionServiceAPI.Web.Middleware
                 {
                     Status = StatusCodes.Status400BadRequest,
                     Type = "Domain Failure",
-                    Title = "Domain Error"                    
+                    Title = "Domain Error"
                 };
 
                 if (ex.InnerException is ValidationException)

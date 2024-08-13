@@ -7,12 +7,12 @@ using Microsoft.EntityFrameworkCore;
 namespace IdentityServiceAPI.Services
 {
     public class IdentityService(
-        UserManager<ApplicationUser> userManager, 
+        UserManager<ApplicationUser> userManager,
         RoleManager<IdentityRole> roleManager,
         IIntegrationEventService integrationEventService
         ) : IIdentityService
     {
-        public async Task<IdentityResult> RegisterNewUser (RegisterModel user, string password)
+        public async Task<IdentityResult> RegisterNewUser(RegisterModel user, string password)
         {
             ApplicationUser newUser = new()
             {

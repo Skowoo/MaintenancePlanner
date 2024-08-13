@@ -23,7 +23,7 @@ namespace ActionServiceAPI.Application.IntegrationEvents.EventHandling
             {
                 part.Quantity += evt.Quantity;
             }
-            
+
             context.SaveChangesAsync(CancellationToken.None);
             return Task.CompletedTask;
         }

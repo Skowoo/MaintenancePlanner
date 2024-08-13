@@ -12,21 +12,21 @@ namespace WarehouseServiceAPI.Controllers
         public async Task<IActionResult> GetParts() => Ok(await partService.GetAllParts());
 
         [HttpGet("{id}")]
-        public async Task <IActionResult> GetPart(int id)
+        public async Task<IActionResult> GetPart(int id)
         {
             var part = await partService.GetPartById(id);
             return part is null ? NotFound(id) : Ok(part);
         }
 
         [HttpPost]
-        public async Task <IActionResult> AddPart(Part part)
+        public async Task<IActionResult> AddPart(Part part)
         {
             var result = await partService.AddPart(part);
             return result.IsSuccess ? Ok() : BadRequest(result.Exception!.Message);
         }
 
         [HttpPut]
-        public async Task <IActionResult> UpdatePart(Part part)
+        public async Task<IActionResult> UpdatePart(Part part)
         {
             var result = await partService.UpdatePart(part);
             return result.IsSuccess ? Ok() : BadRequest(result.Exception!.Message);

@@ -92,15 +92,17 @@ namespace EventBusRabbitMQ
                     continue;
 
                 var eventType = _subscriptionManager.GetEventTypeByName(eventName);
-                var integrationEvent = JsonSerializer.Deserialize(message, eventType!, new JsonSerializerOptions() 
-                { 
-                    PropertyNameCaseInsensitive = true 
-                });
+                var integrationEvent = JsonSerializer.Deserialize(message, eventType!, GetJsonSerializerOptions());
 
                 var concreteType = typeof(IIntegrationEventHandler<>).MakeGenericType(eventType!);
                 await Task.Yield();
                 await (Task)concreteType.GetMethod("Handle")!.Invoke(handler, [integrationEvent!])!;
             }
         }
+
+        static JsonSerializerOptions GetJsonSerializerOptions() => new()
+        {
+            PropertyNameCaseInsensitive = true
+        };
     }
 }

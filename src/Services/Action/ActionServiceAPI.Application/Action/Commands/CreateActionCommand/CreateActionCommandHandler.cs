@@ -10,7 +10,7 @@ namespace ActionServiceAPI.Application.Action.Commands.CreateActionCommand
     {
         public async Task<int> Handle(CreateActionCommand request, CancellationToken cancellationToken)
         {
-            var creator = context.Employees.SingleOrDefault(e => e.UserId == request.CreatedBy) 
+            var creator = context.Employees.SingleOrDefault(e => e.UserId == request.CreatedBy)
                 ?? throw new ActionDomainException("Creator not found");
 
             var conductor = context.Employees.SingleOrDefault(e => e.UserId == request.ConductedBy);
