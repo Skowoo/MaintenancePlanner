@@ -2,6 +2,7 @@
 using EventBus.Abstractions;
 using EventBus.Events;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Text;
@@ -13,26 +14,34 @@ namespace EventBusRabbitMQ
     {
         const string EXCHANGE_NAME = "maintenance_planner_event_bus";
 
-        readonly IRabbitMQConnection _persistentConnection;
+        readonly IRabbitMQConnection _rabbitMQConnection;
         readonly IHandlersManager _subscriptionManager;
         readonly IServiceProvider _serviceProvider;
+        readonly ILogger<EventBusService> _logger;
         readonly IModel _consumerChannel;
 
-        public EventBusService(IRabbitMQConnection persistentConnection, IHandlersManager subscriptionManager, IServiceProvider serviceProvider)
+        public EventBusService(IRabbitMQConnection connection,
+            IHandlersManager subscriptionManager,
+            IServiceProvider serviceProvider,
+            ILogger<EventBusService> logger)
         {
-            _persistentConnection = persistentConnection;
+            _rabbitMQConnection = connection;
             _subscriptionManager = subscriptionManager;
             _serviceProvider = serviceProvider;
-
-            _persistentConnection.TryConnect();
-            _consumerChannel = _persistentConnection.CreateModel();
+            _logger = logger;
+            _consumerChannel = ConnectToChannel();
         }
 
         public void Publish(IntegrationEventBase evt)
         {
+            if (!_rabbitMQConnection.IsConnected)
+                _rabbitMQConnection.TryConnect();
+
             var eventName = evt.GetType().Name;
 
-            using var channel = _persistentConnection.CreateModel();
+            _logger.LogTrace("Publishing {eventName}: (Id: {})", eventName, evt.Id);
+
+            using var channel = _rabbitMQConnection.CreateModel();
 
             channel.ExchangeDeclare(exchange: EXCHANGE_NAME, type: "direct");
 
@@ -48,8 +57,10 @@ namespace EventBusRabbitMQ
             where T : IntegrationEventBase
             where TH : IIntegrationEventHandler<T>
         {
-            if (!_persistentConnection.IsConnected)
-                _persistentConnection.TryConnect();
+            if (!_rabbitMQConnection.IsConnected)
+                _rabbitMQConnection.TryConnect();
+
+            _logger.LogInformation("Subscribing to {EventName} with {EventHandler}", typeof(T).Name, typeof(TH).Name);
 
             var eventName = _subscriptionManager.GetEventName<T>();
 
@@ -77,26 +88,53 @@ namespace EventBusRabbitMQ
             _subscriptionManager.AddHandler<T, TH>();
         }
 
+        IModel ConnectToChannel()
+        {
+            _logger.LogInformation("Creating RabbitMQ consumer channel");
+
+            _rabbitMQConnection.TryConnect();
+            return _rabbitMQConnection.CreateModel();
+        }
+
         async Task ProcessEvent(string eventName, string message)
         {
+            _logger.LogTrace("Processing {EventName} started", eventName);
+
             if (!_subscriptionManager.HasSubscriptionsForEvent(eventName))
+            {
+                _logger.LogWarning("No subscriptions for {EventName}", eventName);
                 return;
+            }
 
             await using var scope = _serviceProvider.CreateAsyncScope();
             var subscriptions = _subscriptionManager.GetHandlersForEventName(eventName);
             foreach (var handlerType in subscriptions)
             {
-                var handler = scope.ServiceProvider.GetService(handlerType);
+                string? eventId = null;
+                try
+                {
+                    var handler = scope.ServiceProvider.GetService(handlerType);
 
-                if (handler is null)
-                    continue;
+                    if (handler is null)
+                        continue;
 
-                var eventType = _subscriptionManager.GetEventTypeByName(eventName);
-                var integrationEvent = JsonSerializer.Deserialize(message, eventType!, GetJsonSerializerOptions());
+                    var eventType = _subscriptionManager.GetEventTypeByName(eventName);
+                    var integrationEvent = JsonSerializer.Deserialize(message, eventType!, GetJsonSerializerOptions());
 
-                var concreteType = typeof(IIntegrationEventHandler<>).MakeGenericType(eventType!);
-                await Task.Yield();
-                await (Task)concreteType.GetMethod("Handle")!.Invoke(handler, [integrationEvent!])!;
+                    eventId = (integrationEvent as IntegrationEventBase)?.Id.ToString()
+                        ?? "IntegrationEventBase parsing failed, no Id retrieved.";
+
+                    var concreteType = typeof(IIntegrationEventHandler<>).MakeGenericType(eventType!);
+                    await Task.Yield();
+                    await (Task)concreteType.GetMethod("Handle")!.Invoke(handler, [integrationEvent!])!;                    
+                                        
+                    _logger.LogTrace("Processed {EventName} (Id: {})", eventName, eventId);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error processing {EventName} Id: {}", eventName, eventId);
+                    throw;
+                }
             }
         }
 

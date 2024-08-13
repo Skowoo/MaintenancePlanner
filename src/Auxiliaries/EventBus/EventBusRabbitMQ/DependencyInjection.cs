@@ -1,6 +1,7 @@
 ﻿using EventBus;
 using EventBus.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 
 namespace EventBusRabbitMQ
@@ -26,7 +27,8 @@ namespace EventBusRabbitMQ
                 {
                     HostName = "localhost"
                 };
-                return new RabbitMQConnection(factory);
+                var logger = sp.GetRequiredService<ILogger<RabbitMQConnection>>();
+                return new RabbitMQConnection(factory, logger);
             });
             services.AddSingleton<IHandlersManager, HandlersManager>();
             services.AddSingleton<IEventBus, EventBusService>(sp =>
@@ -34,8 +36,9 @@ namespace EventBusRabbitMQ
                 var rabbitMQPersistentConnection = sp.GetRequiredService<IRabbitMQConnection>();
                 var iLifetimeScope = sp.GetRequiredService<IServiceProvider>();
                 var eventBusSubscriptionsManager = sp.GetRequiredService<IHandlersManager>();
+                var logger = sp.GetRequiredService<ILogger<EventBusService>>();
 
-                return new EventBusService(rabbitMQPersistentConnection, eventBusSubscriptionsManager, iLifetimeScope);
+                return new EventBusService(rabbitMQPersistentConnection, eventBusSubscriptionsManager, iLifetimeScope, logger);
             });
 
             return services;
