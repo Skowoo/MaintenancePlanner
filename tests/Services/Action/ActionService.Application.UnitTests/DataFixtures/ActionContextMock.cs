@@ -22,10 +22,10 @@ namespace ActionService.Application.UnitTests.DataFixtures
             Employee employee = new(ExistingEmployeeName);
             context.Employees.Add(employee);
 
-            AvailablePart part = new() 
+            AvailablePart part = new()
             {
-                PartId = ExistingPartId, 
-                Quantity = 10 
+                PartId = ExistingPartId,
+                Quantity = 10
             };
             context.AvailableParts.Add(part);
 

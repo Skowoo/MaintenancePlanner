@@ -7,7 +7,7 @@ namespace ActionService.Application.UnitTests.ValidatorsTests
     [TestClass]
     public class CreateActionCommandValidatorUnitTests
     {
-        [DataTestMethod]        
+        [DataTestMethod]
         [DataRow(true, ExistingEmployeeName)]
         [DataRow(false, "")]
         [DataRow(false, "Not existing employee")]
