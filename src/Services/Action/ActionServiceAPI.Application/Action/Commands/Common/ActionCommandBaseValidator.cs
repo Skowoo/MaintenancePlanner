@@ -9,7 +9,7 @@ namespace ActionServiceAPI.Application.Action.Commands.Common
         {
             RuleFor(x => x.CreatedBy)
                 .Must(id => context.Employees.Any(x => x.UserId == id))
-                .WithMessage("Creator not found in database!");
+                .WithMessage("Employee not found in database!");
 
             When(x => !string.IsNullOrEmpty(x.ConductedBy), () =>
             {
@@ -20,18 +20,19 @@ namespace ActionServiceAPI.Application.Action.Commands.Common
 
             When(x => x.Parts.Any(), () =>
             {
-                RuleForEach(x => x.Parts).ChildRules(parts =>
+                RuleForEach(x => x.Parts).ChildRules(part =>
                 {
-                    parts.RuleFor(inputPart => inputPart.PartId)
+                    part.RuleFor(inputPart => inputPart.PartId)
                         .Must(partId => context.AvailableParts.Any(dbPart => dbPart.PartId == partId))
                         .WithMessage("Part not found in database!");
 
-                    parts.RuleFor(inputPart => inputPart)
+                    part.RuleFor(inputPart => inputPart)
                         .Must(inputPart =>
                         {
                             var dbPart = context.AvailableParts.SingleOrDefault(x => x.PartId == inputPart.PartId);
                             return dbPart != null && dbPart.Quantity >= inputPart.Quantity;
                         })
+                        .When(inputPart => context.AvailableParts.Any(dbPart => dbPart.PartId == inputPart.PartId))
                         .WithMessage("Not enough parts in stock!");
                 });
             });
