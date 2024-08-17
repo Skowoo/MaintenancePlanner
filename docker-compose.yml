@@ -1,0 +1,32 @@
+version: '3.4'
+
+services:
+  actionserviceapi.web:
+    image: ${DOCKER_REGISTRY-}actionserviceapiweb
+    build:
+      context: .
+      dockerfile: src/Services/Action/ActionServiceAPI.Web/Dockerfile
+
+  identityserviceapi:
+    image: ${DOCKER_REGISTRY-}identityserviceapi
+    build:
+      context: .
+      dockerfile: src/Services/Identity/IdentityService/Dockerfile
+
+
+  warehouseserviceapi:
+    image: ${DOCKER_REGISTRY-}warehouseserviceapi
+    build:
+      context: .
+      dockerfile: src/Services/Warehouse/WarehouseServiceAPI/Dockerfile
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    hostname: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: "guest"
+      RABBITMQ_DEFAULT_PASS: "guest"
+
