@@ -20,7 +20,7 @@ namespace WarehouseServiceAPI
             builder.Services.AddControllers();
 
             builder.Services.AddDbContext<WarehouseContext>(
-                options => options.UseInMemoryDatabase("WarehouseMemoryDb"));
+                options => options.UseSqlServer("Server=sqlserver;Database=WarehouseDb;User Id=SA;Password=Password1;MultipleActiveResultSets=true;TrustServerCertificate=true;MultiSubnetFailover=True"));
 
             builder.Services.AddRabbitMQEventBus();
 

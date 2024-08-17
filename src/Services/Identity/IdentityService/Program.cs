@@ -20,7 +20,7 @@ namespace IdentityServiceAPI
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddDbContext<IdentityContext>(
-                options => options.UseInMemoryDatabase("MemoIdentityDb"));
+                options => options.UseSqlServer("Server=sqlserver;Database=IdentityDb;User Id=SA;Password=Password1;MultipleActiveResultSets=true;TrustServerCertificate=true;MultiSubnetFailover=true"));
 
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<IdentityContext>();

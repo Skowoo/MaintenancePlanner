@@ -10,7 +10,7 @@ namespace ActionServiceAPI.Infrastructure
         public static IServiceCollection RegisterInfrastructureServices(this IServiceCollection services)
         {
             services.AddDbContext<ActionContext>(options
-                => options.UseInMemoryDatabase("MemoActionDb"));
+                => options.UseSqlServer("Server=sqlserver;Database=ActionDb;User Id=SA;Password=Password1;MultipleActiveResultSets=true;TrustServerCertificate=true;MultiSubnetFailover=true"));
 
             services.AddScoped<IActionContext, ActionContext>();
 
