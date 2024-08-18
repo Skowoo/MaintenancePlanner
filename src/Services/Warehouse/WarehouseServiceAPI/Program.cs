@@ -20,7 +20,7 @@ namespace WarehouseServiceAPI
             builder.Services.AddControllers();
 
             builder.Services.AddDbContext<WarehouseContext>(
-                options => options.UseSqlServer("Server=sqlserver;Database=WarehouseDb;User Id=SA;Password=Password1;MultipleActiveResultSets=true;TrustServerCertificate=true;MultiSubnetFailover=True"));
+                options => options.UseSqlServer("Server=sqlserver;Database=WarehouseDb;User Id=sa;Password=P@ssw0rd112345678;MultipleActiveResultSets=true;TrustServerCertificate=true"));
 
             builder.Services.AddRabbitMQEventBus();
 
@@ -41,6 +41,8 @@ namespace WarehouseServiceAPI
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            app.SeedDatabase();
 
             app.UseHttpsRedirection();
 

@@ -20,7 +20,7 @@ namespace IdentityServiceAPI
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddDbContext<IdentityContext>(
-                options => options.UseSqlServer("Server=sqlserver;Database=IdentityDb;User Id=SA;Password=Password1;MultipleActiveResultSets=true;TrustServerCertificate=true;MultiSubnetFailover=true"));
+                options => options.UseSqlServer("Server=sqlserver;Database=IdentityDb;User Id=sa;Password=P@ssw0rd112345678;MultipleActiveResultSets=true;TrustServerCertificate=true"));
 
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<IdentityContext>();
@@ -31,6 +31,8 @@ namespace IdentityServiceAPI
             builder.Services.AddRabbitMQEventBus();
 
             var app = builder.Build();
+
+            app.SeedDatabase();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

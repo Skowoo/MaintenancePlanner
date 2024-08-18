@@ -12,16 +12,17 @@ services:
       RABBITMQ_DEFAULT_PASS: "guest"
 
   sqlserver:
-    image: "mcr.microsoft.com/mssql/server:2019-latest"
+    image: "mcr.microsoft.com/mssql/server:2022-latest"
     hostname: sqlserver
     ports:
       - "1433:1433"
     environment:
-      SA_PASSWORD: "Password1"
+      SA_PASSWORD: "P@ssw0rd112345678"
       ACCEPT_EULA: "Y"
 
   actionserviceapi.web:
     image: ${DOCKER_REGISTRY-}actionserviceapiweb
+    container_name: ActionServiceAPI
     build:
       context: .
       dockerfile: src/Services/Action/ActionServiceAPI.Web/Dockerfile
@@ -31,6 +32,7 @@ services:
 
   identityserviceapi:
     image: ${DOCKER_REGISTRY-}identityserviceapi
+    container_name: IdentityServiceAPI
     build:
       context: .
       dockerfile: src/Services/Identity/IdentityService/Dockerfile
@@ -40,6 +42,7 @@ services:
       
   warehouseserviceapi:
     image: ${DOCKER_REGISTRY-}warehouseserviceapi
+    container_name: WarehouseServiceAPI
     build:
       context: .
       dockerfile: src/Services/Warehouse/WarehouseServiceAPI/Dockerfile
