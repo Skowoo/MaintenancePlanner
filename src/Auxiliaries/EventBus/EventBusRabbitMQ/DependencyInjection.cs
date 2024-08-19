@@ -25,7 +25,7 @@ namespace EventBusRabbitMQ
             {
                 var factory = new ConnectionFactory()
                 {
-                    HostName = "localhost"
+                    HostName = "rabbitmq"
                 };
                 var logger = sp.GetRequiredService<ILogger<RabbitMQConnection>>();
                 return new RabbitMQConnection(factory, logger);

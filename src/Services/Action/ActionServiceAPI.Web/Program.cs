@@ -3,6 +3,7 @@ using ActionServiceAPI.Application.IntegrationEvents;
 using ActionServiceAPI.Application.IntegrationEvents.EventHandling;
 using ActionServiceAPI.Application.IntegrationEvents.Events;
 using ActionServiceAPI.Infrastructure;
+using ActionServiceAPI.Infrastructure.Data;
 using ActionServiceAPI.Web.Middleware;
 using EventBus.Abstractions;
 using EventBusRabbitMQ;
@@ -20,7 +21,7 @@ namespace ActionServiceAPI.Web
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            builder.Services.RegisterInfrastructureServices();
+            builder.Services.RegisterInfrastructureServices(builder.Configuration);
             builder.Services.RegisterApplicationServices();
 
             builder.Services.AddTransient<IIntegrationEventService, IntegrationEventService>();
@@ -39,6 +40,8 @@ namespace ActionServiceAPI.Web
             var eventBus = app.Services.GetRequiredService<IEventBus>();
             eventBus.Subscribe<NewPartAddedIntegrationEvent, NewPartAddedIntegrationEventHandler>();
             eventBus.Subscribe<NewUserCreatedIntegrationEvent, NewUserCreatedIntegrationEventHandler>();
+
+            app.Services.SeedDatabase();
 
             app.UseHttpsRedirection();
             app.UseAuthorization();

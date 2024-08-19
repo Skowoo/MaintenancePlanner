@@ -19,8 +19,11 @@ namespace IdentityServiceAPI
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            var connectionString = builder.Configuration.GetConnectionString("IdentityDb")
+                ?? throw new InvalidOperationException("Connection string not found in configuration file!");
+
             builder.Services.AddDbContext<IdentityContext>(
-                options => options.UseInMemoryDatabase("MemoIdentityDb"));
+                options => options.UseSqlServer(connectionString));
 
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<IdentityContext>();
@@ -31,6 +34,8 @@ namespace IdentityServiceAPI
             builder.Services.AddRabbitMQEventBus();
 
             var app = builder.Build();
+
+            app.SeedDatabase();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
