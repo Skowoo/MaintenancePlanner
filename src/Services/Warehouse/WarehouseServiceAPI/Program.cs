@@ -19,8 +19,11 @@ namespace WarehouseServiceAPI
 
             builder.Services.AddControllers();
 
+            var connectionString = builder.Configuration.GetConnectionString("WarehouseDb")
+                ?? throw new InvalidOperationException("Connection string not found in configuration file!");
+
             builder.Services.AddDbContext<WarehouseContext>(
-                options => options.UseSqlServer("Server=sqlserver;Database=WarehouseDb;User Id=sa;Password=P@ssw0rd112345678;MultipleActiveResultSets=true;TrustServerCertificate=true"));
+                options => options.UseSqlServer(connectionString));
 
             builder.Services.AddRabbitMQEventBus();
 

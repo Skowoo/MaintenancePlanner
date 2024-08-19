@@ -19,8 +19,11 @@ namespace IdentityServiceAPI
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            var connectionString = builder.Configuration.GetConnectionString("IdentityDb")
+                ?? throw new InvalidOperationException("Connection string not found in configuration file!");
+
             builder.Services.AddDbContext<IdentityContext>(
-                options => options.UseSqlServer("Server=sqlserver;Database=IdentityDb;User Id=sa;Password=P@ssw0rd112345678;MultipleActiveResultSets=true;TrustServerCertificate=true"));
+                options => options.UseSqlServer(connectionString));
 
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<IdentityContext>();

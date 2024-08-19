@@ -21,7 +21,7 @@ namespace ActionServiceAPI.Web
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            builder.Services.RegisterInfrastructureServices();
+            builder.Services.RegisterInfrastructureServices(builder.Configuration);
             builder.Services.RegisterApplicationServices();
 
             builder.Services.AddTransient<IIntegrationEventService, IntegrationEventService>();
