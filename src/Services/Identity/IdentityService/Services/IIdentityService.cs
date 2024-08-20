@@ -5,7 +5,7 @@ namespace IdentityServiceAPI.Services
 {
     public interface IIdentityService
     {
-        Task<IdentityResult> RegisterNewUser(RegisterModel user, string password);
+        Task<(IdentityResult Result, string? NewUserId)> RegisterNewUser(RegisterModel user, string password);
 
         Task<IdentityResult> LoginUser(string login, string password);
 

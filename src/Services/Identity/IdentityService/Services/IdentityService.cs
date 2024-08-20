@@ -18,7 +18,7 @@ namespace IdentityServiceAPI.Services
         readonly IIntegrationEventService _integrationEventService = integrationEventService;
         readonly ILogger<IdentityService> _logger = logger;
 
-        public async Task<IdentityResult> RegisterNewUser(RegisterModel user, string password)
+        public async Task<(IdentityResult Result, string? NewUserId)> RegisterNewUser(RegisterModel user, string password)
         {
             ApplicationUser newUser = new()
             {
@@ -36,7 +36,7 @@ namespace IdentityServiceAPI.Services
             else
                 _logger.LogTrace("New user registration attempt failed.");
 
-            return result;
+            return (result, newUser.Id);
         }
 
         public async Task<IdentityResult> LoginUser(string login, string password)

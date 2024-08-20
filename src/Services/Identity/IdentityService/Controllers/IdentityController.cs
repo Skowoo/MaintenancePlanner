@@ -11,11 +11,12 @@ namespace IdentityServiceAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(RegisterModel user)
         {
-            var result = await identityService.RegisterNewUser(user, user.Password);
-            if (result.Succeeded)
-                return Ok();
+            var (Result, NewUserId) = await identityService.RegisterNewUser(user, user.Password);
 
-            return BadRequest(result);
+            if (Result.Succeeded)
+                return Ok(NewUserId);
+
+            return BadRequest(Result);
         }
 
         [HttpGet]

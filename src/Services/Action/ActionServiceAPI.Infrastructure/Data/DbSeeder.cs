@@ -9,10 +9,8 @@ namespace ActionServiceAPI.Infrastructure.Data
             using var scope = serviceProvider.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<ActionContext>();
 
-            if (context.Database.CanConnect())
-                return;
-
-            context.Database.EnsureCreated(); // Refactor to migrations, move connection string, remove passwords from code.
+            context.Database.EnsureDeleted();  // Test Db layout
+            context.Database.EnsureCreated();  // Refactor to migrations, move connection string, remove passwords from code.
         }
     }
 }

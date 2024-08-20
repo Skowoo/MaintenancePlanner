@@ -7,9 +7,7 @@
             using var scope = app.Services.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<IdentityContext>();
 
-            if (context.Database.CanConnect())
-                return;
-
+            context.Database.EnsureDeleted();  // Test Db layout
             context.Database.EnsureCreated();  // Refactor to migrations, move connection string, remove passwords from code.
         }
     }
