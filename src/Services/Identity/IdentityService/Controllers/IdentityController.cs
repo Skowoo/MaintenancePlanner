@@ -1,4 +1,5 @@
-﻿using IdentityServiceAPI.Models;
+﻿using AutoMapper;
+using IdentityServiceAPI.Models;
 using IdentityServiceAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,7 +7,7 @@ namespace IdentityServiceAPI.Controllers
 {
     [Route("api/v1/[controller]/[action]")]
     [ApiController]
-    public class IdentityController(IIdentityService identityService) : ControllerBase
+    public class IdentityController(IIdentityService identityService, IMapper mapper) : ControllerBase
     {
         [HttpPost]
         public async Task<IActionResult> Register(RegisterModel user)
@@ -30,13 +31,17 @@ namespace IdentityServiceAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllUsers() => Ok(await identityService.GetAllUsers());
+        public async Task<IActionResult> GetAllUsers()
+        {
+            var usersList = await identityService.GetAllUsers();
+            return Ok(usersList.Select(mapper.Map<ApplicationUserExternalModel>));
+        }
 
         [HttpGet]
-        public async Task<IActionResult> GetUserByEmail(string email)
+        public async Task<IActionResult> GetUserByUserName(string userName)
         {
-            var user = await identityService.FindUserByName(email);
-            return user is null ? NotFound(email) : Ok(user);
+            var user = await identityService.FindUserByUserName(userName);
+            return user is null ? NotFound(userName) : Ok(mapper.Map<ApplicationUserExternalModel>(user));
         }
 
         [HttpGet]
@@ -52,7 +57,7 @@ namespace IdentityServiceAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> AddUserToRole(string email, string roleName)
         {
-            var user = await identityService.FindUserByName(email);
+            var user = await identityService.FindUserByUserName(email);
             if (user is null)
                 return NotFound(email);
 
@@ -67,7 +72,7 @@ namespace IdentityServiceAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> RemoveUserFromRole(string email, string roleName)
         {
-            var user = await identityService.FindUserByName(email);
+            var user = await identityService.FindUserByUserName(email);
             if (user is null)
                 return NotFound(email);
 

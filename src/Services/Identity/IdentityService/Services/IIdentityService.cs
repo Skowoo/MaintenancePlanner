@@ -11,7 +11,7 @@ namespace IdentityServiceAPI.Services
 
         Task<IEnumerable<ApplicationUser>> GetAllUsers();
 
-        Task<ApplicationUser?> FindUserByName(string username);
+        Task<ApplicationUser?> FindUserByUserName(string username);
 
         Task<IEnumerable<IdentityRole>> GetAllRoles();
 

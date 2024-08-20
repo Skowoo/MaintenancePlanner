@@ -41,7 +41,7 @@ namespace IdentityServiceAPI.Services
 
         public async Task<IdentityResult> LoginUser(string login, string password)
         {
-            var user = await FindUserByName(login);
+            var user = await FindUserByUserName(login);
 
             if (user is null)
             {
@@ -65,7 +65,7 @@ namespace IdentityServiceAPI.Services
 
         public async Task<IEnumerable<ApplicationUser>> GetAllUsers() => await _userManager.Users.ToArrayAsync();
 
-        public async Task<ApplicationUser?> FindUserByName(string username) => await _userManager.FindByNameAsync(username);
+        public async Task<ApplicationUser?> FindUserByUserName(string username) => await _userManager.FindByNameAsync(username);
 
         public async Task<IEnumerable<IdentityRole>> GetAllRoles() => await _roleManager.Roles.ToArrayAsync();
 
