@@ -5,8 +5,8 @@ using WarehouseServiceAPI.Services;
 namespace WarehouseServiceAPI.IntegrationEvents.EventHandlers
 {
     public class SparePartsUsedInActionIntegrationEventHandler
-        (IPartService partService, 
-        ILogger<SparePartsUsedInActionIntegrationEventHandler> logger) 
+        (IPartService partService,
+        ILogger<SparePartsUsedInActionIntegrationEventHandler> logger)
         : IIntegrationEventHandler<SparePartsUsedInActionIntegrationEvent>
     {
         private readonly IPartService _partService = partService;
@@ -18,7 +18,7 @@ namespace WarehouseServiceAPI.IntegrationEvents.EventHandlers
 
             foreach (var part in evt.UsedParts)
             {
-                var result = _partService.DecreasePartQuantity(part.PartId, part.Quantity);
+                var result = _partService.DecreasePartQuantityAsync(part.PartId, part.Quantity);
 
                 if (!result.Result.IsSuccess)
                 {

@@ -5,16 +5,16 @@ namespace WarehouseServiceAPI.Services
 {
     public interface IPartService
     {
-        Task<Part?> GetPartById(int id);
+        Task<Part?> GetPartByIdAsync(int id);
 
-        Task<IEnumerable<Part>> GetAllParts();
+        Task<IEnumerable<Part>> GetAllPartsAsync();
 
-        Task<DbActionResult> AddPart(Part part);
+        Task<(DbActionResult Result, int? NewPartId)> AddPartAsync(Part part);
 
-        Task<DbActionResult> UpdatePart(Part part);
+        Task<DbActionResult> UpdatePartAsync(Part part);
 
-        Task<DbActionResult> DeletePart(int id);
+        Task<DbActionResult> DeletePartAsync(int id);
 
-        Task<DbActionResult> DecreasePartQuantity(int partId, int quantity);
+        Task<DbActionResult> DecreasePartQuantityAsync(int partId, int quantity);
     }
 }

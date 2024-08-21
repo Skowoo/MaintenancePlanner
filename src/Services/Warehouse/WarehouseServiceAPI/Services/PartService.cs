@@ -17,7 +17,7 @@ namespace WarehouseServiceAPI.Services
         readonly IIntegrationEventService _integrationEventService = integrationEventService;
         readonly ILogger<PartService> _logger = logger;
 
-        public async Task<DbActionResult> AddPart(Part part)
+        public async Task<(DbActionResult Result, int? NewPartId)> AddPartAsync(Part part)
         {
             try
             {
@@ -29,13 +29,13 @@ namespace WarehouseServiceAPI.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error while adding new part to the database.");
-                return new DbActionResult(false, ex);
+                return (new DbActionResult(false, ex), null);
             }
 
-            return new DbActionResult(true);
+            return (new DbActionResult(true), part.Id);
         }
 
-        public async Task<DbActionResult> DecreasePartQuantity(int partId, int quantity)
+        public async Task<DbActionResult> DecreasePartQuantityAsync(int partId, int quantity)
         {
             var part = _context.Parts.SingleOrDefault(p => p.Id == partId);
 
@@ -50,7 +50,7 @@ namespace WarehouseServiceAPI.Services
             return new DbActionResult(true);
         }
 
-        public async Task<DbActionResult> DeletePart(int id)
+        public async Task<DbActionResult> DeletePartAsync(int id)
         {
             try
             {
@@ -71,11 +71,11 @@ namespace WarehouseServiceAPI.Services
             return new DbActionResult(true);
         }
 
-        public async Task<IEnumerable<Part>> GetAllParts() => await _context.Parts.ToArrayAsync();
+        public async Task<IEnumerable<Part>> GetAllPartsAsync() => await _context.Parts.ToArrayAsync();
 
-        public async Task<Part?> GetPartById(int id) => await _context.Parts.FindAsync(id);
+        public async Task<Part?> GetPartByIdAsync(int id) => await _context.Parts.FindAsync(id);
 
-        public async Task<DbActionResult> UpdatePart(Part part)
+        public async Task<DbActionResult> UpdatePartAsync(Part part)
         {
             try
             {
