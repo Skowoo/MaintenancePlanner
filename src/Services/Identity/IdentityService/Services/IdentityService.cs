@@ -47,20 +47,20 @@ namespace IdentityServiceAPI.Services
             {
                 _logger.LogTrace("Invalid login attempt. User not found in database");
                 return IdentityResult.Failed(new IdentityError { Description = "User not found" });
-            }                
+            }
 
             var loginSuccessed = await _userManager.CheckPasswordAsync(user, password);
 
             if (loginSuccessed)
             {
                 _logger.LogTrace("User with Id: {} logged succesfully.", user.Id);
-                return IdentityResult.Success;                
+                return IdentityResult.Success;
             }
             else
             {
                 _logger.LogTrace("Login of user with Id: {} failed due to invalid password", user.Id);
                 return IdentityResult.Failed(new IdentityError { Description = "Invalid password" });
-            }                
+            }
         }
 
         public async Task<IEnumerable<ApplicationUser>> GetAllUsers() => await _userManager.Users.ToArrayAsync();

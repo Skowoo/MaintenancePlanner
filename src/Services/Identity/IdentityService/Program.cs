@@ -1,4 +1,3 @@
-using AutoMapper;
 using EventBusRabbitMQ;
 using IdentityServiceAPI.Infrastructure;
 using IdentityServiceAPI.IntegrationEvents;

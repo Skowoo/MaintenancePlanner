@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using IdentityServiceAPI.Models;
 using IdentityServiceAPI.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace IdentityServiceAPI.Controllers
 {
@@ -10,6 +12,8 @@ namespace IdentityServiceAPI.Controllers
     public class IdentityController(IIdentityService identityService, IMapper mapper) : ControllerBase
     {
         [HttpPost]
+        [ProducesResponseType(typeof(int), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(IEnumerable<IdentityError>), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> Register(RegisterModel user)
         {
             var (Result, NewUserId) = await identityService.RegisterNewUser(user, user.Password);
@@ -17,20 +21,23 @@ namespace IdentityServiceAPI.Controllers
             if (Result.Succeeded)
                 return Ok(NewUserId);
 
-            return BadRequest(Result);
+            return BadRequest(Result.Errors);
         }
 
         [HttpGet]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(IEnumerable<IdentityError>), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> Login(string login, string password)
         {
             var result = await identityService.LoginUser(login, password);
             if (result.Succeeded)
                 return Ok();
 
-            return BadRequest(result);
+            return BadRequest(result.Errors);
         }
 
         [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<ApplicationUserExternalModel>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetAllUsers()
         {
             var usersList = await identityService.GetAllUsers();
@@ -38,6 +45,8 @@ namespace IdentityServiceAPI.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(typeof(ApplicationUserExternalModel), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> GetUserByUserName(string userName)
         {
             var user = await identityService.FindUserByUserName(userName);
@@ -45,6 +54,8 @@ namespace IdentityServiceAPI.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(typeof(ApplicationUserExternalModel), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> GetRoleByName(string roleName)
         {
             var role = await identityService.FindRoleByName(roleName);
@@ -52,9 +63,13 @@ namespace IdentityServiceAPI.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<IdentityRole>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetAllRoles() => Ok(await identityService.GetAllRoles());
 
         [HttpPost]
+        [ProducesResponseType(typeof(int), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(IEnumerable<IdentityError>), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> AddUserToRole(string email, string roleName)
         {
             var user = await identityService.FindUserByUserName(email);
@@ -66,10 +81,13 @@ namespace IdentityServiceAPI.Controllers
                 return NotFound(roleName);
 
             var result = await identityService.AddUserToRole(user, roleName);
-            return result.Succeeded ? Ok() : BadRequest(result);
+            return result.Succeeded ? Ok() : BadRequest(result.Errors);
         }
 
         [HttpPost]
+        [ProducesResponseType(typeof(int), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(IEnumerable<IdentityError>), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> RemoveUserFromRole(string email, string roleName)
         {
             var user = await identityService.FindUserByUserName(email);
@@ -81,7 +99,7 @@ namespace IdentityServiceAPI.Controllers
                 return NotFound(roleName);
 
             var result = await identityService.RemoveUserFromRole(user, roleName);
-            return result.Succeeded ? Ok() : BadRequest(result);
+            return result.Succeeded ? Ok() : BadRequest(result.Errors);
         }
     }
 }
