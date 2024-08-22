@@ -49,7 +49,7 @@ namespace EventBusRabbitMQ
 
             lock (connectionLock)
             {
-                _connection = _connectionFactory.CreateConnection();                
+                _connection = _connectionFactory.CreateConnection();
 
                 if (IsConnected)
                 {

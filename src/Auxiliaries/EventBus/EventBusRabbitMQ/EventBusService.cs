@@ -126,8 +126,8 @@ namespace EventBusRabbitMQ
 
                     var concreteType = typeof(IIntegrationEventHandler<>).MakeGenericType(eventType!);
                     await Task.Yield();
-                    await (Task)concreteType.GetMethod("Handle")!.Invoke(handler, [integrationEvent!])!;                    
-                                        
+                    await (Task)concreteType.GetMethod("Handle")!.Invoke(handler, [integrationEvent!])!;
+
                     _logger.LogTrace("Processed {EventName} (Id: {})", eventName, eventId);
                 }
                 catch (Exception ex)
