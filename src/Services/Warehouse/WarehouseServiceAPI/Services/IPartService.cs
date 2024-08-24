@@ -16,5 +16,7 @@ namespace WarehouseServiceAPI.Services
         Task<DbActionResult> DeletePartAsync(int id);
 
         Task<DbActionResult> DecreasePartQuantityAsync(int partId, int quantity);
+
+        Task<DbActionResult> IncreasePartQuantityAsync(int partId, int quantity);
     }
 }

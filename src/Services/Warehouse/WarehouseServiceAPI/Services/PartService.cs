@@ -35,6 +35,18 @@ namespace WarehouseServiceAPI.Services
             return (new DbActionResult(true), part.Id);
         }
 
+        public async Task<DbActionResult> IncreasePartQuantityAsync(int partId, int quantity)
+        {
+            var part = _context.Parts.SingleOrDefault(p => p.Id == partId);
+
+            if (part is null)
+                return new DbActionResult(false, new WarehouseDomainException("Part not found!"));
+
+            part.QuantityOnStock += quantity;
+            await _context.SaveChangesAsync();
+            return new DbActionResult(true);
+        }
+
         public async Task<DbActionResult> DecreasePartQuantityAsync(int partId, int quantity)
         {
             var part = _context.Parts.SingleOrDefault(p => p.Id == partId);

@@ -7,9 +7,9 @@ using MediatR;
 
 namespace ActionServiceAPI.Application.DomainEventHandlers
 {
-    public class NewActionCreatedDomainEventHandler(IActionContext context, IIntegrationEventService integrationEventService) : INotificationHandler<NewActionCreatedDomainEvent>
+    public class SparePartsTakenDomainEventHandler(IActionContext context, IIntegrationEventService integrationEventService) : INotificationHandler<SparePartsTakenDomainEvent>
     {
-        public async Task Handle(NewActionCreatedDomainEvent notification, CancellationToken cancellationToken)
+        public async Task Handle(SparePartsTakenDomainEvent notification, CancellationToken cancellationToken)
         {
             foreach (var requestedPart in notification.Parts)
             {

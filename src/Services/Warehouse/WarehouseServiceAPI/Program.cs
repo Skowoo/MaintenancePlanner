@@ -37,6 +37,7 @@ namespace WarehouseServiceAPI
 
             var eventBus = app.Services.GetRequiredService<IEventBus>();
             eventBus.Subscribe<SparePartsUsedInActionIntegrationEvent, SparePartsUsedInActionIntegrationEventHandler>();
+            eventBus.Subscribe<SparePartsReturnedFromActionIntegrationEvent, SparePartsReturnedFromActionIntegrationEventHandler>();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

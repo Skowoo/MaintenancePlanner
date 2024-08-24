@@ -24,7 +24,7 @@ namespace ActionServiceAPI.Application.Action.Commands.CreateActionCommand
             await context.SaveChangesAsync(cancellationToken);
 
             // Refactor - Publishing can be refactorized to avoid changes in future
-            await mediator.Publish(new NewActionCreatedDomainEvent(request.Parts), cancellationToken);
+            await mediator.Publish(new SparePartsTakenDomainEvent(request.Parts), cancellationToken);
 
             return newItem.Id;
         }
