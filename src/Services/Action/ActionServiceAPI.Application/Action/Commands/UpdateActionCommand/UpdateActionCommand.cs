@@ -8,5 +8,7 @@ namespace ActionServiceAPI.Application.Action.Commands.UpdateActionCommand
         : ActionCommandBase(name, description, startDate, endDate, createdBy, conductedBy, parts), IRequest<bool>
     {
         public int Id { get; init; } = id;
+
+        public IEnumerable<UsedPart> PartsDifference { get; set; } = [];
     }
 }

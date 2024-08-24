@@ -1,10 +1,11 @@
 ﻿using ActionServiceAPI.Application.Interfaces.DataRepositories;
+using ActionServiceAPI.Domain.Events;
 using ActionServiceAPI.Domain.Exceptions;
 using MediatR;
 
 namespace ActionServiceAPI.Application.Action.Commands.UpdateActionCommand
 {
-    public class UpdateActionCommandHandler(IActionContext context) : IRequestHandler<UpdateActionCommand, bool>
+    public class UpdateActionCommandHandler(IActionContext context, IMediator mediator) : IRequestHandler<UpdateActionCommand, bool>
     {
         public async Task<bool> Handle(UpdateActionCommand request, CancellationToken cancellationToken)
         {
@@ -25,9 +26,20 @@ namespace ActionServiceAPI.Application.Action.Commands.UpdateActionCommand
             target.CreatedBy = creator;
             target.ConductedBy = conductor;
             target.UpdatePartsList(request.Parts);
-
-            context.Actions.Update(target);
             await context.SaveChangesAsync(cancellationToken);
+
+            var takenParts = request.PartsDifference.Where(x => x.Quantity > 0).ToList();
+            if (takenParts.Count != 0)
+                await mediator.Publish(new SparePartsTakenDomainEvent(takenParts), cancellationToken);
+
+            var returnedParts = request.PartsDifference.Where(x => x.Quantity < 0).ToList();
+            if (returnedParts.Count != 0)
+            {
+                foreach (var part in returnedParts) // Sign have to be changed to positive
+                    part.Quantity = -part.Quantity;
+
+                await mediator.Publish(new SparePartsReturnedDomainEvent(returnedParts), cancellationToken);
+            }
 
             return true;
         }

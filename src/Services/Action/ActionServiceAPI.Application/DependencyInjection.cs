@@ -14,6 +14,7 @@ namespace ActionServiceAPI.Application
             services.AddMediatR(cfg =>
             {
                 cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
+                cfg.AddOpenBehavior(typeof(UpdateActionCommandCalculatePartsDifferenceBehavior<,>));
                 cfg.AddOpenBehavior(typeof(ValidatorBehavior<,>));
             });
 

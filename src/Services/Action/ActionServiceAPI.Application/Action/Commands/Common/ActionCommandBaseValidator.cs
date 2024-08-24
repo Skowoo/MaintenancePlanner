@@ -17,25 +17,6 @@ namespace ActionServiceAPI.Application.Action.Commands.Common
                     .Must(id => context.Employees.Any(x => x.UserId == id))
                     .WithMessage("Employee not found in database!");
             });
-
-            When(x => x.Parts.Any(), () =>
-            {
-                RuleForEach(x => x.Parts).ChildRules(part =>
-                {
-                    part.RuleFor(inputPart => inputPart.PartId)
-                        .Must(partId => context.AvailableParts.Any(dbPart => dbPart.PartId == partId))
-                        .WithMessage("Part not found in database!");
-
-                    part.RuleFor(inputPart => inputPart)
-                        .Must(inputPart =>
-                        {
-                            var dbPart = context.AvailableParts.SingleOrDefault(x => x.PartId == inputPart.PartId);
-                            return dbPart != null && dbPart.Quantity >= inputPart.Quantity;
-                        })
-                        .When(inputPart => context.AvailableParts.Any(dbPart => dbPart.PartId == inputPart.PartId))
-                        .WithMessage("Not enough parts in stock!");
-                });
-            });
         }
     }
 }
