@@ -8,27 +8,28 @@ namespace ActionService.Application.UnitTests
     [TestClass]
     public class CalculateUpdateActionCommandPartsDifferenceBehavior_UnitTests
     {
-        static List<UsedPart> Act(List<UsedPart> originalList, List<UsedPart> updatedList)
+        static (List<UsedPart> NewUsedParts, List<UsedPart> ReturnedParts) Act(List<UsedPart> originalList, List<UsedPart> updatedList)
         {
             MethodInfo method = typeof(UpdateActionCommandCalculatePartsDifferenceBehavior<UpdateActionCommand, bool>)
                 .GetMethod("CalculateDifference", BindingFlags.NonPublic | BindingFlags.Static)!;
-            return (List<UsedPart>)method.Invoke(typeof(UpdateActionCommandCalculatePartsDifferenceBehavior<UpdateActionCommand, bool>)
+            return ((List<UsedPart> NewUsedParts, List<UsedPart> ReturnedParts))method.Invoke(typeof(UpdateActionCommandCalculatePartsDifferenceBehavior<UpdateActionCommand, bool>)
                 , [originalList, updatedList])!;
         }
 
         [TestMethod]
-        public void EmptyInputs_ReturnsEmptyDifference()
+        public void EmptyInputs_ReturnsEmptyDifferenceLists()
         {
             List<UsedPart> originalList = [];
             List<UsedPart> updatedList = [];
 
-            var result = Act(originalList, updatedList);
+            var (NewUsedParts, ReturnedParts) = Act(originalList, updatedList);
 
-            Assert.AreEqual(0, result.Count);
+            Assert.AreEqual(0, NewUsedParts.Count);
+            Assert.AreEqual(0, ReturnedParts.Count);
         }
 
         [TestMethod]
-        public void SameInputs_ReturnsEmptyDifference()
+        public void SameInputs_ReturnsEmptyDifferenceLists()
         {
             List<UsedPart> originalList =
             [
@@ -39,13 +40,14 @@ namespace ActionService.Application.UnitTests
                 new() { PartId = 1, Quantity = 5 }
             ];
 
-            var result = Act(originalList, updatedList);
+            var (NewUsedParts, ReturnedParts) = Act(originalList, updatedList);
 
-            Assert.AreEqual(0, result.Count);
+            Assert.AreEqual(0, NewUsedParts.Count);
+            Assert.AreEqual(0, ReturnedParts.Count);
         }
 
         [TestMethod]
-        public void SingleItemsInputs_ReturnsNegativeDifference()
+        public void SingleItemsInputs_ReturnsEmptyNewPartsListsAndSingleReturnedPart()
         {
             List<UsedPart> originalList =
             [
@@ -56,15 +58,16 @@ namespace ActionService.Application.UnitTests
                 new() { PartId = 1, Quantity = 5 }
             ];
 
-            var result = Act(originalList, updatedList);
+            var (NewUsedParts, ReturnedParts) = Act(originalList, updatedList);
 
-            Assert.AreEqual(1, result.Count);
-            Assert.AreEqual(1, result[0].PartId);
-            Assert.AreEqual(-5, result[0].Quantity);
+            Assert.AreEqual(0, NewUsedParts.Count);
+            Assert.AreEqual(1, ReturnedParts.Count);
+            Assert.AreEqual(1, ReturnedParts[0].PartId);
+            Assert.AreEqual(5, ReturnedParts[0].Quantity);
         }
 
         [TestMethod]
-        public void SingleItemsInputs_ReturnsPositiveDifference()
+        public void SingleItemsInputs_ReturnsSingleNewPartAndEmptyReturnedPart()
         {
             List<UsedPart> originalList =
             [
@@ -75,15 +78,16 @@ namespace ActionService.Application.UnitTests
                 new() { PartId = 1, Quantity = 10 }
             ];
 
-            var result = Act(originalList, updatedList);
+            var (NewUsedParts, ReturnedParts) = Act(originalList, updatedList);
 
-            Assert.AreEqual(1, result.Count);
-            Assert.AreEqual(1, result[0].PartId);
-            Assert.AreEqual(5, result[0].Quantity);
+            Assert.AreEqual(1, NewUsedParts.Count);
+            Assert.AreEqual(0, ReturnedParts.Count);
+            Assert.AreEqual(1, NewUsedParts[0].PartId);
+            Assert.AreEqual(5, NewUsedParts[0].Quantity);
         }
 
         [TestMethod]
-        public void SingleItemOriginalEmptyUpdated_ReturnsNegativeDifference()
+        public void SingleItemOriginalEmptyUpdated_ReturnsEmptyNewPartsListsAndSingleReturnedPart()
         {
             List<UsedPart> originalList =
             [
@@ -91,33 +95,35 @@ namespace ActionService.Application.UnitTests
             ];
             List<UsedPart> updatedList = [];
 
-            var result = Act(originalList, updatedList);
+            var (NewUsedParts, ReturnedParts) = Act(originalList, updatedList);
 
-            Assert.AreEqual(1, result.Count);
-            Assert.AreEqual(1, result[0].PartId);
-            Assert.AreEqual(-5, result[0].Quantity);
+            Assert.AreEqual(0, NewUsedParts.Count);
+            Assert.AreEqual(1, ReturnedParts.Count);
+            Assert.AreEqual(1, ReturnedParts[0].PartId);
+            Assert.AreEqual(5, ReturnedParts[0].Quantity);
         }
 
         [TestMethod]
-        public void EmptyOriginalSingleItemUpdated_ReturnsPositiveDifference()
+        public void EmptyOriginalSingleItemUpdated_ReturnsSingleNewPartAndEmptyReturnedPart()
         {
             List<UsedPart> originalList = [];
-            List<UsedPart> updatedList = 
+            List<UsedPart> updatedList =
             [
                 new() { PartId = 1, Quantity = 5 }
             ];
 
-            var result = Act(originalList, updatedList);
+            var (NewUsedParts, ReturnedParts) = Act(originalList, updatedList);
 
-            Assert.AreEqual(1, result.Count);
-            Assert.AreEqual(1, result[0].PartId);
-            Assert.AreEqual(5, result[0].Quantity);
+            Assert.AreEqual(1, NewUsedParts.Count);
+            Assert.AreEqual(0, ReturnedParts.Count);
+            Assert.AreEqual(1, NewUsedParts[0].PartId);
+            Assert.AreEqual(5, NewUsedParts[0].Quantity);
         }
 
         [TestMethod]
-        public void DoubleOriginalSingleItemUpdated_ReturnsNegativeDifference()
+        public void DoubleOriginalSingleItemUpdated_ReturnsEmptyNewPartsListsAndSingleReturnedPart()
         {
-            List<UsedPart> originalList = 
+            List<UsedPart> originalList =
             [
                 new() { PartId = 1, Quantity = 5 },
                 new() { PartId = 2, Quantity = 5 }
@@ -127,35 +133,16 @@ namespace ActionService.Application.UnitTests
                 new() { PartId = 1, Quantity = 5 }
             ];
 
-            var result = Act(originalList, updatedList);
+            var (NewUsedParts, ReturnedParts) = Act(originalList, updatedList);
 
-            Assert.AreEqual(1, result.Count);
-            Assert.AreEqual(2, result[0].PartId);
-            Assert.AreEqual(-5, result[0].Quantity);
+            Assert.AreEqual(0, NewUsedParts.Count);
+            Assert.AreEqual(1, ReturnedParts.Count);
+            Assert.AreEqual(2, ReturnedParts[0].PartId);
+            Assert.AreEqual(5, ReturnedParts[0].Quantity);
         }
 
         [TestMethod]
-        public void SingleOriginalDoubleItemUpdated_ReturnsNegativeDifference()
-        {
-            List<UsedPart> originalList =
-            [
-                new() { PartId = 1, Quantity = 5 }                
-            ];
-            List<UsedPart> updatedList =
-            [
-                new() { PartId = 1, Quantity = 5 },
-                new() { PartId = 2, Quantity = 5 }
-            ];
-
-            var result = Act(originalList, updatedList);
-
-            Assert.AreEqual(1, result.Count);
-            Assert.AreEqual(2, result[0].PartId);
-            Assert.AreEqual(5, result[0].Quantity);
-        }
-
-        [TestMethod]
-        public void SingleItemsInputsWithDifferentIds_ReturnsDoubleDifference()
+        public void SingleOriginalDoubleItemUpdated_ReturnsSingleNewPartAndEmptyReturnedPart()
         {
             List<UsedPart> originalList =
             [
@@ -163,16 +150,38 @@ namespace ActionService.Application.UnitTests
             ];
             List<UsedPart> updatedList =
             [
+                new() { PartId = 1, Quantity = 5 },
                 new() { PartId = 2, Quantity = 5 }
             ];
 
-            var result = Act(originalList, updatedList);
+            var (NewUsedParts, ReturnedParts) = Act(originalList, updatedList);
 
-            Assert.AreEqual(2, result.Count);
-            Assert.AreEqual(1, result[0].PartId);
-            Assert.AreEqual(-5, result[0].Quantity);
-            Assert.AreEqual(2, result[1].PartId);            
-            Assert.AreEqual(5, result[1].Quantity);
+            Assert.AreEqual(1, NewUsedParts.Count);
+            Assert.AreEqual(0, ReturnedParts.Count);
+            Assert.AreEqual(2, NewUsedParts[0].PartId);
+            Assert.AreEqual(5, NewUsedParts[0].Quantity);
+        }
+
+        [TestMethod]
+        public void SingleItemsInputsWithDifferentIds_ReturnsSingleNewPartAndSingleReturnedPart()
+        {
+            List<UsedPart> originalList =
+            [
+                new() { PartId = 1, Quantity = 5 }
+            ];
+            List<UsedPart> updatedList =
+            [
+                new() { PartId = 2, Quantity = 10 }
+            ];
+
+            var (NewUsedParts, ReturnedParts) = Act(originalList, updatedList);
+
+            Assert.AreEqual(1, NewUsedParts.Count);
+            Assert.AreEqual(1, ReturnedParts.Count);
+            Assert.AreEqual(2, NewUsedParts[0].PartId);
+            Assert.AreEqual(10, NewUsedParts[0].Quantity);
+            Assert.AreEqual(1, ReturnedParts[0].PartId);
+            Assert.AreEqual(5, ReturnedParts[0].Quantity);
         }
     }
 }

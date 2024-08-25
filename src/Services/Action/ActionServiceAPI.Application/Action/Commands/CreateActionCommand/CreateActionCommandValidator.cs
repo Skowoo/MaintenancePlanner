@@ -14,10 +14,6 @@ namespace ActionServiceAPI.Application.Action.Commands.CreateActionCommand
             {
                 RuleForEach(x => x.Parts).ChildRules(part =>
                 {
-                    part.RuleFor(inputPart => inputPart.PartId)
-                        .Must(partId => context.AvailableParts.Any(dbPart => dbPart.PartId == partId))
-                        .WithMessage("Part not found in database!");
-
                     part.RuleFor(inputPart => inputPart)
                         .Must(inputPart =>
                         {

@@ -19,13 +19,15 @@ namespace ActionServiceAPI.Application.Behaviors
 
             var originalParts = originalAction.Parts.ToList();
 
-            request.PartsDifference = CalculateDifference(originalParts, request.Parts.ToList());
+            var (NewUsedParts, ReturnedParts) = CalculateDifference(originalParts, request.Parts.ToList());
+            request.NewUsedParts = NewUsedParts;
+            request.ReturnedParts = ReturnedParts;
 
             return await next();
         }
 
         // Tested using reflection
-        static List<UsedPart> CalculateDifference(IList<UsedPart> originalList, IList<UsedPart> updatedList)
+        static (List<UsedPart> NewUsedParts, List<UsedPart> ReturnedParts) CalculateDifference(IList<UsedPart> originalList, IList<UsedPart> updatedList)
         {
             List<UsedPart> differences = [];
 
@@ -37,7 +39,13 @@ namespace ActionServiceAPI.Application.Behaviors
 
                 differences.Add(new UsedPart { PartId = Id, Quantity = updatedQuantity - originalQuantity });
             }
-            return differences.Where(x => x.Quantity != 0).ToList();
+            var newUsedParts = differences.Where(x => x.Quantity > 0).ToList();
+            var returnedParts = differences.Where(x => x.Quantity < 0).ToList();
+
+            foreach (var part in returnedParts)
+                part.Quantity = Math.Abs(part.Quantity);
+
+            return (newUsedParts, returnedParts);
         }
     }
 }

@@ -9,6 +9,8 @@ namespace ActionServiceAPI.Application.Action.Commands.UpdateActionCommand
     {
         public int Id { get; init; } = id;
 
-        public IEnumerable<UsedPart> PartsDifference { get; set; } = [];
+        public IEnumerable<UsedPart> NewUsedParts { get; set; } = [];
+
+        public IEnumerable<UsedPart> ReturnedParts { get; set; } = [];
     }
 }

@@ -8,18 +8,16 @@ namespace ActionServiceAPI.Application.Action.Commands.UpdateActionCommand
     {
         public UpdateActionCommandValidator(IActionContext context)
         {
+            Include(new ActionCommandBaseValidator(context));
+
             RuleFor(x => x.Id)
                 .Must(x => context.Actions.Any(action => action.Id == x))
                 .WithMessage($"Action with given id not found");
 
-            When(x => x.PartsDifference.Any(), () =>
+            When(x => x.NewUsedParts.Any(), () =>
             {
-                RuleForEach(x => x.PartsDifference).ChildRules(part =>
+                RuleForEach(x => x.NewUsedParts).ChildRules(part =>
                 {
-                    part.RuleFor(inputPart => inputPart.PartId)
-                        .Must(partId => context.AvailableParts.Any(dbPart => dbPart.PartId == partId))
-                        .WithMessage("Part not found in database!");
-
                     part.RuleFor(inputPart => inputPart)
                         .Must(inputPart =>
                         {
@@ -30,8 +28,6 @@ namespace ActionServiceAPI.Application.Action.Commands.UpdateActionCommand
                         .WithMessage("Not enough parts in stock!");
                 });
             });
-
-            Include(new ActionCommandBaseValidator(context));
         }
     }
 }
