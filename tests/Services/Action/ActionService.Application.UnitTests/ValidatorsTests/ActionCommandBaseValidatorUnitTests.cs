@@ -1,15 +1,17 @@
 ﻿using ActionServiceAPI.Application.Action.Commands.CreateActionCommand;
-using ActionServiceAPI.Application.Action.Commands.UpdateActionCommand;
 using ActionServiceAPI.Domain.Models;
 using static ActionService.Application.UnitTests.DataFixtures.ActionContextMock;
 
 namespace ActionService.Application.UnitTests.ValidatorsTests
 {
     [TestClass]
-    public class UpdateActionCommandValidatorUnitTests
+    public class ActionCommandBaseValidatorUnitTests
     {
-        [TestMethod]
-        public void BaseValidationTest()
+        [DataTestMethod]
+        [DataRow(true, ExistingEmployeeName)]
+        [DataRow(false, "")]
+        [DataRow(false, "Not existing employee")]
+        public void CreatedByValidationTests(bool expectedResult, string createdByEmployeeName)
         {
             var context = GetContextMock();
             var validator = new CreateActionCommandValidator(context);
@@ -19,56 +21,59 @@ namespace ActionService.Application.UnitTests.ValidatorsTests
                 "Example Description",
                 DateTime.Now,
                 DateTime.Now.AddDays(1),
-                string.Empty,
+                createdByEmployeeName,
                 string.Empty,
                 usedPartsList);
 
             var result = validator.Validate(command);
 
-            Assert.IsFalse(result.IsValid);
-            Assert.AreEqual(1, result.Errors.Count);
-            Assert.IsTrue(result.Errors[0].ErrorMessage.Contains("not found"));
-            Assert.AreEqual(nameof(CreateActionCommand.CreatedBy), result.Errors[0].PropertyName);
-        }
-
-        [DataTestMethod]
-        [DataRow(true, 1)]
-        [DataRow(false, 2)]
-        public void UpdateActionCommandValidator_IdValidationTests(bool expectedResult, int actionId)
-        {
-            var context = GetContextMock();
-            var validator = new UpdateActionCommandValidator(context);
-            var command = new UpdateActionCommand(
-                actionId,
-                "Example Action",
-                "Example Description",
-                DateTime.Now,
-                DateTime.Now.AddDays(1),
-                ExistingEmployeeName,
-                ExistingEmployeeName,
-                []);
-
-            var result = validator.Validate(command);
-
             if (expectedResult)
-            {
                 Assert.IsTrue(result.IsValid);
-            }
             else
             {
                 Assert.IsFalse(result.IsValid);
                 Assert.AreEqual(1, result.Errors.Count);
                 Assert.IsTrue(result.Errors[0].ErrorMessage.Contains("not found"));
-                Assert.AreEqual(nameof(UpdateActionCommand.Id), result.Errors[0].PropertyName);
+                Assert.AreEqual(nameof(CreateActionCommand.CreatedBy), result.Errors[0].PropertyName);
             }
         }
 
         [DataTestMethod]
-        [DataRow(true, 1, 0)]
+        [DataRow(true, ExistingEmployeeName)]
+        [DataRow(true, "")] // Empty value is acceptable for ConductedBy
+        [DataRow(false, "Not existing employee")]
+        public void ConductedByValidationTests(bool expectedResult, string conductedByEmployeeName)
+        {
+            var context = GetContextMock();
+            var validator = new CreateActionCommandValidator(context);
+            UsedPart[] usedPartsList = [new() { PartId = ExistingPartId, Quantity = 5 }];
+            var command = new CreateActionCommand(
+                "Example Action",
+                "Example Description",
+                DateTime.Now,
+                DateTime.Now.AddDays(1),
+                ExistingEmployeeName,
+                conductedByEmployeeName,
+                usedPartsList);
+
+            var result = validator.Validate(command);
+
+            if (expectedResult)
+                Assert.IsTrue(result.IsValid);
+            else
+            {
+                Assert.IsFalse(result.IsValid);
+                Assert.AreEqual(1, result.Errors.Count);
+                Assert.IsTrue(result.Errors[0].ErrorMessage.Contains("not found"));
+                Assert.AreEqual(nameof(CreateActionCommand.ConductedBy), result.Errors[0].PropertyName);
+            }
+        }
+
+        [DataTestMethod]
+        [DataRow(true, -1, 0)]
         [DataRow(true, 1, 5)]
-        [DataRow(true, 1, 10)]
-        [DataRow(false, 1, 11)]
-        public void CreateActionCommandValidator_UsedPartsValidationTests_CheckIfExistingPartHaveEnoughQuantity(bool expectedResult, int usedPartId, int usedPartQuantity)
+        [DataRow(false, 2, 5)]
+        public void Parts_CheckIfPartsExistsInDatabase(bool expectedResult, int usedPartId, int usedPartQuantity)
         {
             var context = GetContextMock();
             var validator = new CreateActionCommandValidator(context);
@@ -101,7 +106,7 @@ namespace ActionService.Application.UnitTests.ValidatorsTests
             {
                 Assert.IsFalse(result.IsValid);
                 Assert.AreEqual(1, result.Errors.Count);
-                Assert.IsTrue(result.Errors[0].ErrorMessage.Contains("Not enough"));
+                Assert.IsTrue(result.Errors[0].ErrorMessage.Contains("not found"));
                 Assert.IsTrue(result.Errors[0].PropertyName.Contains(nameof(CreateActionCommand.Parts)));
             }
         }

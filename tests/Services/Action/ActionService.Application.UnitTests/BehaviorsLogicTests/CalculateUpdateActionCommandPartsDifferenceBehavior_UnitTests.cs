@@ -3,7 +3,7 @@ using ActionServiceAPI.Application.Behaviors;
 using ActionServiceAPI.Domain.Models;
 using System.Reflection;
 
-namespace ActionService.Application.UnitTests
+namespace ActionService.Application.UnitTests.BehaviorsLogicTests
 {
     [TestClass]
     public class CalculateUpdateActionCommandPartsDifferenceBehavior_UnitTests
