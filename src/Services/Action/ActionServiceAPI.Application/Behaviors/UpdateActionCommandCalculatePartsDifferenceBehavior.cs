@@ -20,8 +20,8 @@ namespace ActionServiceAPI.Application.Behaviors
             var originalParts = originalAction.Parts.ToList();
 
             var (NewUsedParts, ReturnedParts) = CalculateDifference(originalParts, request.Parts.ToList());
-            request.NewUsedParts = NewUsedParts;
-            request.ReturnedParts = ReturnedParts;
+            request.SetUsedPartsList(NewUsedParts);
+            request.SetReturnedPartsList(ReturnedParts);
 
             return await next();
         }

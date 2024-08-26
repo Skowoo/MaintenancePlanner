@@ -1,6 +1,7 @@
 ﻿using ActionServiceAPI.Application.Action.Commands.Common;
 using ActionServiceAPI.Domain.Models;
 using MediatR;
+using System.Collections.ObjectModel;
 
 namespace ActionServiceAPI.Application.Action.Commands.UpdateActionCommand
 {
@@ -9,8 +10,16 @@ namespace ActionServiceAPI.Application.Action.Commands.UpdateActionCommand
     {
         public int Id { get; init; } = id;
 
-        public IEnumerable<UsedPart> NewUsedParts { get; set; } = [];
+        List<UsedPart> NewUsedParts = [];
 
-        public IEnumerable<UsedPart> ReturnedParts { get; set; } = [];
+        List<UsedPart> ReturnedParts = [];
+
+        public void SetUsedPartsList(List<UsedPart> usedParts) => NewUsedParts = usedParts;
+
+        public void SetReturnedPartsList(List<UsedPart> returnedParts) => ReturnedParts = returnedParts;
+
+        public ReadOnlyCollection<UsedPart> GetNewUsedPartsList() => NewUsedParts.AsReadOnly();
+
+        public ReadOnlyCollection<UsedPart> GetReturnedPartsList() => ReturnedParts.AsReadOnly();
     }
 }

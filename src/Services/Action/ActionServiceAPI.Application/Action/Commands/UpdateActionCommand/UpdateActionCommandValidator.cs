@@ -14,9 +14,9 @@ namespace ActionServiceAPI.Application.Action.Commands.UpdateActionCommand
                 .Must(x => context.Actions.Any(action => action.Id == x))
                 .WithMessage($"Action with given id not found");
 
-            When(x => x.NewUsedParts.Any(), () =>
+            When(x => x.GetNewUsedPartsList().Count != 0, () =>
             {
-                RuleForEach(x => x.NewUsedParts).ChildRules(part =>
+                RuleForEach(x => x.GetNewUsedPartsList()).ChildRules(part =>
                 {
                     part.RuleFor(inputPart => inputPart)
                         .Must(inputPart =>
@@ -24,9 +24,10 @@ namespace ActionServiceAPI.Application.Action.Commands.UpdateActionCommand
                             var dbPart = context.AvailableParts.SingleOrDefault(x => x.PartId == inputPart.PartId);
                             return dbPart != null && dbPart.Quantity >= inputPart.Quantity;
                         })
-                        .When(inputPart => context.AvailableParts.Any(dbPart => dbPart.PartId == inputPart.PartId))
+                        .When(inputPart => context.AvailableParts.Any(dbPart => dbPart.PartId == inputPart.PartId))                        
                         .WithMessage("Not enough parts in stock!");
-                });
+                })
+                .OverridePropertyName(nameof(UpdateActionCommand.Parts));
             });
         }
     }

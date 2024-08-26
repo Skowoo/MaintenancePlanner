@@ -25,11 +25,11 @@ namespace ActionServiceAPI.Application.Action.Commands.UpdateActionCommand
 
             await context.SaveChangesAsync(cancellationToken);
 
-            if (request.NewUsedParts.Any())
-                await mediator.Publish(new SparePartsTakenDomainEvent(request.NewUsedParts), cancellationToken);
+            if (request.GetNewUsedPartsList().Count != 0)
+                await mediator.Publish(new SparePartsTakenDomainEvent(request.GetNewUsedPartsList()), cancellationToken);
 
-            if (request.ReturnedParts.Any())
-                await mediator.Publish(new SparePartsReturnedDomainEvent(request.ReturnedParts), cancellationToken);
+            if (request.GetReturnedPartsList().Count != 0)
+                await mediator.Publish(new SparePartsReturnedDomainEvent(request.GetReturnedPartsList()), cancellationToken);
 
             return true;
         }
