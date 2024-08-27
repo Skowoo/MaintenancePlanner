@@ -14,14 +14,10 @@ namespace IdentityServiceAPI.Controllers
         [HttpPost]
         [ProducesResponseType(typeof(int), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(IEnumerable<IdentityError>), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> Register(RegisterModel user)
+        public async Task<IActionResult> RegisterNewUser(RegisterModel user)
         {
             var (Result, NewUserId) = await identityService.RegisterNewUser(user, user.Password);
-
-            if (Result.Succeeded)
-                return Ok(NewUserId);
-
-            return BadRequest(Result.Errors);
+            return Result.Succeeded ? Ok(NewUserId) : BadRequest(Result.Errors);
         }
 
         [HttpGet]
@@ -30,10 +26,7 @@ namespace IdentityServiceAPI.Controllers
         public async Task<IActionResult> Login(string login, string password)
         {
             var result = await identityService.LoginUser(login, password);
-            if (result.Succeeded)
-                return Ok();
-
-            return BadRequest(result.Errors);
+            return result.Succeeded ? Ok() : BadRequest(result.Errors);
         }
 
         [HttpGet]
@@ -41,7 +34,8 @@ namespace IdentityServiceAPI.Controllers
         public async Task<IActionResult> GetAllUsers()
         {
             var usersList = await identityService.GetAllUsers();
-            return Ok(usersList.Select(mapper.Map<ApplicationUserExternalModel>));
+            var mappedToExternalModelUsersList = usersList.Select(mapper.Map<ApplicationUserExternalModel>);
+            return Ok(mappedToExternalModelUsersList);
         }
 
         [HttpGet]
@@ -50,53 +44,53 @@ namespace IdentityServiceAPI.Controllers
         public async Task<IActionResult> GetUserByUserName(string userName)
         {
             var user = await identityService.FindUserByUserName(userName);
-            return user is null ? NotFound(userName) : Ok(mapper.Map<ApplicationUserExternalModel>(user));
+            return user is not null ? Ok(mapper.Map<ApplicationUserExternalModel>(user)) : NotFound(userName);
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(ApplicationUserExternalModel), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(IdentityRole), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> GetRoleByName(string roleName)
         {
             var role = await identityService.FindRoleByName(roleName);
-            return role is null ? NotFound(roleName) : Ok(role);
+            return role is not null ? Ok(role) : NotFound(roleName);
         }
 
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<IdentityRole>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetAllRoles() => Ok(await identityService.GetAllRoles());
 
-        [HttpPost]
-        [ProducesResponseType(typeof(int), (int)HttpStatusCode.OK)]
+        [HttpPatch]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(IEnumerable<IdentityError>), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
-        public async Task<IActionResult> AddUserToRole(string email, string roleName)
+        public async Task<IActionResult> AddUserToRole(string userName, string roleName)
         {
-            var user = await identityService.FindUserByUserName(email);
+            var user = await identityService.FindUserByUserName(userName);
             if (user is null)
-                return NotFound(email);
+                return NotFound($"{nameof(userName)} : {userName} not found!");
 
             var role = await identityService.FindRoleByName(roleName);
             if (role is null)
-                return NotFound(roleName);
+                return NotFound($"{nameof(roleName)} : {roleName} not found!");
 
             var result = await identityService.AddUserToRole(user, roleName);
             return result.Succeeded ? Ok() : BadRequest(result.Errors);
         }
 
-        [HttpPost]
+        [HttpPatch]
         [ProducesResponseType(typeof(int), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(IEnumerable<IdentityError>), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
-        public async Task<IActionResult> RemoveUserFromRole(string email, string roleName)
+        public async Task<IActionResult> RemoveUserFromRole(string userName, string roleName)
         {
-            var user = await identityService.FindUserByUserName(email);
+            var user = await identityService.FindUserByUserName(userName);
             if (user is null)
-                return NotFound(email);
+                return NotFound($"{nameof(userName)} : {userName} not found!");
 
             var role = await identityService.FindRoleByName(roleName);
             if (role is null)
-                return NotFound(roleName);
+                return NotFound($"{nameof(roleName)} : {roleName} not found!");
 
             var result = await identityService.RemoveUserFromRole(user, roleName);
             return result.Succeeded ? Ok() : BadRequest(result.Errors);
