@@ -2,11 +2,12 @@
 using ActionServiceAPI.Domain.Events;
 using ActionServiceAPI.Domain.Exceptions;
 using ActionServiceAPI.Domain.Models;
+using AutoMapper;
 using MediatR;
 
 namespace ActionServiceAPI.Application.Action.Commands.CreateActionCommand
 {
-    public class CreateActionCommandHandler(IActionContext context, IMediator mediator) : IRequestHandler<CreateActionCommand, int>
+    public class CreateActionCommandHandler(IActionContext context, IMediator mediator, IMapper mapper) : IRequestHandler<CreateActionCommand, int>
     {
         public async Task<int> Handle(CreateActionCommand request, CancellationToken cancellationToken)
         {
@@ -17,14 +18,14 @@ namespace ActionServiceAPI.Application.Action.Commands.CreateActionCommand
 
             ActionEntity newItem = new(request.Name, request.Description, request.StartDate, request.EndDate, creator, conductor);
 
-            foreach (var part in request.Parts)
+            foreach (var part in request.Parts.Select(mapper.Map<UsedPart>))
                 newItem.AddPart(part);
 
             context.Actions.Add(newItem);
             await context.SaveChangesAsync(cancellationToken);
 
             // Refactor - Publishing can be refactorized to avoid changes in future
-            await mediator.Publish(new SparePartsTakenDomainEvent(request.Parts), cancellationToken);
+            await mediator.Publish(new SparePartsTakenDomainEvent(request.Parts.Select(mapper.Map<UsedPart>)), cancellationToken);
 
             return newItem.Id;
         }

@@ -18,6 +18,8 @@ namespace ActionServiceAPI.Application
                 cfg.AddOpenBehavior(typeof(ValidatorBehavior<,>));
             });
 
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
+
             return services;
         }
     }

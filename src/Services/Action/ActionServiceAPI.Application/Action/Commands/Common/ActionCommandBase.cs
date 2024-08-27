@@ -1,8 +1,8 @@
-﻿using ActionServiceAPI.Domain.Models;
+﻿using ActionServiceAPI.Application.DataTransferObjects.Models;
 
 namespace ActionServiceAPI.Application.Action.Commands.Common
 {
-    public abstract class ActionCommandBase(string name, string description, DateTime startDate, DateTime endDate, string createdBy, string conductedBy, IEnumerable<UsedPart> parts)
+    public abstract class ActionCommandBase(string name, string description, DateTime startDate, DateTime endDate, string createdBy, string conductedBy, IEnumerable<SparePartDto> parts)
     {
         public string Name { get; init; } = name;
 
@@ -16,6 +16,6 @@ namespace ActionServiceAPI.Application.Action.Commands.Common
 
         public string? ConductedBy { get; init; } = conductedBy;
 
-        public IEnumerable<UsedPart> Parts { get; init; } = parts;
+        public IEnumerable<SparePartDto> Parts { get; init; } = parts;
     }
 }

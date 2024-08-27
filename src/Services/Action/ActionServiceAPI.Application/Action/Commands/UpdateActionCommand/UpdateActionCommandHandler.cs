@@ -1,11 +1,13 @@
 ﻿using ActionServiceAPI.Application.Interfaces.DataRepositories;
 using ActionServiceAPI.Domain.Events;
 using ActionServiceAPI.Domain.Exceptions;
+using ActionServiceAPI.Domain.Models;
+using AutoMapper;
 using MediatR;
 
 namespace ActionServiceAPI.Application.Action.Commands.UpdateActionCommand
 {
-    public class UpdateActionCommandHandler(IActionContext context, IMediator mediator) : IRequestHandler<UpdateActionCommand, bool>
+    public class UpdateActionCommandHandler(IActionContext context, IMediator mediator, IMapper mapper) : IRequestHandler<UpdateActionCommand, bool>
     {
         public async Task<bool> Handle(UpdateActionCommand request, CancellationToken cancellationToken)
         {
@@ -21,15 +23,15 @@ namespace ActionServiceAPI.Application.Action.Commands.UpdateActionCommand
 
             target.CreatedBy = creator;
             target.ConductedBy = conductor;
-            target.UpdatePartsList(request.Parts);
+            target.UpdatePartsList(request.Parts.Select(mapper.Map<UsedPart>));
 
             await context.SaveChangesAsync(cancellationToken);
 
             if (request.GetNewUsedPartsList().Count != 0)
-                await mediator.Publish(new SparePartsTakenDomainEvent(request.GetNewUsedPartsList()), cancellationToken);
+                await mediator.Publish(new SparePartsTakenDomainEvent(request.GetNewUsedPartsList().Select(mapper.Map<UsedPart>)), cancellationToken);
 
             if (request.GetReturnedPartsList().Count != 0)
-                await mediator.Publish(new SparePartsReturnedDomainEvent(request.GetReturnedPartsList()), cancellationToken);
+                await mediator.Publish(new SparePartsReturnedDomainEvent(request.GetReturnedPartsList().Select(mapper.Map<UsedPart>)), cancellationToken);
 
             return true;
         }

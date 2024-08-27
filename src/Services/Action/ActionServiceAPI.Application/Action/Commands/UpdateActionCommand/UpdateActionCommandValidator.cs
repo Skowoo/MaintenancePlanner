@@ -24,7 +24,7 @@ namespace ActionServiceAPI.Application.Action.Commands.UpdateActionCommand
                             var dbPart = context.AvailableParts.SingleOrDefault(x => x.PartId == inputPart.PartId);
                             return dbPart != null && dbPart.Quantity >= inputPart.Quantity;
                         })
-                        .When(inputPart => context.AvailableParts.Any(dbPart => dbPart.PartId == inputPart.PartId))                        
+                        .When(inputPart => context.AvailableParts.Any(dbPart => dbPart.PartId == inputPart.PartId))
                         .WithMessage("Not enough parts in stock!");
                 })
                 .OverridePropertyName(nameof(UpdateActionCommand.Parts));

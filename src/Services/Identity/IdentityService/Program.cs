@@ -6,6 +6,7 @@ using IdentityServiceAPI.Models;
 using IdentityServiceAPI.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 namespace IdentityServiceAPI
 {
@@ -30,7 +31,7 @@ namespace IdentityServiceAPI
 
             builder.Services.AddScoped<IIdentityService, IdentityService>();
 
-            builder.Services.AddAutoMapper(typeof(ApplicationUserMappingProfile));
+            builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
             builder.Services.AddTransient<IIntegrationEventService, IntegrationEventService>();
             builder.Services.AddRabbitMQEventBus();

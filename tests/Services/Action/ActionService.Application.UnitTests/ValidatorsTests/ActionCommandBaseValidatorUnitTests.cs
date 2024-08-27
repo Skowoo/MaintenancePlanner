@@ -1,5 +1,5 @@
 ﻿using ActionServiceAPI.Application.Action.Commands.CreateActionCommand;
-using ActionServiceAPI.Domain.Models;
+using ActionServiceAPI.Application.DataTransferObjects.Models;
 using static ActionService.Application.UnitTests.DataFixtures.ActionContextMock;
 
 namespace ActionService.Application.UnitTests.ValidatorsTests
@@ -15,7 +15,7 @@ namespace ActionService.Application.UnitTests.ValidatorsTests
         {
             var context = GetContextMock();
             var validator = new CreateActionCommandValidator(context);
-            UsedPart[] usedPartsList = [new() { PartId = ExistingPartId, Quantity = 5 }];
+            SparePartDto[] usedPartsList = [new() { PartId = ExistingPartId, Quantity = 5 }];
             var command = new CreateActionCommand(
                 "Example Action",
                 "Example Description",
@@ -46,7 +46,7 @@ namespace ActionService.Application.UnitTests.ValidatorsTests
         {
             var context = GetContextMock();
             var validator = new CreateActionCommandValidator(context);
-            UsedPart[] usedPartsList = [new() { PartId = ExistingPartId, Quantity = 5 }];
+            SparePartDto[] usedPartsList = [new() { PartId = ExistingPartId, Quantity = 5 }];
             var command = new CreateActionCommand(
                 "Example Action",
                 "Example Description",
@@ -79,7 +79,7 @@ namespace ActionService.Application.UnitTests.ValidatorsTests
             var validator = new CreateActionCommandValidator(context);
 
             // Initialize new part only when passed Id is bigger than 0 - otherwise tests assumes that no part should be created.
-            UsedPart? usedPart = null;
+            SparePartDto? usedPart = null;
             if (usedPartId > 0)
             {
                 usedPart = new()

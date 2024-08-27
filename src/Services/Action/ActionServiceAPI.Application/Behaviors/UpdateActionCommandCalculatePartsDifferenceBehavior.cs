@@ -1,12 +1,13 @@
 ﻿using ActionServiceAPI.Application.Action.Commands.UpdateActionCommand;
+using ActionServiceAPI.Application.DataTransferObjects.Models;
 using ActionServiceAPI.Application.Interfaces.DataRepositories;
-using ActionServiceAPI.Domain.Models;
+using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace ActionServiceAPI.Application.Behaviors
 {
-    public class UpdateActionCommandCalculatePartsDifferenceBehavior<TRequest, TResponse>(IActionContext context)
+    public class UpdateActionCommandCalculatePartsDifferenceBehavior<TRequest, TResponse>(IActionContext context, IMapper mapper)
         : IPipelineBehavior<TRequest, TResponse> where TRequest : UpdateActionCommand
     {
         public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
@@ -19,7 +20,7 @@ namespace ActionServiceAPI.Application.Behaviors
 
             var originalParts = originalAction.Parts.ToList();
 
-            var (NewUsedParts, ReturnedParts) = CalculateDifference(originalParts, request.Parts.ToList());
+            var (NewUsedParts, ReturnedParts) = CalculateDifference(originalParts.Select(mapper.Map<SparePartDto>).ToList(), request.Parts.ToList());
             request.SetUsedPartsList(NewUsedParts);
             request.SetReturnedPartsList(ReturnedParts);
 
@@ -27,9 +28,9 @@ namespace ActionServiceAPI.Application.Behaviors
         }
 
         // Tested using reflection
-        static (List<UsedPart> NewUsedParts, List<UsedPart> ReturnedParts) CalculateDifference(IList<UsedPart> originalList, IList<UsedPart> updatedList)
+        static (List<SparePartDto> NewUsedParts, List<SparePartDto> ReturnedParts) CalculateDifference(IList<SparePartDto> originalList, IList<SparePartDto> updatedList)
         {
-            List<UsedPart> differences = [];
+            List<SparePartDto> differences = [];
 
             List<int> allPartIds = originalList.Select(x => x.PartId).Union(updatedList.Select(x => x.PartId)).ToList();
             foreach (int Id in allPartIds)
@@ -37,7 +38,7 @@ namespace ActionServiceAPI.Application.Behaviors
                 int originalQuantity = originalList.SingleOrDefault(x => x.PartId == Id)?.Quantity ?? 0;
                 int updatedQuantity = updatedList.SingleOrDefault(x => x.PartId == Id)?.Quantity ?? 0;
 
-                differences.Add(new UsedPart { PartId = Id, Quantity = updatedQuantity - originalQuantity });
+                differences.Add(new SparePartDto { PartId = Id, Quantity = updatedQuantity - originalQuantity });
             }
             var newUsedParts = differences.Where(x => x.Quantity > 0).ToList();
             var returnedParts = differences.Where(x => x.Quantity < 0).ToList();
