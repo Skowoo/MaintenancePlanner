@@ -3,7 +3,7 @@ using ActionServiceAPI.Application.Action.Commands.DeleteActionCommand;
 using ActionServiceAPI.Application.Action.Commands.UpdateActionCommand;
 using ActionServiceAPI.Application.Action.Queries.GetActionById;
 using ActionServiceAPI.Application.Action.Queries.GetAllActions;
-using ActionServiceAPI.Domain.Models;
+using ActionServiceAPI.Application.DataTransferObjects.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
@@ -15,12 +15,12 @@ namespace ActionServiceAPI.Web.Controllers
     public class ActionController(IMediator mediator) : ControllerBase
     {
         [HttpGet]
-        [ProducesResponseType(typeof(IEnumerable<ActionEntity>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(IEnumerable<ActionDto>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetAllActions()
             => Ok(await mediator.Send(new GetAllActionsQuery()));
 
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(ActionEntity), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ActionDto), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(int), (int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> GetAction(int id)
         {
