@@ -7,7 +7,7 @@ namespace ActionService.Application.UnitTests.DataFixtures
 {
     internal static class ActionContextMock
     {
-        internal const string ExistingEmployeeName = "TestEmployee";
+        internal const string ExistingEmployeeId = "d30f82c0-7232-4549-83ee-08c9111aff8e";
         internal const int ExistingPartId = 1;
 
         public static IActionContext GetContextMock()
@@ -19,7 +19,7 @@ namespace ActionService.Application.UnitTests.DataFixtures
 
             context.Database.EnsureCreated();
 
-            Employee employee = new(ExistingEmployeeName);
+            Employee employee = new(ExistingEmployeeId);
             context.Employees.Add(employee);
 
             AvailablePart part = new()
@@ -32,6 +32,8 @@ namespace ActionService.Application.UnitTests.DataFixtures
             context.SaveChanges();
 
             ActionEntity action = new("TestAction", "TestDescription", DateTime.Now, DateTime.Now, employee, null);
+            UsedPart usedPart = new() { PartId = ExistingPartId, Quantity = 4 };
+            action.AddPart(usedPart);
             context.Actions.Add(action);
 
             context.SaveChanges();

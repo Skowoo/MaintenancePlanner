@@ -44,8 +44,8 @@ namespace ActionService.Application.UnitTests.ValidatorsTests
                 "Example Description",
                 DateTime.Now,
                 DateTime.Now.AddDays(1),
-                ExistingEmployeeName,
-                ExistingEmployeeName,
+                ExistingEmployeeId,
+                ExistingEmployeeId,
                 []);
 
             var result = validator.Validate(command);
@@ -89,8 +89,8 @@ namespace ActionService.Application.UnitTests.ValidatorsTests
                 "Example Description",
                 DateTime.Now,
                 DateTime.Now.AddDays(1),
-                ExistingEmployeeName,
-                ExistingEmployeeName,
+                ExistingEmployeeId,
+                ExistingEmployeeId,
                 [usedPart!]);
 
             var result = validator.Validate(command);

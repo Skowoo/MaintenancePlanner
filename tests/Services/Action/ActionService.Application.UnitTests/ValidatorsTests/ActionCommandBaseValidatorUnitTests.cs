@@ -8,7 +8,7 @@ namespace ActionService.Application.UnitTests.ValidatorsTests
     public class ActionCommandBaseValidatorUnitTests
     {
         [DataTestMethod]
-        [DataRow(true, ExistingEmployeeName)]
+        [DataRow(true, ExistingEmployeeId)]
         [DataRow(false, "")]
         [DataRow(false, "Not existing employee")]
         public void CreatedByValidationTests(bool expectedResult, string createdByEmployeeName)
@@ -39,7 +39,7 @@ namespace ActionService.Application.UnitTests.ValidatorsTests
         }
 
         [DataTestMethod]
-        [DataRow(true, ExistingEmployeeName)]
+        [DataRow(true, ExistingEmployeeId)]
         [DataRow(true, "")] // Empty value is acceptable for ConductedBy
         [DataRow(false, "Not existing employee")]
         public void ConductedByValidationTests(bool expectedResult, string conductedByEmployeeName)
@@ -52,7 +52,7 @@ namespace ActionService.Application.UnitTests.ValidatorsTests
                 "Example Description",
                 DateTime.Now,
                 DateTime.Now.AddDays(1),
-                ExistingEmployeeName,
+                ExistingEmployeeId,
                 conductedByEmployeeName,
                 usedPartsList);
 
@@ -94,8 +94,8 @@ namespace ActionService.Application.UnitTests.ValidatorsTests
                 "Example Description",
                 DateTime.Now,
                 DateTime.Now.AddDays(1),
-                ExistingEmployeeName,
-                ExistingEmployeeName,
+                ExistingEmployeeId,
+                ExistingEmployeeId,
                 [usedPart!]);
 
             var result = validator.Validate(command);

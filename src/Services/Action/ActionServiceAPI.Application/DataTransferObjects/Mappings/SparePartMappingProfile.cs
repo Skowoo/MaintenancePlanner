@@ -8,8 +8,11 @@ namespace ActionServiceAPI.Application.DataTransferObjects.Mappings
     {
         public SparePartMappingProfile()
         {
-            CreateMap<SparePartDto, UsedPart>();
-            CreateMap<SparePartDto, AvailablePart>();
+            CreateMap<SparePartDto, UsedPart>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore());
+
+            CreateMap<SparePartDto, AvailablePart>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore());
 
             CreateMap<UsedPart, SparePartDto>();
             CreateMap<AvailablePart, SparePartDto>();
