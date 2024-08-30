@@ -27,12 +27,7 @@ namespace ActionService.Application.UnitTests.MappingProfilesTests
         [TestMethod]
         public void ShouldSupportMappingFromUsedPartToSparePartDto()
         {
-            UsedPart entity = new()
-            {
-                Id = 1,
-                PartId = 1,
-                Quantity = 10
-            };
+            UsedPart entity = new(1, 10);
             var mapper = GetActionMapper();
 
             var dto = mapper.Map<SparePartDto>(entity);
@@ -44,12 +39,7 @@ namespace ActionService.Application.UnitTests.MappingProfilesTests
         [TestMethod]
         public void ShouldSupportMappingFromAvailablePartToSparePartDto()
         {
-            AvailablePart entity = new()
-            {
-                Id = 1,
-                PartId = 1,
-                Quantity = 10
-            };
+            AvailablePart entity = new(1, 10);
             var mapper = GetActionMapper();
 
             var dto = mapper.Map<SparePartDto>(entity);

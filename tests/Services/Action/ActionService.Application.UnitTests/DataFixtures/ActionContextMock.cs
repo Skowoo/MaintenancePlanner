@@ -22,17 +22,13 @@ namespace ActionService.Application.UnitTests.DataFixtures
             Employee employee = new(ExistingEmployeeId);
             context.Employees.Add(employee);
 
-            AvailablePart part = new()
-            {
-                PartId = ExistingPartId,
-                Quantity = 10
-            };
+            AvailablePart part = new(ExistingPartId, 10);
             context.AvailableParts.Add(part);
 
             context.SaveChanges();
 
             ActionEntity action = new("TestAction", "TestDescription", DateTime.Now, DateTime.Now, employee, null);
-            UsedPart usedPart = new() { PartId = ExistingPartId, Quantity = 4 };
+            UsedPart usedPart = new(ExistingPartId, 4);
             action.AddPart(usedPart);
             context.Actions.Add(action);
 

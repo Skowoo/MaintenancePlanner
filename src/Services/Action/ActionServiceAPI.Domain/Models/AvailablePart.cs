@@ -1,4 +1,4 @@
 ﻿namespace ActionServiceAPI.Domain.Models
 {
-    public class AvailablePart : SparePart { }
+    public class AvailablePart(int partId, int quantity) : SparePart(partId, quantity) { }
 }

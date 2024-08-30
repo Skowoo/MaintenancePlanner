@@ -12,11 +12,7 @@ namespace ActionServiceAPI.Application.IntegrationEvents.EventHandling
             var part = context.AvailableParts.SingleOrDefault(x => x.PartId == evt.PartId);
             if (part is null)
             {
-                part = new AvailablePart()
-                {
-                    PartId = evt.PartId,
-                    Quantity = evt.Quantity
-                };
+                part = new AvailablePart(evt.PartId, evt.Quantity);
                 context.AvailableParts.Add(part);
             }
             else
