@@ -2,7 +2,7 @@
 
 namespace WarehouseServiceAPI.Models
 {
-    public class Part(string name, string description, string manufacturer, string model) : Entity
+    public class Part(string name, string description, string manufacturer, string model, int quantityOnStock, int minimumStock) : Entity
     {
         public string Name { get; set; } = name;
 
@@ -12,8 +12,8 @@ namespace WarehouseServiceAPI.Models
 
         public string Model { get; set; } = model;
 
-        public int QuantityOnStock { get; set; }
+        public int QuantityOnStock { get; set; } = quantityOnStock;
 
-        public int MinimumStock { get; set; }
+        public int MinimumStock { get; set; } = minimumStock;
     }
 }
