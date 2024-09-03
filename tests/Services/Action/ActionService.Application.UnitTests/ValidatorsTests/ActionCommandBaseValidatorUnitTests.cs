@@ -19,8 +19,8 @@ namespace ActionService.Application.UnitTests.ValidatorsTests
             var command = new CreateActionCommand(
                 "Example Action",
                 "Example Description",
-                DateTime.Now,
-                DateTime.Now.AddDays(1),
+                DateTime.UtcNow,
+                DateTime.UtcNow.AddDays(1),
                 createdByEmployeeName,
                 string.Empty,
                 usedPartsList);
@@ -50,8 +50,8 @@ namespace ActionService.Application.UnitTests.ValidatorsTests
             var command = new CreateActionCommand(
                 "Example Action",
                 "Example Description",
-                DateTime.Now,
-                DateTime.Now.AddDays(1),
+                DateTime.UtcNow,
+                DateTime.UtcNow.AddDays(1),
                 ExistingEmployeeId,
                 conductedByEmployeeName,
                 usedPartsList);
@@ -92,8 +92,8 @@ namespace ActionService.Application.UnitTests.ValidatorsTests
             var command = new CreateActionCommand(
                 "Example Action",
                 "Example Description",
-                DateTime.Now,
-                DateTime.Now.AddDays(1),
+                DateTime.UtcNow,
+                DateTime.UtcNow.AddDays(1),
                 ExistingEmployeeId,
                 ExistingEmployeeId,
                 [usedPart!]);

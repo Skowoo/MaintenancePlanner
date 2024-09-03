@@ -21,7 +21,7 @@ namespace ActionServiceAPI.Infrastructure.Data
             context.AvailableParts.Add(availablePart);
             context.SaveChanges();
 
-            ActionEntity entity = new("Naprawa", "Wymiana czujnika", DateTime.Now, DateTime.Now, employee, employee);
+            ActionEntity entity = new("Naprawa", "Wymiana czujnika", DateTime.UtcNow, DateTime.UtcNow, employee, employee);
             UsedPart usedPart = new(1, 1);
             entity.AddPart(usedPart);
             context.Actions.Add(entity);

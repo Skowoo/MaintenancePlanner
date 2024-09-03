@@ -27,7 +27,7 @@ namespace ActionService.Application.UnitTests.DataFixtures
 
             context.SaveChanges();
 
-            ActionEntity action = new("TestAction", "TestDescription", DateTime.Now, DateTime.Now, employee, null);
+            ActionEntity action = new("TestAction", "TestDescription", DateTime.UtcNow, DateTime.UtcNow, employee, null);
             UsedPart usedPart = new(ExistingPartId, 4);
             action.AddPart(usedPart);
             context.Actions.Add(action);

@@ -5,7 +5,7 @@
         public IntegrationEventBase()
         {
             Id = Guid.NewGuid();
-            CreationDate = DateTime.Now;
+            CreationDate = DateTime.UtcNow;
         }
 
         public Guid Id { get; init; }

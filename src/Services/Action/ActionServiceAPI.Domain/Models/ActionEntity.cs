@@ -4,7 +4,7 @@ namespace ActionServiceAPI.Domain.Models
 {
     public class ActionEntity(string name, string description, DateTime startDate, DateTime endDate, Employee createdBy, Employee? conductedBy) : Entity
     {
-        protected ActionEntity() : this("", "", DateTime.Now, DateTime.Now, new Employee(""), null) { }
+        protected ActionEntity() : this("", "", DateTime.UtcNow, DateTime.UtcNow, new Employee(""), null) { }
 
         public string Name { get; set; } = name;
 
@@ -14,7 +14,7 @@ namespace ActionServiceAPI.Domain.Models
 
         public DateTime EndDate { get; set; } = endDate;
 
-        public DateTime CreatedAt { get; init; } = DateTime.Now;
+        public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
 
         public Employee CreatedBy { get; set; } = createdBy;
         public int CreatedById { get; set; } = createdBy.Id;
