@@ -1,4 +1,5 @@
 ﻿using ActionServiceAPI.Infrastructure.Data;
+using EventBus.Abstractions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using System.Data.Common;
@@ -22,6 +23,11 @@ namespace ActionService.FunctionalTests.Setup
                         options.UseInMemoryDatabase("TestDatabase")
                         .UseInternalServiceProvider(container);
                     });
+
+                var originalEventBus = services.SingleOrDefault(x => x.ServiceType == typeof(IEventBus));
+                services.Remove(originalEventBus!);
+
+                services.AddSingleton<IEventBus, EventBusMock>();
             });
         }
     }
