@@ -7,14 +7,14 @@ namespace ActionService.FunctionalTests.Setup
     {
         public void Publish(IntegrationEventBase evt)
         {
-            
+
         }
 
         public void Subscribe<T, TH>()
             where T : IntegrationEventBase
             where TH : IIntegrationEventHandler<T>
         {
-            
+
         }
     }
 }

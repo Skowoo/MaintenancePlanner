@@ -10,7 +10,8 @@ namespace ActionService.FunctionalTests.Setup
     {
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
-            builder.ConfigureServices(services => {
+            builder.ConfigureServices(services =>
+            {
                 var originalContext = services.SingleOrDefault(x => x.ServiceType == typeof(DbContextOptions<ActionContext>));
                 services.Remove(originalContext!);
 
@@ -20,7 +21,7 @@ namespace ActionService.FunctionalTests.Setup
                 services.AddEntityFrameworkInMemoryDatabase()
                     .AddDbContext<ActionContext>((container, options) =>
                     {
-                        options.UseInMemoryDatabase("TestDatabase")
+                        options.UseInMemoryDatabase(Guid.NewGuid().ToString())
                         .UseInternalServiceProvider(container);
                     });
 

@@ -19,16 +19,17 @@ namespace ActionService.FunctionalTests.Setup
             var context = scope.ServiceProvider.GetRequiredService<ActionContext>();
             context.Database.EnsureCreated();
 
-            AvailablePart testPart = new (1, 10);
+            AvailablePart testPart = new(1, 10);
             context.AvailableParts.Add(testPart);
-
             context.SaveChanges();
 
             Employee testEmployee = new("TestEmployee");
             context.Employees.Add(testEmployee);
             context.SaveChanges();
 
-            var testAction = new ActionEntity("Test Name", "Test Description", new DateTime(2024, 09, 13), new DateTime(2024, 09, 12), testEmployee, testEmployee);
+            var testAction = new ActionEntity("Test Name", "Test Description", new DateTime(2024, 09, 13), new DateTime(2024, 09, 14), testEmployee, testEmployee);
+            UsedPart usedPart = new(1, 5);
+            testAction.AddPart(usedPart);
             context.Actions.Add(testAction);
             context.SaveChanges();
         }
