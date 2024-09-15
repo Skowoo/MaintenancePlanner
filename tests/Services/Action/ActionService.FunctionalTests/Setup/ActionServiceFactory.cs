@@ -30,6 +30,8 @@ namespace ActionService.FunctionalTests.Setup
 
                 services.AddSingleton<IEventBus, EventBusMock>();
             });
+
+            builder.UseEnvironment("Testing");
         }
     }
 }

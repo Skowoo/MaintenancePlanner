@@ -35,13 +35,12 @@ namespace ActionServiceAPI.Web
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
+                app.Services.SeedDatabase();
             }
 
             var eventBus = app.Services.GetRequiredService<IEventBus>();
             eventBus.Subscribe<NewPartAddedIntegrationEvent, NewPartAddedIntegrationEventHandler>();
-            eventBus.Subscribe<NewUserCreatedIntegrationEvent, NewUserCreatedIntegrationEventHandler>();
-
-            app.Services.SeedDatabase();
+            eventBus.Subscribe<NewUserCreatedIntegrationEvent, NewUserCreatedIntegrationEventHandler>();            
 
             app.UseHttpsRedirection();
             app.UseAuthorization();
