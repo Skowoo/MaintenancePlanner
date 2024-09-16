@@ -26,7 +26,8 @@ namespace ActionService.FunctionalTests
             var response = client.SendAsync(request).Result;
 
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-            var returnedItem = JsonConvert.DeserializeObject<List<ActionDto>>(response.Content.ReadAsStringAsync().Result);            
+            var responseContent = response.Content.ReadAsStringAsync().Result;
+            var returnedItem = JsonConvert.DeserializeObject<List<ActionDto>>(responseContent);
             Assert.IsTrue(returnedItem is not null);
             Assert.AreEqual(1, returnedItem.Count);
         }
@@ -42,7 +43,8 @@ namespace ActionService.FunctionalTests
             };
 
             var response = client.SendAsync(request).Result;
-            var returnedItem = JsonConvert.DeserializeObject<ActionDto>(response.Content.ReadAsStringAsync().Result);
+            var responseContent = response.Content.ReadAsStringAsync().Result;
+            var returnedItem = JsonConvert.DeserializeObject<ActionDto>(responseContent);
 
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
             Assert.IsTrue(returnedItem is not null);

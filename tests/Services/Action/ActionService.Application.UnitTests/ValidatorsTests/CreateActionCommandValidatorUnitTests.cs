@@ -56,8 +56,8 @@ namespace ActionService.Application.UnitTests.ValidatorsTests
                 "Example Description",
                 DateTime.UtcNow,
                 DateTime.UtcNow.AddDays(1),
-                ExistingEmployeeId,
-                ExistingEmployeeId,
+                CreatedByEmployeeId,
+                CreatedByEmployeeId,
                 [usedPart!]);
 
             var result = validator.Validate(command);

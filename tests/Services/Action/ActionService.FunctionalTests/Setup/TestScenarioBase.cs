@@ -11,7 +11,7 @@ namespace ActionService.FunctionalTests.Setup
             var factory = new ActionServiceFactory<Program>();
             var scope = factory.Services.CreateScope();
             SeedDatabase(scope);
-            return factory.CreateClient();            
+            return factory.CreateClient();
         }
 
         static void SeedDatabase(IServiceScope scope)

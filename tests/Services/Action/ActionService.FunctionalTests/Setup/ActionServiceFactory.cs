@@ -21,7 +21,7 @@ namespace ActionService.FunctionalTests.Setup
                 services.AddEntityFrameworkInMemoryDatabase()
                     .AddDbContext<ActionContext>((container, options) =>
                     {
-                        options.UseInMemoryDatabase(Guid.NewGuid().ToString())
+                        options.UseInMemoryDatabase("TestDatabase")
                         .UseInternalServiceProvider(container);
                     });
 
