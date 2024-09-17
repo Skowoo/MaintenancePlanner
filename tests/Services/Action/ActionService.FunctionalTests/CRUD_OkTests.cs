@@ -11,8 +11,6 @@ namespace ActionService.FunctionalTests
     [TestClass]
     public class CRUD_OkTests : TestScenarioBase
     {
-        const string ActionServiceUri = "https://localhost:7120/api/v1/Action/";
-
         [TestMethod]
         public void GetAllActions_ShouldReturnOK()
         {
@@ -54,6 +52,12 @@ namespace ActionService.FunctionalTests
         [TestMethod]
         public void CreateAction_ShouldReturnOKAndId()
         {
+            string name = "New";
+            string description = "new";
+            DateTime startDate = DateTime.Now;
+            DateTime endDate = DateTime.Now.AddDays(7);
+            List<SparePartDto> parts = [new SparePartDto() { PartId = 1, Quantity = 5 }];
+
             var client = GetClient();
             HttpRequestMessage request = new()
             {
@@ -63,7 +67,7 @@ namespace ActionService.FunctionalTests
                 {
                     {HttpRequestHeader.ContentType.ToString(), "application/json"},
                 },
-                Content = JsonContent.Create(new CreateActionCommand("New", "new", DateTime.Now, DateTime.Now, "TestEmployee", "TestEmployee", [new SparePartDto() { PartId = 1, Quantity = 5 }]))
+                Content = JsonContent.Create(new CreateActionCommand(name, description, startDate, endDate, FirstEmployeeId, SecondEmployeeId, parts))
             };
 
             var response = client.SendAsync(request).Result;
@@ -71,11 +75,31 @@ namespace ActionService.FunctionalTests
 
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
             Assert.AreEqual(2, returnedId);
+
+            var newItem = client.DownloadAction(returnedId);
+            Assert.IsTrue(newItem is not null);
+
+            Assert.AreEqual(name, newItem.Name);
+            Assert.AreEqual(description, newItem.Description);
+            Assert.AreEqual(startDate, newItem.StartDate);
+            Assert.AreEqual(endDate, newItem.EndDate);
+            Assert.AreEqual(FirstEmployeeId, newItem.CreatedBy);
+            Assert.AreEqual(SecondEmployeeId, newItem.ConductedBy);
+            Assert.AreEqual(1, parts.Count);
+            Assert.AreEqual(parts.Count, newItem.Parts.Count);
+            Assert.AreEqual(parts[0].PartId, newItem.Parts[0].PartId);
+            Assert.AreEqual(parts[0].Quantity, newItem.Parts[0].Quantity);
         }
 
         [TestMethod]
         public void UpdateAction_ShouldReturnOKAndId()
         {
+            string name = "Updated";
+            string description = "Updated";
+            DateTime startDate = DateTime.Now.AddDays(-5);
+            DateTime endDate = DateTime.Now.AddDays(5);
+            List<SparePartDto> parts = [new SparePartDto() { PartId = 1, Quantity = 2 }];
+
             var client = GetClient();
             HttpRequestMessage request = new()
             {
@@ -85,7 +109,7 @@ namespace ActionService.FunctionalTests
                 {
                     {HttpRequestHeader.ContentType.ToString(), "application/json"},
                 },
-                Content = JsonContent.Create(new UpdateActionCommand(1, "Updated", "Updated", DateTime.Now, DateTime.Now, "TestEmployee", "TestEmployee", [new SparePartDto() { PartId = 1, Quantity = 2 }]))
+                Content = JsonContent.Create(new UpdateActionCommand(1, name, description, startDate, endDate, SecondEmployeeId, FirstEmployeeId, parts))
             };
 
             var response = client.SendAsync(request).Result;
@@ -93,6 +117,20 @@ namespace ActionService.FunctionalTests
 
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
             Assert.AreEqual(1, returnedId);
+
+            var updatedItem = client.DownloadAction(returnedId);
+            Assert.IsTrue(updatedItem is not null);
+
+            Assert.AreEqual(name, updatedItem.Name);
+            Assert.AreEqual(description, updatedItem.Description);
+            Assert.AreEqual(startDate, updatedItem.StartDate);
+            Assert.AreEqual(endDate, updatedItem.EndDate);
+            Assert.AreEqual(SecondEmployeeId, updatedItem.CreatedBy);
+            Assert.AreEqual(FirstEmployeeId, updatedItem.ConductedBy);
+            Assert.AreEqual(1, parts.Count);
+            Assert.AreEqual(parts.Count, updatedItem.Parts.Count);
+            Assert.AreEqual(parts[0].PartId, updatedItem.Parts[0].PartId);
+            Assert.AreEqual(parts[0].Quantity, updatedItem.Parts[0].Quantity);
         }
 
         [TestMethod]
@@ -115,6 +153,9 @@ namespace ActionService.FunctionalTests
 
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
             Assert.AreEqual(1, returnedId);
+
+            var checkDeleted = client.DownloadAction(1);
+            Assert.IsTrue(checkDeleted is null);
         }
     }
 }
