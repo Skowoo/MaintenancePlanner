@@ -39,11 +39,11 @@ namespace ActionServiceAPI.Web.Controllers
 
         [HttpPut]
         [ProducesResponseType(typeof(int), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(int), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(int), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> UpdateAction([FromBody] UpdateActionCommand command)
         {
             var result = await mediator.Send(command);
-            return result ? Ok(command.Id) : NotFound(command.Id);
+            return result ? Ok(command.Id) : BadRequest(command.Id);
         }
 
         [HttpDelete("{id}")]
