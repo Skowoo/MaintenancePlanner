@@ -3,6 +3,7 @@ using EventBus.Abstractions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using System.Data.Common;
+using CommonTestAssets.MockObjects;
 
 namespace ActionService.FunctionalTests.Setup
 {

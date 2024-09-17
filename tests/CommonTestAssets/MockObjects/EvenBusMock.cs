@@ -1,7 +1,7 @@
 ﻿using EventBus.Abstractions;
 using EventBus.Events;
 
-namespace ActionService.FunctionalTests.Setup
+namespace CommonTestAssets.MockObjects
 {
     public class EventBusMock : IEventBus
     {
