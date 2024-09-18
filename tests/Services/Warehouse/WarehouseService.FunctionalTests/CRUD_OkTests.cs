@@ -98,7 +98,7 @@ namespace WarehouseService.FunctionalTests
 
             Part updadetPart = new(partName, partDescription, partManufacturer, partModel, partQuantity, partMinStock)
             {
-                Id = 1
+                Id = targetPartId
             };
 
             var client = GetClient();
