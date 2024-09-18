@@ -5,6 +5,8 @@ namespace WarehouseService.FunctionalTests.Setup
 {
     public class TestingScenarioBase
     {
+        public const string WarehouseServiceUri = "https://localhost:7224/api/v1/Warehouse/";
+
         protected static HttpClient GetClient()
         {
             var factory = new WarehouseServiceFactory();
