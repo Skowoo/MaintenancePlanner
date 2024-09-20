@@ -37,17 +37,17 @@ namespace ActionService.FunctionalTests
         [DataRow("Name", "Desc", 2024, 09, 20, 2024, 09, 22, FirstEmployeeId, SecondEmployeeId, 2, 5, nameof(CreateActionCommand.Parts), "not found")]
         [DataRow("Name", "Desc", 2024, 09, 20, 2024, 09, 22, FirstEmployeeId, SecondEmployeeId, 1, 11, nameof(CreateActionCommand.Parts), "enough")]
         public void CreateAction_ShouldReturnBadRequestAndValidationMessages(
-            string name, 
-            string description, 
+            string name,
+            string description,
             int startYear,
             int startMonth,
             int startDay,
             int endYear,
             int endMonth,
             int endDay,
-            string createdBy, 
-            string conductedBy, 
-            int partId, 
+            string createdBy,
+            string conductedBy,
+            int partId,
             int partQuantity,
             params string[] expectedMessage)
         {

@@ -41,12 +41,12 @@ namespace IdentityService.FunctionalTests
                 Content = JsonContent.Create(registerModel)
             };
 
-            var response = client.SendAsync(request).Result;            
+            var response = client.SendAsync(request).Result;
             var responseContent = response.Content.ReadAsStringAsync().Result;
             var errors = JsonConvert.DeserializeObject<List<IdentityError>>(responseContent);
 
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
-            Assert.IsNotNull(errors);            
+            Assert.IsNotNull(errors);
 
             foreach (var expectedError in expectedErrors)
                 Assert.IsTrue(errors.Any(e => e.Code.Equals(expectedError)), $"{expectedError} not found");
@@ -125,7 +125,7 @@ namespace IdentityService.FunctionalTests
         [DataTestMethod]
         [DataRow("")]
         [DataRow(" ")]
-        [DataRow(null)] 
+        [DataRow(null)]
         public void GetUserByUserName_ReturnsBadRequestAndInputStringWithMissingData(string userName)
         {
             using var client = GetClient();
