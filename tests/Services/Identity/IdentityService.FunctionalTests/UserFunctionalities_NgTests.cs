@@ -54,121 +54,182 @@ namespace IdentityService.FunctionalTests
             Assert.AreEqual(expectedErrors.Length, errors.Count);
         }
 
-        //[TestMethod]
-        //public void Login_ReturnsOk() // To be refactorized 
-        //{
-        //    string login = AdminLogin,
-        //        password = AdminPassword;
+        [DataTestMethod] // To be refactorized with service - change test to use code and service to operate on original Identity codes
+        [DataRow("NotExisting", AdminPassword, "not found")]
+        [DataRow(AdminLogin, "Wr0ngP@sw0rd", "password")]
+        public void Login_ReturnsBadRequestAndIdentityErrorsWithWrongData(string login, string password, params string[] expectedErrorsPartialDescription) // To be refactorized 
+        {
+            using var client = GetClient();
+            HttpRequestMessage request = new()
+            {
+                RequestUri = new Uri(IdentityServiceUri + $"Login?login={login}&password={password}"),
+                Method = HttpMethod.Get
+            };
 
-        //    using var client = GetClient();
-        //    HttpRequestMessage request = new()
-        //    {
-        //        RequestUri = new Uri(IdentityServiceUri + $"Login?login={login}&password={password}"),
-        //        Method = HttpMethod.Get
-        //    };
+            var response = client.SendAsync(request).Result;
+            var responseContent = response.Content.ReadAsStringAsync().Result;
+            var errors = JsonConvert.DeserializeObject<List<IdentityError>>(responseContent);
 
-        //    var response = client.SendAsync(request).Result;
+            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
+            Assert.IsNotNull(errors);
 
-        //    Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-        //}
+            foreach (var expectedError in expectedErrorsPartialDescription)
+                Assert.IsTrue(errors.Any(e => e.Description.Contains(expectedError)), $"{expectedError} not found");
 
-        //[TestMethod]
-        //public void GetUserByUserName_ReturnsUser()
-        //{
-        //    string userName = AdminLogin;
+            Assert.AreEqual(expectedErrorsPartialDescription.Length, errors.Count);
+        }
 
-        //    using var client = GetClient();
-        //    HttpRequestMessage request = new()
-        //    {
-        //        RequestUri = new Uri(IdentityServiceUri + $"GetUserByUserName?userName={userName}"),
-        //        Method = HttpMethod.Get
-        //    };
+        [DataTestMethod] // To be refactorized with service - change test to use code and service to operate on original Identity codes
+        [DataRow("", AdminPassword, "login")]
+        [DataRow("", "", "login", "password")]
+        [DataRow(AdminLogin, "", "password")]
+        public void Login_ReturnsBadRequestAndErrorsWithMissingData(string login, string password, params string[] expectedErrorsPartialDescription) // To be refactorized 
+        {
+            using var client = GetClient();
+            HttpRequestMessage request = new()
+            {
+                RequestUri = new Uri(IdentityServiceUri + $"Login?login={login}&password={password}"),
+                Method = HttpMethod.Get
+            };
 
-        //    var response = client.SendAsync(request).Result;
+            var response = client.SendAsync(request).Result;
+            var responseContent = response.Content.ReadAsStringAsync().Result;
 
-        //    var responseContent = response.Content.ReadAsStringAsync().Result;
-        //    var user = JsonConvert.DeserializeObject<ApplicationUserExternalModel>(responseContent);
+            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
+            Assert.IsNotNull(responseContent);
 
-        //    Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-        //    Assert.IsNotNull(user);
-        //    Assert.AreEqual(AdminLogin, user.UserName);
-        //}
+            foreach (var expectedError in expectedErrorsPartialDescription)
+                Assert.IsTrue(responseContent.Contains(expectedError), $"{expectedError} not found");
+        }
 
-        //[TestMethod]
-        //public void GetRoleByName_ReturnsOkAndRoleName()
-        //{
-        //    string roleName = AdminRoleName;
-        //    using var client = GetClient();
-        //    HttpRequestMessage request = new()
-        //    {
-        //        RequestUri = new Uri(IdentityServiceUri + $"GetRoleByName?roleName={roleName}"),
-        //        Method = HttpMethod.Get
-        //    };
+        [DataTestMethod]
+        [DataRow("NotExistingUser")]
+        public void GetUserByUserName_ReturnsBadRequestAndInputStringWithWrongData(string userName)
+        {
+            using var client = GetClient();
+            HttpRequestMessage request = new()
+            {
+                RequestUri = new Uri(IdentityServiceUri + $"GetUserByUserName?userName={userName}"),
+                Method = HttpMethod.Get
+            };
 
-        //    var response = client.SendAsync(request).Result;
-        //    var responseContent = response.Content.ReadAsStringAsync().Result;
-        //    var role = JsonConvert.DeserializeObject<IdentityRole>(responseContent);
+            var response = client.SendAsync(request).Result;
 
-        //    Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-        //    Assert.IsNotNull(role);
-        //    Assert.AreEqual(roleName, role.Name);
-        //}
+            var responseContent = response.Content.ReadAsStringAsync().Result;
 
-        //[TestMethod]
-        //public void GetAllRoles_ReturnsRolesList()
-        //{
-        //    using var client = GetClient();
-        //    HttpRequestMessage request = new()
-        //    {
-        //        RequestUri = new Uri(IdentityServiceUri + $"GetAllRoles"),
-        //        Method = HttpMethod.Get
-        //    };
+            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
+            Assert.IsNotNull(responseContent);
+            Assert.AreEqual(userName, responseContent);
+        }
 
-        //    var response = client.SendAsync(request).Result;
+        [DataTestMethod]
+        [DataRow("")]
+        [DataRow(" ")]
+        [DataRow(null)] 
+        public void GetUserByUserName_ReturnsBadRequestAndInputStringWithMissingData(string userName)
+        {
+            using var client = GetClient();
+            HttpRequestMessage request = new()
+            {
+                RequestUri = new Uri(IdentityServiceUri + $"GetUserByUserName?userName={userName}"),
+                Method = HttpMethod.Get
+            };
 
-        //    var responseContent = response.Content.ReadAsStringAsync().Result;
-        //    var roles = JsonConvert.DeserializeObject<List<IdentityRole>>(responseContent);
+            var response = client.SendAsync(request).Result;
 
-        //    Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-        //    Assert.IsNotNull(roles);
-        //    Assert.AreEqual(1, roles.Count);
-        //    Assert.AreEqual(AdminRoleName, roles[0].Name);
-        //}
+            var responseContent = response.Content.ReadAsStringAsync().Result;
 
-        //[TestMethod]
-        //public void AddUserToRole_ShouldReturnOk()
-        //{
-        //    string userName = NoRoleUserLogin,
-        //        roleName = AdminRoleName;
+            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
+            Assert.IsNotNull(responseContent);
+            Assert.IsTrue(responseContent.Contains("userName"));
+        }
 
-        //    var client = GetClient();
-        //    HttpRequestMessage request = new()
-        //    {
-        //        RequestUri = new Uri(IdentityServiceUri + $"AddUserToRole?userName={userName}&roleName={roleName}"),
-        //        Method = HttpMethod.Patch
-        //    };
+        [DataTestMethod]
+        [DataRow("NotExistingRoleName")]
+        public void GetRoleByName_ReturnsNotFoundAndRoleName(string roleName)
+        {
+            using var client = GetClient();
+            HttpRequestMessage request = new()
+            {
+                RequestUri = new Uri(IdentityServiceUri + $"GetRoleByName?roleName={roleName}"),
+                Method = HttpMethod.Get
+            };
 
-        //    var response = client.SendAsync(request).Result;
+            var response = client.SendAsync(request).Result;
+            var responseContent = response.Content.ReadAsStringAsync().Result;
 
-        //    Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-        //}
+            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
+            Assert.IsNotNull(responseContent);
+            Assert.AreEqual(roleName, responseContent);
+        }
 
-        //[TestMethod]
-        //public void RemoveUserFromRole_ShouldReturnOk()
-        //{
-        //    string userName = AdminRoleName,
-        //        roleName = AdminRoleName;
+        [DataTestMethod]
+        [DataRow("")]
+        [DataRow(" ")]
+        [DataRow(null)]
+        public void GetRoleByName_ReturnsBadRequest(string roleName)
+        {
+            using var client = GetClient();
+            HttpRequestMessage request = new()
+            {
+                RequestUri = new Uri(IdentityServiceUri + $"GetRoleByName?roleName={roleName}"),
+                Method = HttpMethod.Get
+            };
 
-        //    var client = GetClient();
-        //    HttpRequestMessage request = new()
-        //    {
-        //        RequestUri = new Uri(IdentityServiceUri + $"RemoveUserFromRole?userName={userName}&roleName={roleName}"),
-        //        Method = HttpMethod.Patch
-        //    };
+            var response = client.SendAsync(request).Result;
+            var responseContent = response.Content.ReadAsStringAsync().Result;
 
-        //    var response = client.SendAsync(request).Result;
+            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
+            Assert.IsNotNull(responseContent);
+            Assert.IsTrue(responseContent.Contains("roleName"));
+        }
 
-        //    Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-        //}
+        [DataTestMethod]
+        [DataRow(AdminLogin, AdminRoleName, "UserAlreadyInRole")]
+        public void AddUserToRole_ShouldReturnBadRequestAndIdentityErrors(string userName, string roleName, params string[] expectedErrors)
+        {
+            var client = GetClient();
+            HttpRequestMessage request = new()
+            {
+                RequestUri = new Uri(IdentityServiceUri + $"AddUserToRole?userName={userName}&roleName={roleName}"),
+                Method = HttpMethod.Patch
+            };
+
+            var response = client.SendAsync(request).Result;
+            var responseContent = response.Content.ReadAsStringAsync().Result;
+            var errors = JsonConvert.DeserializeObject<List<IdentityError>>(responseContent);
+
+            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
+            Assert.IsNotNull(errors);
+
+            foreach (var expectedError in expectedErrors)
+                Assert.IsTrue(errors.Any(e => e.Code.Equals(expectedError)), $"{expectedError} not found");
+
+            Assert.AreEqual(expectedErrors.Length, errors.Count);
+        }
+
+        [DataTestMethod]
+        [DataRow(NoRoleUserLogin, AdminRoleName, "UserNotInRole")]
+        public void RemoveUserFromRole_ShouldReturnBadRequestAndIdentityErrors(string userName, string roleName, params string[] expectedErrors)
+        {
+            var client = GetClient();
+            HttpRequestMessage request = new()
+            {
+                RequestUri = new Uri(IdentityServiceUri + $"RemoveUserFromRole?userName={userName}&roleName={roleName}"),
+                Method = HttpMethod.Patch
+            };
+
+            var response = client.SendAsync(request).Result;
+            var responseContent = response.Content.ReadAsStringAsync().Result;
+            var errors = JsonConvert.DeserializeObject<List<IdentityError>>(responseContent);
+
+            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
+            Assert.IsNotNull(errors);
+
+            foreach (var expectedError in expectedErrors)
+                Assert.IsTrue(errors.Any(e => e.Code.Equals(expectedError)), $"{expectedError} not found");
+
+            Assert.AreEqual(expectedErrors.Length, errors.Count);
+        }
     }
 }
