@@ -44,9 +44,8 @@ namespace WarehouseServiceAPI
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
-            }
-
-            app.SeedDatabase();
+                app.SeedDatabase();
+            }            
 
             app.UseHttpsRedirection();
 

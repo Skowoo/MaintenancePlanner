@@ -36,15 +36,14 @@ namespace IdentityServiceAPI
             builder.Services.AddTransient<IIntegrationEventService, IntegrationEventService>();
             builder.Services.AddRabbitMQEventBus();
 
-            var app = builder.Build();
-
-            app.SeedDatabase();
+            var app = builder.Build();            
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
+                app.SeedDatabase();
             }
 
             app.UseHttpsRedirection();

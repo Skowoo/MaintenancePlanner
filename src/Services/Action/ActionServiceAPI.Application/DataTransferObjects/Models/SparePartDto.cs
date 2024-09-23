@@ -2,8 +2,8 @@
 {
     public class SparePartDto
     {
-        public int PartId { get; set; }
+        public int PartId { get; init; }
 
-        public int Quantity { get; set; }
+        public int Quantity { get; init; }
     }
 }
