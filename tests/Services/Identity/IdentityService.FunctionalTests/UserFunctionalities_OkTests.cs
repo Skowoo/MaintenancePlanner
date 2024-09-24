@@ -148,14 +148,14 @@ namespace IdentityService.FunctionalTests
         [TestMethod]
         public void AddUserToRole_ShouldReturnOk()
         {
-            string userName = NoRoleUserLogin,
-                roleName = AdminRoleName;
+            RoleAssignChangeModel roleAssignChangeModel = new(NoRoleUserLogin, AdminRoleName);
 
             var client = GetClient();
             HttpRequestMessage request = new()
             {
-                RequestUri = new Uri(IdentityServiceUri + $"AddUserToRole?userName={userName}&roleName={roleName}"),
-                Method = HttpMethod.Patch
+                RequestUri = new Uri(IdentityServiceUri + $"AddUserToRole"),
+                Method = HttpMethod.Patch,
+                Content = JsonContent.Create(roleAssignChangeModel)
             };
 
             var response = client.SendAsync(request).Result;
@@ -166,14 +166,14 @@ namespace IdentityService.FunctionalTests
         [TestMethod]
         public void RemoveUserFromRole_ShouldReturnOk()
         {
-            string userName = AdminRoleName,
-                roleName = AdminRoleName;
+            RoleAssignChangeModel roleAssignChangeModel = new(AdminLogin, AdminRoleName);
 
             var client = GetClient();
             HttpRequestMessage request = new()
             {
-                RequestUri = new Uri(IdentityServiceUri + $"RemoveUserFromRole?userName={userName}&roleName={roleName}"),
-                Method = HttpMethod.Patch
+                RequestUri = new Uri(IdentityServiceUri + $"RemoveUserFromRole"),
+                Method = HttpMethod.Patch,
+                Content = JsonContent.Create(roleAssignChangeModel)
             };
 
             var response = client.SendAsync(request).Result;

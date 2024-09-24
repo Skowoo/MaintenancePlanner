@@ -160,11 +160,13 @@ namespace IdentityService.FunctionalTests
         [DataRow(AdminLogin, AdminRoleName, "UserAlreadyInRole")]
         public void AddUserToRole_ShouldReturnBadRequestAndIdentityErrors(string userName, string roleName, params string[] expectedErrors)
         {
-            var client = GetClient();
+            using var client = GetClient();
+            RoleAssignChangeModel roleAssignChangeModel = new(userName, roleName);
             HttpRequestMessage request = new()
             {
-                RequestUri = new Uri(IdentityServiceUri + $"AddUserToRole?userName={userName}&roleName={roleName}"),
-                Method = HttpMethod.Patch
+                RequestUri = new Uri(IdentityServiceUri + $"AddUserToRole"),
+                Method = HttpMethod.Patch,
+                Content = JsonContent.Create(roleAssignChangeModel)
             };
 
             var response = client.SendAsync(request).Result;
@@ -184,11 +186,13 @@ namespace IdentityService.FunctionalTests
         [DataRow(NoRoleUserLogin, AdminRoleName, "UserNotInRole")]
         public void RemoveUserFromRole_ShouldReturnBadRequestAndIdentityErrors(string userName, string roleName, params string[] expectedErrors)
         {
-            var client = GetClient();
+            using var client = GetClient();
+            RoleAssignChangeModel roleAssignChangeModel = new(userName, roleName);
             HttpRequestMessage request = new()
             {
-                RequestUri = new Uri(IdentityServiceUri + $"RemoveUserFromRole?userName={userName}&roleName={roleName}"),
-                Method = HttpMethod.Patch
+                RequestUri = new Uri(IdentityServiceUri + $"RemoveUserFromRole"),
+                Method = HttpMethod.Patch,
+                Content = JsonContent.Create(roleAssignChangeModel)
             };
 
             var response = client.SendAsync(request).Result;

@@ -64,17 +64,17 @@ namespace IdentityServiceAPI.Controllers
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(IEnumerable<IdentityError>), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
-        public async Task<IActionResult> AddUserToRole(string userName, string roleName)
+        public async Task<IActionResult> AddUserToRole([FromBody] RoleAssignChangeModel input)
         {
-            var user = await identityService.FindUserByUserName(userName);
+            var user = await identityService.FindUserByUserName(input.Login);
             if (user is null)
-                return NotFound($"{nameof(userName)} : {userName} not found!");
+                return NotFound($"{nameof(input.Login)} : {input.Login} not found!");
 
-            var role = await identityService.FindRoleByName(roleName);
+            var role = await identityService.FindRoleByName(input.RoleName);
             if (role is null)
-                return NotFound($"{nameof(roleName)} : {roleName} not found!");
+                return NotFound($"{nameof(input.RoleName)} : {input.RoleName} not found!");
 
-            var result = await identityService.AddUserToRole(user, roleName);
+            var result = await identityService.AddUserToRole(user, input.RoleName);
             return result.Succeeded ? Ok() : BadRequest(result.Errors);
         }
 
@@ -82,17 +82,17 @@ namespace IdentityServiceAPI.Controllers
         [ProducesResponseType(typeof(int), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(IEnumerable<IdentityError>), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
-        public async Task<IActionResult> RemoveUserFromRole(string userName, string roleName)
+        public async Task<IActionResult> RemoveUserFromRole([FromBody] RoleAssignChangeModel input)
         {
-            var user = await identityService.FindUserByUserName(userName);
+            var user = await identityService.FindUserByUserName(input.Login);
             if (user is null)
-                return NotFound($"{nameof(userName)} : {userName} not found!");
+                return NotFound($"{nameof(input.Login)} : {input.Login} not found!");
 
-            var role = await identityService.FindRoleByName(roleName);
+            var role = await identityService.FindRoleByName(input.RoleName);
             if (role is null)
-                return NotFound($"{nameof(roleName)} : {roleName} not found!");
+                return NotFound($"{nameof(input.RoleName)} : {input.RoleName} not found!");
 
-            var result = await identityService.RemoveUserFromRole(user, roleName);
+            var result = await identityService.RemoveUserFromRole(user, input.RoleName);
             return result.Succeeded ? Ok() : BadRequest(result.Errors);
         }
     }
