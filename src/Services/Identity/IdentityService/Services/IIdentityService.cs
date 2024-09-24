@@ -5,9 +5,9 @@ namespace IdentityServiceAPI.Services
 {
     public interface IIdentityService
     {
-        Task<(IdentityResult Result, string? NewUserId)> RegisterNewUser(RegisterModel user, string password);
+        Task<(IdentityResult Result, string? NewUserId)> RegisterNewUser(RegisterModel registerModel);
 
-        Task<IdentityResult> LoginUser(string login, string password);
+        Task<IdentityResult> LoginUser(LoginModel loginModel);
 
         Task<IEnumerable<ApplicationUser>> GetAllUsers();
 
@@ -17,8 +17,8 @@ namespace IdentityServiceAPI.Services
 
         Task<IdentityRole?> FindRoleByName(string roleName);
 
-        Task<IdentityResult> AddUserToRole(ApplicationUser user, string roleName);
+        Task<IdentityResult> AddUserToRole(string user, string roleName);
 
-        Task<IdentityResult> RemoveUserFromRole(ApplicationUser user, string roleName);
+        Task<IdentityResult> RemoveUserFromRole(string user, string roleName);
     }
 }

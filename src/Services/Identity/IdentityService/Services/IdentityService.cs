@@ -18,15 +18,15 @@ namespace IdentityServiceAPI.Services
         readonly IIntegrationEventService _integrationEventService = integrationEventService;
         readonly ILogger<IdentityService> _logger = logger;
 
-        public async Task<(IdentityResult Result, string? NewUserId)> RegisterNewUser(RegisterModel user, string password)
+        public async Task<(IdentityResult Result, string? NewUserId)> RegisterNewUser(RegisterModel registerModel)
         {
             ApplicationUser newUser = new()
             {
-                UserName = user.Login,
-                Email = user.Email
+                UserName = registerModel.Login,
+                Email = registerModel.Email
             };
 
-            var result = await _userManager.CreateAsync(newUser, password);
+            var result = await _userManager.CreateAsync(newUser, registerModel.Password);
 
             if (result.Succeeded)
             {
@@ -39,9 +39,9 @@ namespace IdentityServiceAPI.Services
             return (result, newUser.Id);
         }
 
-        public async Task<IdentityResult> LoginUser(string login, string password)
+        public async Task<IdentityResult> LoginUser(LoginModel loginModel)
         {
-            var user = await FindUserByUserName(login);
+            var user = await FindUserByUserName(loginModel.Login);
 
             if (user is null)
             {
@@ -49,7 +49,7 @@ namespace IdentityServiceAPI.Services
                 return IdentityResult.Failed(new IdentityError { Description = "User not found" });
             }
 
-            var loginSuccessed = await _userManager.CheckPasswordAsync(user, password);
+            var loginSuccessed = await _userManager.CheckPasswordAsync(user, loginModel.Password);
 
             if (loginSuccessed)
             {
@@ -71,8 +71,22 @@ namespace IdentityServiceAPI.Services
 
         public async Task<IdentityRole?> FindRoleByName(string roleName) => await _roleManager.FindByNameAsync(roleName);
 
-        public async Task<IdentityResult> AddUserToRole(ApplicationUser user, string roleName) => await _userManager.AddToRoleAsync(user, roleName);
+        public async Task<IdentityResult> AddUserToRole(string userName, string roleName)
+        {
+            var user = await FindUserByUserName(userName);
+            if (user is null)
+                return IdentityResult.Failed(new IdentityError { Code = "UserNameNotFound", Description = "User not found" });
 
-        public async Task<IdentityResult> RemoveUserFromRole(ApplicationUser user, string roleName) => await _userManager.RemoveFromRoleAsync(user, roleName);
+            return await _userManager.AddToRoleAsync(user, roleName);
+        }
+
+        public async Task<IdentityResult> RemoveUserFromRole(string userName, string roleName)
+        {
+            var user = await FindUserByUserName(userName);
+            if (user is null)
+                return IdentityResult.Failed(new IdentityError { Code = "UserNameNotFound", Description = "User not found" });
+
+            return await _userManager.RemoveFromRoleAsync(user, roleName);
+        }
     }
 }

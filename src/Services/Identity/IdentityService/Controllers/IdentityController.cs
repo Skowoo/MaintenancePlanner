@@ -16,7 +16,7 @@ namespace IdentityServiceAPI.Controllers
         [ProducesResponseType(typeof(IEnumerable<IdentityError>), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> RegisterNewUser([FromBody] RegisterModel user)
         {
-            var (Result, NewUserId) = await identityService.RegisterNewUser(user, user.Password);
+            var (Result, NewUserId) = await identityService.RegisterNewUser(user);
             return Result.Succeeded ? Ok(NewUserId) : BadRequest(Result.Errors);
         }
 
@@ -25,7 +25,7 @@ namespace IdentityServiceAPI.Controllers
         [ProducesResponseType(typeof(IEnumerable<IdentityError>), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> Login([FromBody] LoginModel user)
         {
-            var result = await identityService.LoginUser(user.Login, user.Password);
+            var result = await identityService.LoginUser(user);
             return result.Succeeded ? Ok() : BadRequest(result.Errors);
         }
 
@@ -63,36 +63,18 @@ namespace IdentityServiceAPI.Controllers
         [HttpPatch]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(IEnumerable<IdentityError>), (int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> AddUserToRole([FromBody] RoleAssignChangeModel input)
         {
-            var user = await identityService.FindUserByUserName(input.Login);
-            if (user is null)
-                return NotFound($"{nameof(input.Login)} : {input.Login} not found!");
-
-            var role = await identityService.FindRoleByName(input.RoleName);
-            if (role is null)
-                return NotFound($"{nameof(input.RoleName)} : {input.RoleName} not found!");
-
-            var result = await identityService.AddUserToRole(user, input.RoleName);
+            var result = await identityService.AddUserToRole(input.Login, input.RoleName);
             return result.Succeeded ? Ok() : BadRequest(result.Errors);
         }
 
         [HttpPatch]
         [ProducesResponseType(typeof(int), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(IEnumerable<IdentityError>), (int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> RemoveUserFromRole([FromBody] RoleAssignChangeModel input)
         {
-            var user = await identityService.FindUserByUserName(input.Login);
-            if (user is null)
-                return NotFound($"{nameof(input.Login)} : {input.Login} not found!");
-
-            var role = await identityService.FindRoleByName(input.RoleName);
-            if (role is null)
-                return NotFound($"{nameof(input.RoleName)} : {input.RoleName} not found!");
-
-            var result = await identityService.RemoveUserFromRole(user, input.RoleName);
+            var result = await identityService.RemoveUserFromRole(input.Login, input.RoleName);
             return result.Succeeded ? Ok() : BadRequest(result.Errors);
         }
     }

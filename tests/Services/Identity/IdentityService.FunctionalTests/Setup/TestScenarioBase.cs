@@ -43,7 +43,7 @@ namespace IdentityService.FunctionalTests.Setup
                 Email = AdminEmail,
                 Password = AdminPassword
             };
-            identityService.RegisterNewUser(adminRegisterModel, AdminPassword).Wait();
+            identityService.RegisterNewUser(adminRegisterModel).Wait();
 
             var noRoleUserRegisterModel = new RegisterModel()
             {
@@ -51,13 +51,13 @@ namespace IdentityService.FunctionalTests.Setup
                 Email = NoRoleUserEmail,
                 Password = NoRoleUserPassword
             };
-            identityService.RegisterNewUser(noRoleUserRegisterModel, NoRoleUserPassword).Wait();
+            identityService.RegisterNewUser(noRoleUserRegisterModel).Wait();
 
             roleManager.CreateAsync(new IdentityRole(AdminRoleName)).Wait();
             context.SaveChanges();
 
             var admin = context.Users.Single(u => u.UserName == AdminLogin);
-            identityService.AddUserToRole(admin, AdminRoleName).Wait();
+            identityService.AddUserToRole(AdminLogin, AdminRoleName).Wait();
             context.SaveChanges();
         }
     }
