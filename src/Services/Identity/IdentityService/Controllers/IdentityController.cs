@@ -14,7 +14,7 @@ namespace IdentityServiceAPI.Controllers
         [HttpPost]
         [ProducesResponseType(typeof(int), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(IEnumerable<IdentityError>), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> RegisterNewUser(RegisterModel user)
+        public async Task<IActionResult> RegisterNewUser([FromBody] RegisterModel user)
         {
             var (Result, NewUserId) = await identityService.RegisterNewUser(user, user.Password);
             return Result.Succeeded ? Ok(NewUserId) : BadRequest(Result.Errors);
@@ -23,9 +23,9 @@ namespace IdentityServiceAPI.Controllers
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(IEnumerable<IdentityError>), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> Login(string login, string password)
+        public async Task<IActionResult> Login([FromBody] LoginModel user)
         {
-            var result = await identityService.LoginUser(login, password);
+            var result = await identityService.LoginUser(user.Login, user.Password);
             return result.Succeeded ? Ok() : BadRequest(result.Errors);
         }
 

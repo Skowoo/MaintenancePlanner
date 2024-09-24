@@ -44,16 +44,16 @@ namespace IdentityService.FunctionalTests
         }
 
         [TestMethod]
-        public void Login_ReturnsOk() // To be refactorized 
+        public void Login_ReturnsOk() // To be refactorized
         {
-            string login = AdminLogin,
-                password = AdminPassword;
+            LoginModel loginModel = new(AdminLogin, AdminPassword);
 
             using var client = GetClient();
             HttpRequestMessage request = new()
             {
-                RequestUri = new Uri(IdentityServiceUri + $"Login?login={login}&password={password}"),
-                Method = HttpMethod.Get
+                RequestUri = new Uri(IdentityServiceUri + $"Login"),
+                Method = HttpMethod.Get,
+                Content = JsonContent.Create(loginModel)
             };
 
             var response = client.SendAsync(request).Result;
