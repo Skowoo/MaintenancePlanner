@@ -96,5 +96,7 @@ namespace IdentityServiceAPI.Services
 
             return await _userManager.RemoveFromRoleAsync(user, roleName);
         }
+
+        public async Task<IEnumerable<string>> GetUserRoles(ApplicationUser user) => await _userManager.GetRolesAsync(user);
     }
 }

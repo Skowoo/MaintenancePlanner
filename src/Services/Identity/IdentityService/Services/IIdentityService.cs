@@ -20,5 +20,7 @@ namespace IdentityServiceAPI.Services
         Task<IdentityResult> AddUserToRole(string user, string roleName);
 
         Task<IdentityResult> RemoveUserFromRole(string user, string roleName);
+
+        Task<IEnumerable<string>> GetUserRoles(ApplicationUser user);
     }
 }

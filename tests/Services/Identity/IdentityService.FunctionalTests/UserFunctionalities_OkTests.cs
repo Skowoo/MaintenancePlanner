@@ -2,6 +2,7 @@
 using IdentityServiceAPI.Models;
 using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json;
+using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 
 namespace IdentityService.FunctionalTests
@@ -57,8 +58,13 @@ namespace IdentityService.FunctionalTests
             };
 
             var response = client.SendAsync(request).Result;
+            var responseContent = response.Content.ReadAsStringAsync().Result;
+            var handler = new JwtSecurityTokenHandler();
+            var decodedToken = handler.ReadJwtToken(responseContent);
 
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            Assert.IsNotNull(responseContent);            
+            Assert.IsTrue(handler.CanReadToken(responseContent));
         }
 
         [TestMethod]
