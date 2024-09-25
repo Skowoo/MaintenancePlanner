@@ -53,7 +53,7 @@ namespace IdentityService.FunctionalTests
         public void Login_ReturnsBadRequestAndIdentityErrorsWithWrongData(string login, string password, params string[] expectedErrorsPartialDescription)
         {
             using var client = GetClient();
-            LoginModel loginModel = new(login, password);            
+            LoginModel loginModel = new(login, password);
             HttpRequestMessage request = new()
             {
                 RequestUri = new Uri(IdentityServiceUri + $"Login"),

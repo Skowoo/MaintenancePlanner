@@ -1,6 +1,4 @@
-﻿using ActionServiceAPI.Domain.Models;
-
-namespace ActionServiceAPI.Application.DataTransferObjects.Models
+﻿namespace ActionServiceAPI.Application.DataTransferObjects.Models
 {
     public class ActionDto
     {
