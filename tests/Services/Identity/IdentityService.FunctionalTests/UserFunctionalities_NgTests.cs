@@ -158,6 +158,10 @@ namespace IdentityService.FunctionalTests
 
         [DataTestMethod]
         [DataRow(AdminLogin, AdminRoleName, "UserAlreadyInRole")]
+        [DataRow("NotExistingUser", AdminRoleName, "UserNameNotFound")]
+        [DataRow("", AdminRoleName, "UserNameNotFound")]
+        [DataRow(NoRoleUserLogin, "InvalidRoleName", "InvalidRoleName")]
+        [DataRow(NoRoleUserLogin, "", "InvalidRoleName")]
         public void AddUserToRole_ShouldReturnBadRequestAndIdentityErrors(string userName, string roleName, params string[] expectedErrors)
         {
             using var client = GetClient();
@@ -184,6 +188,10 @@ namespace IdentityService.FunctionalTests
 
         [DataTestMethod]
         [DataRow(NoRoleUserLogin, AdminRoleName, "UserNotInRole")]
+        [DataRow("NotExistingUser", AdminRoleName, "UserNameNotFound")]
+        [DataRow("", AdminRoleName, "UserNameNotFound")]
+        [DataRow(NoRoleUserLogin, "InvalidRoleName", "InvalidRoleName")]
+        [DataRow(NoRoleUserLogin, "", "InvalidRoleName")]
         public void RemoveUserFromRole_ShouldReturnBadRequestAndIdentityErrors(string userName, string roleName, params string[] expectedErrors)
         {
             using var client = GetClient();

@@ -77,6 +77,10 @@ namespace IdentityServiceAPI.Services
             if (user is null)
                 return IdentityResult.Failed(new IdentityError { Code = "UserNameNotFound", Description = "User not found" });
 
+            var role = await FindRoleByName(roleName);
+            if (role is null)
+                return IdentityResult.Failed(new IdentityError { Code = "InvalidRoleName", Description = $"Role not found" });
+
             return await _userManager.AddToRoleAsync(user, roleName);
         }
 
@@ -85,6 +89,10 @@ namespace IdentityServiceAPI.Services
             var user = await FindUserByUserName(userName);
             if (user is null)
                 return IdentityResult.Failed(new IdentityError { Code = "UserNameNotFound", Description = "User not found" });
+
+            var role = await FindRoleByName(roleName);
+            if (role is null)
+                return IdentityResult.Failed(new IdentityError { Code = "InvalidRoleName", Description = $"Role not found" });
 
             return await _userManager.RemoveFromRoleAsync(user, roleName);
         }
