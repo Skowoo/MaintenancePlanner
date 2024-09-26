@@ -23,21 +23,11 @@ namespace IdentityService.FunctionalTests
         public void RegisterNewUser_ReturnsBadRequestAndIdentityErrors(string login, string email, string password, params string[] expectedErrors)
         {
             var client = GetClient();
-            RegisterModel registerModel = new()
-            {
-                Login = login,
-                Email = email,
-                Password = password
-            };
-
+            RegisterModel registerModel = new(login, email, password);
             HttpRequestMessage request = new()
             {
                 RequestUri = new Uri(IdentityServiceUri + $"RegisterNewUser"),
                 Method = HttpMethod.Post,
-                Headers =
-                {
-                    {HttpRequestHeader.ContentType.ToString(), "application/json"},
-                },
                 Content = JsonContent.Create(registerModel)
             };
 
@@ -54,16 +44,21 @@ namespace IdentityService.FunctionalTests
             Assert.AreEqual(expectedErrors.Length, errors.Count);
         }
 
-        [DataTestMethod] // To be refactorized with service - change test to use code and service to operate on original Identity codes
+        [DataTestMethod]
         [DataRow("NotExisting", AdminPassword, "not found")]
         [DataRow(AdminLogin, "Wr0ngP@sw0rd", "password")]
-        public void Login_ReturnsBadRequestAndIdentityErrorsWithWrongData(string login, string password, params string[] expectedErrorsPartialDescription) // To be refactorized 
+        [DataRow("", AdminPassword, "not found")]
+        [DataRow("", "", "not found")]
+        [DataRow(AdminLogin, "", "password")]
+        public void Login_ReturnsBadRequestAndIdentityErrorsWithWrongData(string login, string password, params string[] expectedErrorsPartialDescription)
         {
             using var client = GetClient();
+            LoginModel loginModel = new(login, password);
             HttpRequestMessage request = new()
             {
-                RequestUri = new Uri(IdentityServiceUri + $"Login?login={login}&password={password}"),
-                Method = HttpMethod.Get
+                RequestUri = new Uri(IdentityServiceUri + $"Login"),
+                Method = HttpMethod.Get,
+                Content = JsonContent.Create(loginModel)
             };
 
             var response = client.SendAsync(request).Result;
@@ -77,29 +72,6 @@ namespace IdentityService.FunctionalTests
                 Assert.IsTrue(errors.Any(e => e.Description.Contains(expectedError)), $"{expectedError} not found");
 
             Assert.AreEqual(expectedErrorsPartialDescription.Length, errors.Count);
-        }
-
-        [DataTestMethod] // To be refactorized with service - change test to use code and service to operate on original Identity codes
-        [DataRow("", AdminPassword, "login")]
-        [DataRow("", "", "login", "password")]
-        [DataRow(AdminLogin, "", "password")]
-        public void Login_ReturnsBadRequestAndErrorsWithMissingData(string login, string password, params string[] expectedErrorsPartialDescription) // To be refactorized 
-        {
-            using var client = GetClient();
-            HttpRequestMessage request = new()
-            {
-                RequestUri = new Uri(IdentityServiceUri + $"Login?login={login}&password={password}"),
-                Method = HttpMethod.Get
-            };
-
-            var response = client.SendAsync(request).Result;
-            var responseContent = response.Content.ReadAsStringAsync().Result;
-
-            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
-            Assert.IsNotNull(responseContent);
-
-            foreach (var expectedError in expectedErrorsPartialDescription)
-                Assert.IsTrue(responseContent.Contains(expectedError), $"{expectedError} not found");
         }
 
         [DataTestMethod]
@@ -186,13 +158,19 @@ namespace IdentityService.FunctionalTests
 
         [DataTestMethod]
         [DataRow(AdminLogin, AdminRoleName, "UserAlreadyInRole")]
+        [DataRow("NotExistingUser", AdminRoleName, "UserNameNotFound")]
+        [DataRow("", AdminRoleName, "UserNameNotFound")]
+        [DataRow(NoRoleUserLogin, "InvalidRoleName", "InvalidRoleName")]
+        [DataRow(NoRoleUserLogin, "", "InvalidRoleName")]
         public void AddUserToRole_ShouldReturnBadRequestAndIdentityErrors(string userName, string roleName, params string[] expectedErrors)
         {
-            var client = GetClient();
+            using var client = GetClient();
+            RoleAssignChangeModel roleAssignChangeModel = new(userName, roleName);
             HttpRequestMessage request = new()
             {
-                RequestUri = new Uri(IdentityServiceUri + $"AddUserToRole?userName={userName}&roleName={roleName}"),
-                Method = HttpMethod.Patch
+                RequestUri = new Uri(IdentityServiceUri + $"AddUserToRole"),
+                Method = HttpMethod.Patch,
+                Content = JsonContent.Create(roleAssignChangeModel)
             };
 
             var response = client.SendAsync(request).Result;
@@ -210,13 +188,19 @@ namespace IdentityService.FunctionalTests
 
         [DataTestMethod]
         [DataRow(NoRoleUserLogin, AdminRoleName, "UserNotInRole")]
+        [DataRow("NotExistingUser", AdminRoleName, "UserNameNotFound")]
+        [DataRow("", AdminRoleName, "UserNameNotFound")]
+        [DataRow(NoRoleUserLogin, "InvalidRoleName", "InvalidRoleName")]
+        [DataRow(NoRoleUserLogin, "", "InvalidRoleName")]
         public void RemoveUserFromRole_ShouldReturnBadRequestAndIdentityErrors(string userName, string roleName, params string[] expectedErrors)
         {
-            var client = GetClient();
+            using var client = GetClient();
+            RoleAssignChangeModel roleAssignChangeModel = new(userName, roleName);
             HttpRequestMessage request = new()
             {
-                RequestUri = new Uri(IdentityServiceUri + $"RemoveUserFromRole?userName={userName}&roleName={roleName}"),
-                Method = HttpMethod.Patch
+                RequestUri = new Uri(IdentityServiceUri + $"RemoveUserFromRole"),
+                Method = HttpMethod.Patch,
+                Content = JsonContent.Create(roleAssignChangeModel)
             };
 
             var response = client.SendAsync(request).Result;

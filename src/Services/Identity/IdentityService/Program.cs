@@ -1,7 +1,6 @@
 using EventBusRabbitMQ;
 using IdentityServiceAPI.Infrastructure;
 using IdentityServiceAPI.IntegrationEvents;
-using IdentityServiceAPI.Mapping;
 using IdentityServiceAPI.Models;
 using IdentityServiceAPI.Services;
 using Microsoft.AspNetCore.Identity;
@@ -30,13 +29,14 @@ namespace IdentityServiceAPI
                 .AddEntityFrameworkStores<IdentityContext>();
 
             builder.Services.AddScoped<IIdentityService, IdentityService>();
+            builder.Services.AddScoped<IAuthorizationService, AuthorizationService>();
 
             builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
             builder.Services.AddTransient<IIntegrationEventService, IntegrationEventService>();
             builder.Services.AddRabbitMQEventBus();
 
-            var app = builder.Build();            
+            var app = builder.Build();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

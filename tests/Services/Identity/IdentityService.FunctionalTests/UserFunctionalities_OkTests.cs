@@ -2,6 +2,7 @@
 using IdentityServiceAPI.Models;
 using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json;
+using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 
 namespace IdentityService.FunctionalTests
@@ -44,21 +45,26 @@ namespace IdentityService.FunctionalTests
         }
 
         [TestMethod]
-        public void Login_ReturnsOk() // To be refactorized 
+        public void Login_ReturnsOk() // To be refactorized
         {
-            string login = AdminLogin,
-                password = AdminPassword;
+            LoginModel loginModel = new(AdminLogin, AdminPassword);
 
             using var client = GetClient();
             HttpRequestMessage request = new()
             {
-                RequestUri = new Uri(IdentityServiceUri + $"Login?login={login}&password={password}"),
-                Method = HttpMethod.Get
+                RequestUri = new Uri(IdentityServiceUri + $"Login"),
+                Method = HttpMethod.Get,
+                Content = JsonContent.Create(loginModel)
             };
 
             var response = client.SendAsync(request).Result;
+            var responseContent = response.Content.ReadAsStringAsync().Result;
+            var handler = new JwtSecurityTokenHandler();
+            var decodedToken = handler.ReadJwtToken(responseContent);
 
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            Assert.IsNotNull(responseContent);            
+            Assert.IsTrue(handler.CanReadToken(responseContent));
         }
 
         [TestMethod]
@@ -148,14 +154,14 @@ namespace IdentityService.FunctionalTests
         [TestMethod]
         public void AddUserToRole_ShouldReturnOk()
         {
-            string userName = NoRoleUserLogin,
-                roleName = AdminRoleName;
+            RoleAssignChangeModel roleAssignChangeModel = new(NoRoleUserLogin, AdminRoleName);
 
             var client = GetClient();
             HttpRequestMessage request = new()
             {
-                RequestUri = new Uri(IdentityServiceUri + $"AddUserToRole?userName={userName}&roleName={roleName}"),
-                Method = HttpMethod.Patch
+                RequestUri = new Uri(IdentityServiceUri + $"AddUserToRole"),
+                Method = HttpMethod.Patch,
+                Content = JsonContent.Create(roleAssignChangeModel)
             };
 
             var response = client.SendAsync(request).Result;
@@ -166,14 +172,14 @@ namespace IdentityService.FunctionalTests
         [TestMethod]
         public void RemoveUserFromRole_ShouldReturnOk()
         {
-            string userName = AdminRoleName,
-                roleName = AdminRoleName;
+            RoleAssignChangeModel roleAssignChangeModel = new(AdminLogin, AdminRoleName);
 
             var client = GetClient();
             HttpRequestMessage request = new()
             {
-                RequestUri = new Uri(IdentityServiceUri + $"RemoveUserFromRole?userName={userName}&roleName={roleName}"),
-                Method = HttpMethod.Patch
+                RequestUri = new Uri(IdentityServiceUri + $"RemoveUserFromRole"),
+                Method = HttpMethod.Patch,
+                Content = JsonContent.Create(roleAssignChangeModel)
             };
 
             var response = client.SendAsync(request).Result;

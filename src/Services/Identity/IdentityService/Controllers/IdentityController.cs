@@ -9,24 +9,24 @@ namespace IdentityServiceAPI.Controllers
 {
     [Route("api/v1/[controller]/[action]")]
     [ApiController]
-    public class IdentityController(IIdentityService identityService, IMapper mapper) : ControllerBase
+    public class IdentityController(IIdentityService identityService, IAuthorizationService authorizationService, IMapper mapper) : ControllerBase
     {
         [HttpPost]
         [ProducesResponseType(typeof(int), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(IEnumerable<IdentityError>), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> RegisterNewUser(RegisterModel user)
+        public async Task<IActionResult> RegisterNewUser([FromBody] RegisterModel user)
         {
-            var (Result, NewUserId) = await identityService.RegisterNewUser(user, user.Password);
+            var (Result, NewUserId) = await identityService.RegisterNewUser(user);
             return Result.Succeeded ? Ok(NewUserId) : BadRequest(Result.Errors);
         }
 
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(IEnumerable<IdentityError>), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> Login(string login, string password)
+        public async Task<IActionResult> Login([FromBody] LoginModel user)
         {
-            var result = await identityService.LoginUser(login, password);
-            return result.Succeeded ? Ok() : BadRequest(result.Errors);
+            var result = await identityService.LoginUser(user);
+            return result.Succeeded ? Ok(await authorizationService.GetJwtTokenAsync(user.Login)) : BadRequest(result.Errors);
         }
 
         [HttpGet]
@@ -63,36 +63,18 @@ namespace IdentityServiceAPI.Controllers
         [HttpPatch]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(IEnumerable<IdentityError>), (int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
-        public async Task<IActionResult> AddUserToRole(string userName, string roleName)
+        public async Task<IActionResult> AddUserToRole([FromBody] RoleAssignChangeModel input)
         {
-            var user = await identityService.FindUserByUserName(userName);
-            if (user is null)
-                return NotFound($"{nameof(userName)} : {userName} not found!");
-
-            var role = await identityService.FindRoleByName(roleName);
-            if (role is null)
-                return NotFound($"{nameof(roleName)} : {roleName} not found!");
-
-            var result = await identityService.AddUserToRole(user, roleName);
+            var result = await identityService.AddUserToRole(input.Login, input.RoleName);
             return result.Succeeded ? Ok() : BadRequest(result.Errors);
         }
 
         [HttpPatch]
         [ProducesResponseType(typeof(int), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(IEnumerable<IdentityError>), (int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
-        public async Task<IActionResult> RemoveUserFromRole(string userName, string roleName)
+        public async Task<IActionResult> RemoveUserFromRole([FromBody] RoleAssignChangeModel input)
         {
-            var user = await identityService.FindUserByUserName(userName);
-            if (user is null)
-                return NotFound($"{nameof(userName)} : {userName} not found!");
-
-            var role = await identityService.FindRoleByName(roleName);
-            if (role is null)
-                return NotFound($"{nameof(roleName)} : {roleName} not found!");
-
-            var result = await identityService.RemoveUserFromRole(user, roleName);
+            var result = await identityService.RemoveUserFromRole(input.Login, input.RoleName);
             return result.Succeeded ? Ok() : BadRequest(result.Errors);
         }
     }
