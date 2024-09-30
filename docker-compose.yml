@@ -51,3 +51,13 @@ services:
     depends_on:
       - sqlserver
       - rabbitmq
+
+  ocelotgateway:
+    image: ${DOCKER_REGISTRY-}ocelotgateway
+    build:
+      context: .
+      dockerfile: src/Gateways/OcelotGateway/Dockerfile
+    depends_on:
+      - actionserviceapi.web
+      - identityserviceapi
+      - warehouseserviceapi

@@ -6,7 +6,8 @@
       "serviceActions": {
         "actionserviceapi.web": "StartDebugging",
         "identityserviceapi": "StartDebugging",
-        "warehouseserviceapi": "StartDebugging"
+        "warehouseserviceapi": "StartDebugging",
+        "ocelotgateway": "StartDebugging"
       }
     }
   }

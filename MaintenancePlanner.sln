@@ -53,7 +53,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WarehouseService.Functional
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Identity", "Identity", "{E3115448-2427-42FB-B664-583C7298DA11}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityService.FunctionalTests", "tests\Services\Identity\IdentityService.FunctionalTests\IdentityService.FunctionalTests.csproj", "{CA2BA127-3C6A-4031-8CD2-C9E48251E26A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityService.FunctionalTests", "tests\Services\Identity\IdentityService.FunctionalTests\IdentityService.FunctionalTests.csproj", "{CA2BA127-3C6A-4031-8CD2-C9E48251E26A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Gateways", "Gateways", "{DE9776AD-BDE7-4226-998D-6A978FBD92FB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OcelotGateway", "src\Gateways\OcelotGateway\OcelotGateway.csproj", "{02D6BEFE-0BB5-406A-AF4B-8025A431DF29}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -117,6 +121,10 @@ Global
 		{CA2BA127-3C6A-4031-8CD2-C9E48251E26A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CA2BA127-3C6A-4031-8CD2-C9E48251E26A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CA2BA127-3C6A-4031-8CD2-C9E48251E26A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{02D6BEFE-0BB5-406A-AF4B-8025A431DF29}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{02D6BEFE-0BB5-406A-AF4B-8025A431DF29}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{02D6BEFE-0BB5-406A-AF4B-8025A431DF29}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{02D6BEFE-0BB5-406A-AF4B-8025A431DF29}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -145,6 +153,8 @@ Global
 		{DE95A9D9-7CF1-4D11-8510-EE0357DF549F} = {4A9F9B0F-8FD7-41EC-8250-8E1174693CB6}
 		{E3115448-2427-42FB-B664-583C7298DA11} = {7746EDA6-DED1-4EEB-99DC-0D350912D99F}
 		{CA2BA127-3C6A-4031-8CD2-C9E48251E26A} = {E3115448-2427-42FB-B664-583C7298DA11}
+		{DE9776AD-BDE7-4226-998D-6A978FBD92FB} = {DC4B48B2-7116-4427-9796-AC438B26F2C2}
+		{02D6BEFE-0BB5-406A-AF4B-8025A431DF29} = {DE9776AD-BDE7-4226-998D-6A978FBD92FB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F0441398-1390-4B25-B591-680557E93204}

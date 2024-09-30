@@ -1,0 +1,20 @@
+{
+  "GlobalConfiguration": {
+    "BaseUrl": "https://localhost:6001"
+  },
+  "Routes": [
+    {
+      "UpstreamPathTemplate": "/api/v1/Warehouse/GetAllParts",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DownstreamPathTemplate": "/api/v1/Warehouse/GetAllParts",
+      "RouteIsCaseSensitive": true,
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "WarehouseServiceAPI",
+          "Port": 8080
+        }
+      ]
+    } 
+  ]
+}
