@@ -17,6 +17,9 @@ namespace OcelotGateway
             builder.Configuration.AddOcelot("OcelotConfiguration", builder.Environment);
             builder.Services.AddOcelot(builder.Configuration);
 
+            builder.Configuration.AddJsonFile("OcelotConfiguration/ocelot.swagger.json", optional: true);
+            builder.Services.AddSwaggerForOcelot(builder.Configuration);
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -27,6 +30,12 @@ namespace OcelotGateway
             }
 
             app.UseOcelot();
+
+            app.UseSwaggerForOcelotUI(opt =>
+            {
+                opt.PathToSwaggerGenerator = "/swagger/docs";
+                opt.DownstreamSwaggerHeaders = [new KeyValuePair<string, string>("Auth-Key", "AuthValue")];
+            });
 
             app.UseHttpsRedirection();
 

@@ -1,0 +1,34 @@
+{
+  "SwaggerEndPoints": [
+    {
+      "Key": "actions",
+      "Config": [
+        {
+          "Name": "ActionsService",
+          "Version": "v1",
+          "Url": "https://ActionServiceAPI:80/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "identity",
+      "Config": [
+        {
+          "Name": "IdentityService",
+          "Version": "v1",
+          "Url": "https://IdentityServiceAPI:80/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "warehouse",
+      "Config": [
+        {
+          "Name": "WarehouseServiceAPI",
+          "Version": "v1",
+          "Url": "https://WarehouseServiceAPI:80/swagger/v1/swagger.json"
+        }
+      ]
+    }
+  ]
+}
