@@ -1,0 +1,18 @@
+{
+  "Routes": [
+    {
+      "UpstreamPathTemplate": "/api/v1/Warehouse/GetAllParts",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DownstreamPathTemplate": "/api/v1/Warehouse/GetAllParts",
+      "RouteIsCaseSensitive": true,
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "WarehouseServiceAPI",
+          "Port": 80
+        }
+      ],
+      "DangerousAcceptAnyServerCertificateValidator": true
+    } 
+  ]
+}

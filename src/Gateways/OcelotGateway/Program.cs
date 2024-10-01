@@ -14,7 +14,7 @@ namespace OcelotGateway
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            builder.Configuration.AddJsonFile("ocelot.json", optional: false, reloadOnChange: true);
+            builder.Configuration.AddOcelot("OcelotConfiguration", builder.Environment);
             builder.Services.AddOcelot(builder.Configuration);
 
             var app = builder.Build();
