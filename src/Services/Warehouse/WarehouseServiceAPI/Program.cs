@@ -47,10 +47,7 @@ namespace WarehouseServiceAPI
                 app.SeedDatabase();
             }
 
-            app.UseHttpsRedirection();
-
             app.UseAuthorization();
-
 
             app.MapControllers();
 

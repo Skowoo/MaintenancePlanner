@@ -10,7 +10,7 @@
         "AuthenticationProviderKeys": []
       },
       "ChangeDownstreamPathTemplate": {},
-      "DangerousAcceptAnyServerCertificateValidator": true,
+      "DangerousAcceptAnyServerCertificateValidator": false,
       "DelegatingHandlers": [],
       "DownstreamHeaderTransform": {},
       "DownstreamHostAndPorts": [
@@ -23,7 +23,7 @@
       "DownstreamHttpVersion": null,
       "DownstreamHttpVersionPolicy": null,
       "DownstreamPathTemplate": "/api/v1/Action/GetAllActions",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "FileCacheOptions": {
         "TtlSeconds": null,
         "Region": null,
@@ -87,7 +87,7 @@
         "AuthenticationProviderKeys": []
       },
       "ChangeDownstreamPathTemplate": {},
-      "DangerousAcceptAnyServerCertificateValidator": true,
+      "DangerousAcceptAnyServerCertificateValidator": false,
       "DelegatingHandlers": [],
       "DownstreamHeaderTransform": {},
       "DownstreamHostAndPorts": [
@@ -100,7 +100,7 @@
       "DownstreamHttpVersion": null,
       "DownstreamHttpVersionPolicy": null,
       "DownstreamPathTemplate": "/api/v1/Identity/GetAllUsers",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "FileCacheOptions": {
         "TtlSeconds": null,
         "Region": null,
@@ -164,7 +164,7 @@
         "AuthenticationProviderKeys": []
       },
       "ChangeDownstreamPathTemplate": {},
-      "DangerousAcceptAnyServerCertificateValidator": true,
+      "DangerousAcceptAnyServerCertificateValidator": false,
       "DelegatingHandlers": [],
       "DownstreamHeaderTransform": {},
       "DownstreamHostAndPorts": [
@@ -177,7 +177,7 @@
       "DownstreamHttpVersion": null,
       "DownstreamHttpVersionPolicy": null,
       "DownstreamPathTemplate": "/api/v1/Warehouse/GetAllParts",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "FileCacheOptions": {
         "TtlSeconds": null,
         "Region": null,

@@ -5,15 +5,14 @@
       "UpstreamHttpMethod": [ "GET" ],
       "DownstreamPathTemplate": "/api/v1/Action/GetAllActions",
       "RouteIsCaseSensitive": true,
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "ActionServiceAPI",
           "Port": 80
         }
       ],
-      "SwaggerKey": "actions",
-      "DangerousAcceptAnyServerCertificateValidator": true
+      "SwaggerKey": "actions"
     } 
   ]
 }

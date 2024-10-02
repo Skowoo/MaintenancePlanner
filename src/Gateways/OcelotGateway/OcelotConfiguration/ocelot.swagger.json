@@ -6,7 +6,7 @@
         {
           "Name": "ActionsService",
           "Version": "v1",
-          "Url": "https://ActionServiceAPI:80/swagger/v1/swagger.json"
+          "Url": "http://ActionServiceAPI:80/swagger/v1/swagger.json"
         }
       ]
     },
@@ -16,7 +16,7 @@
         {
           "Name": "IdentityService",
           "Version": "v1",
-          "Url": "https://IdentityServiceAPI:80/swagger/v1/swagger.json"
+          "Url": "http://IdentityServiceAPI:80/swagger/v1/swagger.json"
         }
       ]
     },
@@ -26,7 +26,7 @@
         {
           "Name": "WarehouseServiceAPI",
           "Version": "v1",
-          "Url": "https://WarehouseServiceAPI:80/swagger/v1/swagger.json"
+          "Url": "http://WarehouseServiceAPI:80/swagger/v1/swagger.json"
         }
       ]
     }

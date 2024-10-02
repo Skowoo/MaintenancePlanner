@@ -42,7 +42,6 @@ namespace ActionServiceAPI.Web
             eventBus.Subscribe<NewPartAddedIntegrationEvent, NewPartAddedIntegrationEventHandler>();
             eventBus.Subscribe<NewUserCreatedIntegrationEvent, NewUserCreatedIntegrationEventHandler>();
 
-            app.UseHttpsRedirection();
             app.UseAuthorization();
 
             app.UseMiddleware<DomainExceptionHandlingMiddleware>();

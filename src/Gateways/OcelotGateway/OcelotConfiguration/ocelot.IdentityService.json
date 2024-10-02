@@ -5,15 +5,14 @@
       "UpstreamHttpMethod": [ "GET" ],
       "DownstreamPathTemplate": "/api/v1/Identity/GetAllUsers",
       "RouteIsCaseSensitive": true,
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "IdentityServiceAPI",
           "Port": 80
         }
       ],
-      "SwaggerKey": "identity",
-      "DangerousAcceptAnyServerCertificateValidator": true
+      "SwaggerKey": "identity"
     } 
   ]
 }

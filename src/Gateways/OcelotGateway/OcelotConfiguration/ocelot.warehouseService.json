@@ -5,15 +5,14 @@
       "UpstreamHttpMethod": [ "GET" ],
       "DownstreamPathTemplate": "/api/v1/Warehouse/GetAllParts",
       "RouteIsCaseSensitive": true,
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "WarehouseServiceAPI",
           "Port": 80
         }
       ],
-      "SwaggerKey": "warehouse",
-      "DangerousAcceptAnyServerCertificateValidator": true
+      "SwaggerKey": "warehouse"
     } 
   ]
 }

@@ -46,8 +46,6 @@ namespace IdentityServiceAPI
                 app.SeedDatabase();
             }
 
-            app.UseHttpsRedirection();
-
             app.UseAuthorization();
 
             app.MapControllers();
