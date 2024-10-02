@@ -1,3 +1,4 @@
+using MMLib.SwaggerForOcelot.DependencyInjection;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
 
@@ -14,10 +15,11 @@ namespace OcelotGateway
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            builder.Configuration.AddOcelot("OcelotConfiguration", builder.Environment);
+            builder.Configuration.AddOcelotWithSwaggerSupport(options =>
+            {
+                options.Folder = "OcelotConfiguration";
+            });
             builder.Services.AddOcelot(builder.Configuration);
-
-            builder.Configuration.AddJsonFile("OcelotConfiguration/ocelot.swagger.json", optional: true);
             builder.Services.AddSwaggerForOcelot(builder.Configuration);
 
             var app = builder.Build();
@@ -29,13 +31,11 @@ namespace OcelotGateway
                 app.UseSwaggerUI();
             }
 
-            app.UseOcelot();
-
             app.UseSwaggerForOcelotUI(opt =>
             {
                 opt.PathToSwaggerGenerator = "/swagger/docs";
-                opt.DownstreamSwaggerHeaders = [new KeyValuePair<string, string>("Auth-Key", "AuthValue")];
             });
+            app.UseOcelot().Wait();
 
             app.UseHttpsRedirection();
 
