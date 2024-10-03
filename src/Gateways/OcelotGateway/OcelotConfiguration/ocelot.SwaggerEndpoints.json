@@ -1,32 +1,41 @@
 {
   "SwaggerEndPoints": [
     {
-      "Key": "actions",
+      "Key": "actionKey",
       "Config": [
         {
-          "Name": "ActionsService",
+          "Name": "ActionService",
           "Version": "v1",
-          "Url": "http://ActionServiceAPI:80/swagger/v1/swagger.json"
+          "Service": {
+            "Name": "action",
+            "Path": "/swagger/v1/swagger.json"
+          }
         }
       ]
     },
     {
-      "Key": "identity",
+      "Key": "identityKey",
       "Config": [
         {
           "Name": "IdentityService",
           "Version": "v1",
-          "Url": "http://IdentityServiceAPI:80/swagger/v1/swagger.json"
+          "Service": {
+            "Name": "identity",
+            "Path": "/swagger/v1/swagger.json"
+          }
         }
       ]
     },
     {
-      "Key": "warehouse",
+      "Key": "warehouseKey",
       "Config": [
         {
-          "Name": "WarehouseServiceAPI",
+          "Name": "WarehouseService",
           "Version": "v1",
-          "Url": "http://WarehouseServiceAPI:80/swagger/v1/swagger.json"
+          "Service": {
+            "Name": "warehouse",
+            "Path": "/swagger/v1/swagger.json"
+          }
         }
       ]
     }

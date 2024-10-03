@@ -1,3 +1,4 @@
+using MMLib.Ocelot.Provider.AppConfiguration;
 using MMLib.SwaggerForOcelot.DependencyInjection;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
@@ -19,7 +20,8 @@ namespace OcelotGateway
             {
                 options.Folder = "OcelotConfiguration";
             });
-            builder.Services.AddOcelot(builder.Configuration);
+            builder.Services.AddOcelot(builder.Configuration)
+                .AddAppConfiguration();
             builder.Services.AddSwaggerForOcelot(builder.Configuration);
 
             var app = builder.Build();

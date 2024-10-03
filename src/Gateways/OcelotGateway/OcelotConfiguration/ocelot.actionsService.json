@@ -4,14 +4,8 @@
       "UpstreamPathTemplate": "/api/v1/Action/{everything}",
       "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
       "DownstreamPathTemplate": "/api/v1/Action/{everything}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "ActionServiceAPI",
-          "Port": 80
-        }
-      ],
-      "SwaggerKey": "actions"
+      "ServiceName": "action",
+      "SwaggerKey": "actionKey"
     } 
   ]
 }
