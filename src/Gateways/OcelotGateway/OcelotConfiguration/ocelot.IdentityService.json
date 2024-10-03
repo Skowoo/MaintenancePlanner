@@ -1,10 +1,9 @@
 {
   "Routes": [
     {
-      "UpstreamPathTemplate": "/api/v1/Identity/GetAllUsers",
-      "UpstreamHttpMethod": [ "GET" ],
-      "DownstreamPathTemplate": "/api/v1/Identity/GetAllUsers",
-      "RouteIsCaseSensitive": true,
+      "UpstreamPathTemplate": "/api/v1/Identity/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PATCH" ],
+      "DownstreamPathTemplate": "/api/v1/Identity/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {

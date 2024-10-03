@@ -1,10 +1,9 @@
 {
   "Routes": [
     {
-      "UpstreamPathTemplate": "/api/v1/Warehouse/GetAllParts",
-      "UpstreamHttpMethod": [ "GET" ],
-      "DownstreamPathTemplate": "/api/v1/Warehouse/GetAllParts",
-      "RouteIsCaseSensitive": true,
+      "UpstreamPathTemplate": "/api/v1/Warehouse/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
+      "DownstreamPathTemplate": "/api/v1/Warehouse/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {

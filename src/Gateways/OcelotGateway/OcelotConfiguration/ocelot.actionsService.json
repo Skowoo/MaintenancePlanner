@@ -1,10 +1,9 @@
 {
   "Routes": [
     {
-      "UpstreamPathTemplate": "/api/v1/Action/GetAllActions",
-      "UpstreamHttpMethod": [ "GET" ],
-      "DownstreamPathTemplate": "/api/v1/Action/GetAllActions",
-      "RouteIsCaseSensitive": true,
+      "UpstreamPathTemplate": "/api/v1/Action/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
+      "DownstreamPathTemplate": "/api/v1/Action/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
