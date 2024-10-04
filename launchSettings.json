@@ -3,11 +3,16 @@
     "Docker Compose": {
       "commandName": "DockerCompose",
       "commandVersion": "1.0",
+      "composeLaunchAction": "LaunchBrowser",
+      "composeLaunchServiceName": "ocelotgateway",
+      "composeLaunchUrl": "{Scheme}://localhost:{ServicePort}/swagger",
       "serviceActions": {
         "actionserviceapi.web": "StartDebugging",
         "identityserviceapi": "StartDebugging",
         "warehouseserviceapi": "StartDebugging",
-        "ocelotgateway": "StartDebugging"
+        "ocelotgateway": "StartDebugging",
+        "rabbitmq": "StartWithoutDebugging",
+        "sqlserver": "StartWithoutDebugging"
       }
     }
   }

@@ -30,13 +30,9 @@ namespace OcelotGateway
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
-                app.UseSwaggerUI();
+                app.UseSwaggerForOcelotUI();
             }
 
-            app.UseSwaggerForOcelotUI(opt =>
-            {
-                opt.PathToSwaggerGenerator = "/swagger/docs";
-            });
             app.UseOcelot().Wait();
 
             app.UseHttpsRedirection();
