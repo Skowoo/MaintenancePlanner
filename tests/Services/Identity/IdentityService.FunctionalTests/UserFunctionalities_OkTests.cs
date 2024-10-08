@@ -63,7 +63,7 @@ namespace IdentityService.FunctionalTests
             var decodedToken = handler.ReadJwtToken(responseContent);
 
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-            Assert.IsNotNull(responseContent);            
+            Assert.IsNotNull(responseContent);
             Assert.IsTrue(handler.CanReadToken(responseContent));
         }
 
