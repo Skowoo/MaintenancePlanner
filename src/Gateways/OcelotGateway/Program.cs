@@ -2,6 +2,7 @@ using MMLib.Ocelot.Provider.AppConfiguration;
 using MMLib.SwaggerForOcelot.DependencyInjection;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
+using OcelotGateway.OcelotConfiguration;
 
 namespace OcelotGateway
 {
@@ -16,12 +17,11 @@ namespace OcelotGateway
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            builder.Configuration.AddOcelotWithSwaggerSupport(options =>
-            {
-                options.Folder = "OcelotConfiguration";
-            });
+            builder.Configuration.AddOcelotWithSwaggerSupport(OcelotOptions.ConfigureOcelotWithSwaggerOptions);
+
             builder.Services.AddOcelot(builder.Configuration)
                 .AddAppConfiguration();
+
             builder.Services.AddSwaggerForOcelot(builder.Configuration);
 
             var app = builder.Build();
