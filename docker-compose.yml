@@ -22,6 +22,12 @@ services:
       SA_PASSWORD: "P@ssw0rd112345678"
       ACCEPT_EULA: "Y"
 
+  jwtauthenticationapp:
+    image: ${DOCKER_REGISTRY-}jwtauthenticationapp
+    build:
+      context: .
+      dockerfile: src/Auxiliaries/Authentication/JwtAuthenticationApp/Dockerfile
+
   actionserviceapi.web:
     image: ${DOCKER_REGISTRY-}actionserviceapiweb
     container_name: ActionServiceAPI
@@ -31,6 +37,7 @@ services:
     depends_on:
       - sqlserver
       - rabbitmq
+      - jwtauthenticationapp
 
   identityserviceapi:
     image: ${DOCKER_REGISTRY-}identityserviceapi
@@ -41,6 +48,7 @@ services:
     depends_on:
       - sqlserver
       - rabbitmq
+      - jwtauthenticationapp
       
   warehouseserviceapi:
     image: ${DOCKER_REGISTRY-}warehouseserviceapi
@@ -51,6 +59,7 @@ services:
     depends_on:
       - sqlserver
       - rabbitmq
+      - jwtauthenticationapp
 
   ocelotgateway:
     image: ${DOCKER_REGISTRY-}ocelotgateway

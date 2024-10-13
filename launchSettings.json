@@ -12,7 +12,8 @@
         "warehouseserviceapi": "StartDebugging",
         "ocelotgateway": "StartDebugging",
         "rabbitmq": "StartWithoutDebugging",
-        "sqlserver": "StartWithoutDebugging"
+        "sqlserver": "StartWithoutDebugging",
+        "jwtauthenticationapp": "StartDebugging"
       }
     }
   }
