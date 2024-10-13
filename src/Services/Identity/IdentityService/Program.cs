@@ -1,4 +1,5 @@
 using EventBusRabbitMQ;
+using IdentityServiceAPI.GrpcServices;
 using IdentityServiceAPI.Infrastructure;
 using IdentityServiceAPI.IntegrationEvents;
 using IdentityServiceAPI.Models;
@@ -16,8 +17,9 @@ namespace IdentityServiceAPI
             var builder = WebApplication.CreateBuilder(args);
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
-
             builder.Services.AddSwaggerGen();
+
+            builder.Services.AddGrpc();
 
             var connectionString = builder.Configuration.GetConnectionString("IdentityDb")
                 ?? throw new InvalidOperationException("Connection string not found in configuration file!");
@@ -37,6 +39,8 @@ namespace IdentityServiceAPI
             builder.Services.AddRabbitMQEventBus();
 
             var app = builder.Build();
+
+            app.MapGrpcService<LoginConfirmationGrpcService>();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
