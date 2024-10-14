@@ -1,16 +1,15 @@
-﻿using Grpc.Core;
-using Grpc.Net.Client;
+﻿using Grpc.Net.Client;
 using JwtAuthenticationApp.Models;
 
 namespace JwtAuthenticationApp.Services
 {
     public class LoginGrpcService
     {
-        string IdentityServiceAddress = "https://IdentityServiceAPI:81";
+        string IdentityServiceAddress = "https://IdentityServiceAPI:81"; // Refactor as external variable
 
-        public (bool, string[]) ConfirmUser(LoginModel model)
+        public (bool, string, string, string[]) ConfirmUser(LoginModel model)
         {
-            // Bypass of lack of SSL certificate - refactor
+            // Refactor - HttpClientHandler that disables SSL certificate validation to allow connections. Not for production use.
             var httpClientHandler = new HttpClientHandler
             {                
                 ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
@@ -23,7 +22,7 @@ namespace JwtAuthenticationApp.Services
 
             var client = new UserConfirmator.UserConfirmatorClient(channel);
             var response = client.Work(new LoginRequest { Login = model.Login, Password = model.Password });
-            return (response.IsValid, [.. response.Roles]);
+            return (response.IsValid, response.Id, response.Login, [.. response.Roles]);
         }
     }
 }

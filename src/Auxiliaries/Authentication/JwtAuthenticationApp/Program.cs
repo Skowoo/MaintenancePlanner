@@ -17,6 +17,7 @@ namespace JwtAuthenticationApp
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddSingleton<LoginGrpcService>();
+            builder.Services.AddTransient<JwtTokenService>();
 
             var app = builder.Build();
 

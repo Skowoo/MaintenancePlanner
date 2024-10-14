@@ -13,10 +13,16 @@ namespace IdentityServiceAPI.GrpcServices
 
             if (result.Succeeded) 
             {
-                var user = await identityService.FindUserByUserName(request.Login);
+                var user = await identityService.FindUserByUserName(request.Login)
+                    ?? throw new Exception("User not found");
+
                 var roles = await identityService.GetUserRoles(user!);
 
-                LoginResponse response = new() { IsValid = true };
+                LoginResponse response = new() { 
+                    IsValid = true,
+                    Login = user.UserName,
+                    Id = user.Id.ToString()
+                };
 
                 foreach (var role in roles) 
                     response.Roles.Add(role);
