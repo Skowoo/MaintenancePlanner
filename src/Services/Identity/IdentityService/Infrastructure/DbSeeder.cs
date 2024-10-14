@@ -51,7 +51,7 @@ namespace IdentityServiceAPI.Infrastructure
 
             var admin = context.Users.Single(u => u.UserName == AdminLogin);
             identityService.AddUserToRole(AdminLogin, AdminRoleName).Wait();
-            context.SaveChanges();        
+            context.SaveChanges();
         }
     }
 }

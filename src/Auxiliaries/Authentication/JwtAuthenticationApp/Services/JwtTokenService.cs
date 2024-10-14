@@ -1,6 +1,7 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using JwtAuthenticationApp.JwtConfig;
+using JwtAuthenticationApp.Models;
+using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
-using JwtAuthenticationApp.JwtConfig;
 using System.Security.Claims;
 using System.Text;
 
@@ -8,16 +9,16 @@ namespace JwtAuthenticationApp.Services
 {
     public class JwtTokenService(ILogger<JwtTokenService> logger)
     {
-        public string GetJwtTokenString(string id, string userName, string[] userRoles)
+        public string GetJwtTokenString(UserModel user)
         {
             var claims = new List<Claim>()
             {
-                new("Id", id.ToString()),
-                new(JwtRegisteredClaimNames.Sub, userName),
+                new("Id", user.Id),
+                new(JwtRegisteredClaimNames.Sub, user.Login),
                 new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
 
-            claims.AddRange(userRoles.Select(role =>
+            claims.AddRange(user.Roles.Select(role =>
                 new Claim(ClaimsIdentity.DefaultRoleClaimType, role)));
 
             var tokenDescriptor = new SecurityTokenDescriptor
@@ -32,7 +33,7 @@ namespace JwtAuthenticationApp.Services
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var tokenToString = tokenHandler.WriteToken(token);
 
-            logger.LogInformation("JWT Token for user {} (ID: {}) created", userName, id);
+            logger.LogInformation("JWT Token for user {} (ID: {}) created", user.Login, user.Id);
 
             return tokenToString;
         }

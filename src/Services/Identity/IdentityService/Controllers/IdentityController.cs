@@ -9,7 +9,7 @@ namespace IdentityServiceAPI.Controllers
 {
     [Route("api/v1/[controller]/[action]")]
     [ApiController]
-    public class IdentityController(IIdentityService identityService, IAuthorizationService authorizationService, IMapper mapper) : ControllerBase
+    public class IdentityController(IIdentityService identityService, IMapper mapper) : ControllerBase
     {
         [HttpPost]
         [ProducesResponseType(typeof(int), (int)HttpStatusCode.OK)]
@@ -18,15 +18,6 @@ namespace IdentityServiceAPI.Controllers
         {
             var (Result, NewUserId) = await identityService.RegisterNewUser(user);
             return Result.Succeeded ? Ok(NewUserId) : BadRequest(Result.Errors);
-        }
-
-        [HttpGet]
-        [ProducesResponseType((int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(IEnumerable<IdentityError>), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> Login([FromBody] LoginModel user)
-        {
-            var result = await identityService.LoginUser(user);
-            return result.Succeeded ? Ok(await authorizationService.GetJwtTokenAsync(user.Login)) : BadRequest(result.Errors);
         }
 
         [HttpGet]

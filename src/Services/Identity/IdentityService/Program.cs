@@ -31,7 +31,6 @@ namespace IdentityServiceAPI
                 .AddEntityFrameworkStores<IdentityContext>();
 
             builder.Services.AddScoped<IIdentityService, IdentityService>();
-            builder.Services.AddScoped<IAuthorizationService, AuthorizationService>();
 
             builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 

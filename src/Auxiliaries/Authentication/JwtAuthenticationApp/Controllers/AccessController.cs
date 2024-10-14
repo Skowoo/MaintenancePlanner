@@ -10,19 +10,23 @@ namespace JwtAuthenticationApp.Controllers
     [Route("[controller]/[action]")]
     public class AccessController(ILogger<AccessController> logger, LoginGrpcService loginService, JwtTokenService tokenService) : ControllerBase
     {
-        private readonly ILogger<AccessController> _logger = logger;
-
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(IEnumerable<IdentityError>), (int)HttpStatusCode.BadRequest)]
         public IActionResult Login([FromBody] LoginModel user)
         {
-            var (result, id, login, roles) = loginService.ConfirmUser(user);
+            var confirmedUser = loginService.ConfirmUser(user);
 
-            if (!result)
+            if (confirmedUser is null)
+            {
+                logger.LogInformation("Login of user {} failed", user.Login);
                 return BadRequest("Login failed!");
-
-            return Ok(tokenService.GetJwtTokenString(id, login, roles));
+            }
+            else
+            {
+                logger.LogInformation("Login of user {} suceeded and token was returned", user.Login);
+                return Ok(tokenService.GetJwtTokenString((UserModel)confirmedUser));
+            }
         }
     }
 }
