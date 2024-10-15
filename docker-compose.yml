@@ -6,21 +6,10 @@ services:
   rabbitmq:
     image: rabbitmq:3-management
     hostname: rabbitmq
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-    environment:
-      RABBITMQ_DEFAULT_USER: "guest"
-      RABBITMQ_DEFAULT_PASS: "guest"
 
   sqlserver:
     image: "mcr.microsoft.com/mssql/server:2022-latest"
     hostname: sqlserver
-    ports:
-      - "1433:1433"
-    environment:
-      SA_PASSWORD: "P@ssw0rd112345678"
-      ACCEPT_EULA: "Y"
 
   jwtauthenticationapp:
     image: ${DOCKER_REGISTRY-}jwtauthenticationapp
