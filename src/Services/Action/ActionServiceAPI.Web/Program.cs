@@ -7,6 +7,7 @@ using ActionServiceAPI.Infrastructure.Data;
 using ActionServiceAPI.Web.Middleware;
 using EventBus.Abstractions;
 using EventBusRabbitMQ;
+using JwtAuthenticationApp.JwtConfiguration;
 
 namespace ActionServiceAPI.Web
 {
@@ -28,6 +29,8 @@ namespace ActionServiceAPI.Web
 
             builder.Services.AddRabbitMQEventBus();
 
+            builder.Services.AddCommonJwtConfiguration();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -47,6 +50,8 @@ namespace ActionServiceAPI.Web
             app.UseMiddleware<DomainExceptionHandlingMiddleware>();
 
             app.MapControllers();
+
+            app.UseAuthentication();
 
             app.Run();
         }

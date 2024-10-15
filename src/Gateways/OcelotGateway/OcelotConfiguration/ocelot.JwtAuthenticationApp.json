@@ -1,0 +1,11 @@
+{
+  "Routes": [
+    {
+      "UpstreamPathTemplate": "/Access/{everything}",
+      "UpstreamHttpMethod": [ "POST" ],
+      "DownstreamPathTemplate": "/Access/{everything}",
+      "ServiceName": "jwtauthenticationapp",
+      "SwaggerKey": "jwtauthenticationappKey"
+    }
+  ]
+}

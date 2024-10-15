@@ -2,7 +2,7 @@
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
-namespace JwtAuthenticationApp.JwtConfig
+namespace JwtAuthenticationApp.JwtConfiguration
 {
     public static class CommonJwtConfiguration
     {
@@ -15,14 +15,15 @@ namespace JwtAuthenticationApp.JwtConfig
             {
                 opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(options =>
+            }).AddJwtBearer(opt =>
             {
-                options.TokenValidationParameters = new TokenValidationParameters
+                opt.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
                     ValidIssuer = ValidIssuer,
+                    ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SecurityKey)),
-                    ValidateIssuerSigningKey = true
+                    ValidateAudience = false
                 };
             });
         }

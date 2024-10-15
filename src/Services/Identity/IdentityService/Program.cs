@@ -4,6 +4,7 @@ using IdentityServiceAPI.Infrastructure;
 using IdentityServiceAPI.IntegrationEvents;
 using IdentityServiceAPI.Models;
 using IdentityServiceAPI.Services;
+using JwtAuthenticationApp.JwtConfiguration;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
@@ -37,6 +38,8 @@ namespace IdentityServiceAPI
             builder.Services.AddTransient<IIntegrationEventService, IntegrationEventService>();
             builder.Services.AddRabbitMQEventBus();
 
+            builder.Services.AddCommonJwtConfiguration();
+
             var app = builder.Build();
 
             app.MapGrpcService<LoginConfirmationGrpcService>();
@@ -52,6 +55,8 @@ namespace IdentityServiceAPI
             app.UseAuthorization();
 
             app.MapControllers();
+
+            app.UseAuthentication();
 
             app.Run();
         }

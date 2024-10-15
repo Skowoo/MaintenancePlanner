@@ -38,6 +38,19 @@
           }
         }
       ]
+    },
+    {
+      "Key": "jwtauthenticationappKey",
+      "Config": [
+        {
+          "Name": "JwtAuthenticationProvider",
+          "Version": "v1",
+          "Service": {
+            "Name": "jwtauthenticationapp",
+            "Path": "/swagger/v1/swagger.json"
+          }
+        }
+      ]
     }
   ]
 }

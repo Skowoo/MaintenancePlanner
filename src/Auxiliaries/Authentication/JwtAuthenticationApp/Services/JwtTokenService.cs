@@ -1,4 +1,4 @@
-﻿using JwtAuthenticationApp.JwtConfig;
+﻿using JwtAuthenticationApp.JwtConfiguration;
 using JwtAuthenticationApp.Models;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;

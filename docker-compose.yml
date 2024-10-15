@@ -37,7 +37,6 @@ services:
     depends_on:
       - sqlserver
       - rabbitmq
-      - jwtauthenticationapp
 
   identityserviceapi:
     image: ${DOCKER_REGISTRY-}identityserviceapi
@@ -47,8 +46,7 @@ services:
       dockerfile: src/Services/Identity/IdentityService/Dockerfile
     depends_on:
       - sqlserver
-      - rabbitmq
-      - jwtauthenticationapp
+      - rabbitmq      
       
   warehouseserviceapi:
     image: ${DOCKER_REGISTRY-}warehouseserviceapi
@@ -58,8 +56,7 @@ services:
       dockerfile: src/Services/Warehouse/WarehouseServiceAPI/Dockerfile
     depends_on:
       - sqlserver
-      - rabbitmq
-      - jwtauthenticationapp
+      - rabbitmq      
 
   ocelotgateway:
     image: ${DOCKER_REGISTRY-}ocelotgateway
@@ -70,3 +67,4 @@ services:
       - actionserviceapi.web
       - identityserviceapi
       - warehouseserviceapi
+      - jwtauthenticationapp
