@@ -1,6 +1,6 @@
 using EventBus.Abstractions;
 using EventBusRabbitMQ;
-using JwtAuthenticationApp.JwtConfiguration;
+using JwtGlobalConfiguration;
 using Microsoft.EntityFrameworkCore;
 using WarehouseServiceAPI.Infrastructure;
 using WarehouseServiceAPI.IntegrationEvents;

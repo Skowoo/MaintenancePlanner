@@ -7,7 +7,7 @@ using ActionServiceAPI.Infrastructure.Data;
 using ActionServiceAPI.Web.Middleware;
 using EventBus.Abstractions;
 using EventBusRabbitMQ;
-using JwtAuthenticationApp.JwtConfiguration;
+using JwtGlobalConfiguration;
 
 namespace ActionServiceAPI.Web
 {

@@ -1,4 +1,4 @@
-
+using JwtGlobalConfiguration;
 using JwtAuthenticationApp.Services;
 
 namespace JwtAuthenticationApp
@@ -8,6 +8,8 @@ namespace JwtAuthenticationApp
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            builder.Services.AddCommonJwtConfiguration();
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
@@ -26,6 +28,7 @@ namespace JwtAuthenticationApp
             }
 
             app.UseAuthorization();
+            app.UseAuthentication();
 
             app.MapControllers();
 

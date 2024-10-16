@@ -22,6 +22,10 @@
 	</PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\JwtGlobalConfiguration\JwtGlobalConfiguration.csproj" />
+  </ItemGroup>
+
 	<ItemGroup>
 		<Protobuf Include="Protos\ConfirmUser.proto" GrpcServices="Client" />
 	</ItemGroup>

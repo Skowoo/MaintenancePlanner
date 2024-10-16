@@ -3,6 +3,7 @@ using MMLib.SwaggerForOcelot.DependencyInjection;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
 using OcelotGateway.OcelotConfiguration;
+using JwtGlobalConfiguration;
 
 namespace OcelotGateway
 {
@@ -13,6 +14,8 @@ namespace OcelotGateway
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddAuthorization();
+
+            builder.Services.AddCommonJwtConfiguration();
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -38,6 +41,7 @@ namespace OcelotGateway
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
+            app.UseAuthentication();
 
             app.Run();
         }

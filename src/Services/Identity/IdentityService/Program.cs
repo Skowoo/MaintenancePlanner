@@ -4,7 +4,7 @@ using IdentityServiceAPI.Infrastructure;
 using IdentityServiceAPI.IntegrationEvents;
 using IdentityServiceAPI.Models;
 using IdentityServiceAPI.Services;
-using JwtAuthenticationApp.JwtConfiguration;
+using JwtGlobalConfiguration;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;

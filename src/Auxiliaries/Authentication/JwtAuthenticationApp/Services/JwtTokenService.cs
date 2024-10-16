@@ -1,4 +1,4 @@
-﻿using JwtAuthenticationApp.JwtConfiguration;
+﻿using JwtGlobalConfiguration;
 using JwtAuthenticationApp.Models;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -24,9 +24,9 @@ namespace JwtAuthenticationApp.Services
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddMinutes(60), // Refactor - remove magic number
-                Issuer = CommonJwtConfiguration.ValidIssuer,
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.ASCII.GetBytes(CommonJwtConfiguration.SecurityKey)), SecurityAlgorithms.HmacSha256)
+                Expires = DateTime.UtcNow.AddMinutes(JwtConfiguration.ExpirationTimeInMinutes),
+                Issuer = JwtConfiguration.ValidIssuer,
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.ASCII.GetBytes(JwtConfiguration.SecurityKey)), SecurityAlgorithms.HmacSha256)
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();
