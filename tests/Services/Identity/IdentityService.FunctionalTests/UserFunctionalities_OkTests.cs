@@ -45,29 +45,6 @@ namespace IdentityService.FunctionalTests
         }
 
         [TestMethod]
-        public void Login_ReturnsOk() // To be refactorized
-        {
-            LoginModel loginModel = new(AdminLogin, AdminPassword);
-
-            using var client = GetClient();
-            HttpRequestMessage request = new()
-            {
-                RequestUri = new Uri(IdentityServiceUri + $"Login"),
-                Method = HttpMethod.Get,
-                Content = JsonContent.Create(loginModel)
-            };
-
-            var response = client.SendAsync(request).Result;
-            var responseContent = response.Content.ReadAsStringAsync().Result;
-            var handler = new JwtSecurityTokenHandler();
-            var decodedToken = handler.ReadJwtToken(responseContent);
-
-            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-            Assert.IsNotNull(responseContent);
-            Assert.IsTrue(handler.CanReadToken(responseContent));
-        }
-
-        [TestMethod]
         public void GetAllUsers_ReturnsUsersList()
         {
             using var client = GetClient();

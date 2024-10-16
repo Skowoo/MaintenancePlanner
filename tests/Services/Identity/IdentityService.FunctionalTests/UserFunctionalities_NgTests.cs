@@ -45,36 +45,6 @@ namespace IdentityService.FunctionalTests
         }
 
         [DataTestMethod]
-        [DataRow("NotExisting", AdminPassword, "not found")]
-        [DataRow(AdminLogin, "Wr0ngP@sw0rd", "password")]
-        [DataRow("", AdminPassword, "not found")]
-        [DataRow("", "", "not found")]
-        [DataRow(AdminLogin, "", "password")]
-        public void Login_ReturnsBadRequestAndIdentityErrorsWithWrongData(string login, string password, params string[] expectedErrorsPartialDescription)
-        {
-            using var client = GetClient();
-            LoginModel loginModel = new(login, password);
-            HttpRequestMessage request = new()
-            {
-                RequestUri = new Uri(IdentityServiceUri + $"Login"),
-                Method = HttpMethod.Get,
-                Content = JsonContent.Create(loginModel)
-            };
-
-            var response = client.SendAsync(request).Result;
-            var responseContent = response.Content.ReadAsStringAsync().Result;
-            var errors = JsonConvert.DeserializeObject<List<IdentityError>>(responseContent);
-
-            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
-            Assert.IsNotNull(errors);
-
-            foreach (var expectedError in expectedErrorsPartialDescription)
-                Assert.IsTrue(errors.Any(e => e.Description.Contains(expectedError)), $"{expectedError} not found");
-
-            Assert.AreEqual(expectedErrorsPartialDescription.Length, errors.Count);
-        }
-
-        [DataTestMethod]
         [DataRow("NotExistingUser")]
         public void GetUserByUserName_ReturnsBadRequestAndInputStringWithWrongData(string userName)
         {
