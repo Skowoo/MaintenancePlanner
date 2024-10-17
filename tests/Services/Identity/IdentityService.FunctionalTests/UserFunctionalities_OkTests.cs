@@ -2,7 +2,6 @@
 using IdentityServiceAPI.Models;
 using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json;
-using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 
 namespace IdentityService.FunctionalTests

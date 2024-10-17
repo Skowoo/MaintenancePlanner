@@ -1,5 +1,5 @@
-using JwtGlobalConfiguration;
 using JwtAuthenticationApp.Services;
+using JwtGlobalConfiguration;
 
 namespace JwtAuthenticationApp
 {

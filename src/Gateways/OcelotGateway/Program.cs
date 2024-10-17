@@ -1,9 +1,9 @@
+using JwtGlobalConfiguration;
 using MMLib.Ocelot.Provider.AppConfiguration;
 using MMLib.SwaggerForOcelot.DependencyInjection;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
 using OcelotGateway.OcelotConfiguration;
-using JwtGlobalConfiguration;
 
 namespace OcelotGateway
 {

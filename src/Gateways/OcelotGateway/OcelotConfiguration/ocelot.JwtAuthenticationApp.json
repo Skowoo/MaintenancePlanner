@@ -1,7 +1,7 @@
 {
   "Routes": [
     {
-      "UpstreamPathTemplate": "/Access/{everything}",
+      "UpstreamPathTemplate": "/api/v1/Access/{everything}",
       "UpstreamHttpMethod": [ "POST" ],
       "DownstreamPathTemplate": "/Access/{everything}",
       "ServiceName": "jwtauthenticationapp",

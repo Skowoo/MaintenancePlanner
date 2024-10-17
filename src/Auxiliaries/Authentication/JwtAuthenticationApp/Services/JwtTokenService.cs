@@ -1,5 +1,5 @@
-﻿using JwtGlobalConfiguration;
-using JwtAuthenticationApp.Models;
+﻿using JwtAuthenticationApp.Models;
+using JwtGlobalConfiguration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
