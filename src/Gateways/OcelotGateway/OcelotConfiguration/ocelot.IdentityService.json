@@ -5,7 +5,11 @@
       "UpstreamHttpMethod": [ "GET", "POST", "PATCH" ],
       "DownstreamPathTemplate": "/api/v1/Identity/{everything}",
       "ServiceName": "identity",
-      "SwaggerKey": "identityKey"
+      "SwaggerKey": "identityKey",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
     } 
   ]
 }

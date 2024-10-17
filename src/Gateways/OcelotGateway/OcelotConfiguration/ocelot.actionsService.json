@@ -5,7 +5,11 @@
       "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
       "DownstreamPathTemplate": "/api/v1/Action/{everything}",
       "ServiceName": "action",
-      "SwaggerKey": "actionKey"
+      "SwaggerKey": "actionKey",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
     } 
   ]
 }
