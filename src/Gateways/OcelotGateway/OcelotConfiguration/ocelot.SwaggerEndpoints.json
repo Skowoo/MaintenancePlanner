@@ -1,0 +1,56 @@
+{
+  "SwaggerEndPoints": [
+    {
+      "Key": "actionKey",
+      "Config": [
+        {
+          "Name": "ActionService",
+          "Version": "v1",
+          "Service": {
+            "Name": "action",
+            "Path": "/swagger/v1/swagger.json"
+          }
+        }
+      ]
+    },
+    {
+      "Key": "identityKey",
+      "Config": [
+        {
+          "Name": "IdentityService",
+          "Version": "v1",
+          "Service": {
+            "Name": "identity",
+            "Path": "/swagger/v1/swagger.json"
+          }
+        }
+      ]
+    },
+    {
+      "Key": "warehouseKey",
+      "Config": [
+        {
+          "Name": "WarehouseService",
+          "Version": "v1",
+          "Service": {
+            "Name": "warehouse",
+            "Path": "/swagger/v1/swagger.json"
+          }
+        }
+      ]
+    },
+    {
+      "Key": "jwtauthenticationappKey",
+      "Config": [
+        {
+          "Name": "JwtAuthenticationProvider",
+          "Version": "v1",
+          "Service": {
+            "Name": "jwtauthenticationapp",
+            "Path": "/swagger/v1/swagger.json"
+          }
+        }
+      ]
+    }
+  ]
+}

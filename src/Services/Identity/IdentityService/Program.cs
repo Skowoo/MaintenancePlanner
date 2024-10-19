@@ -1,8 +1,10 @@
 using EventBusRabbitMQ;
+using IdentityServiceAPI.GrpcServices;
 using IdentityServiceAPI.Infrastructure;
 using IdentityServiceAPI.IntegrationEvents;
 using IdentityServiceAPI.Models;
 using IdentityServiceAPI.Services;
+using JwtGlobalConfiguration;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
@@ -16,8 +18,9 @@ namespace IdentityServiceAPI
             var builder = WebApplication.CreateBuilder(args);
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
-
             builder.Services.AddSwaggerGen();
+
+            builder.Services.AddGrpc();
 
             var connectionString = builder.Configuration.GetConnectionString("IdentityDb")
                 ?? throw new InvalidOperationException("Connection string not found in configuration file!");
@@ -29,14 +32,17 @@ namespace IdentityServiceAPI
                 .AddEntityFrameworkStores<IdentityContext>();
 
             builder.Services.AddScoped<IIdentityService, IdentityService>();
-            builder.Services.AddScoped<IAuthorizationService, AuthorizationService>();
 
             builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
             builder.Services.AddTransient<IIntegrationEventService, IntegrationEventService>();
             builder.Services.AddRabbitMQEventBus();
 
+            builder.Services.AddCommonJwtConfiguration();
+
             var app = builder.Build();
+
+            app.MapGrpcService<LoginConfirmationGrpcService>();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -46,11 +52,11 @@ namespace IdentityServiceAPI
                 app.SeedDatabase();
             }
 
-            app.UseHttpsRedirection();
-
             app.UseAuthorization();
 
             app.MapControllers();
+
+            app.UseAuthentication();
 
             app.Run();
         }

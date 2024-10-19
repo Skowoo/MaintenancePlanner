@@ -1,5 +1,6 @@
 using EventBus.Abstractions;
 using EventBusRabbitMQ;
+using JwtGlobalConfiguration;
 using Microsoft.EntityFrameworkCore;
 using WarehouseServiceAPI.Infrastructure;
 using WarehouseServiceAPI.IntegrationEvents;
@@ -33,6 +34,8 @@ namespace WarehouseServiceAPI
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            builder.Services.AddCommonJwtConfiguration();
+
             var app = builder.Build();
 
             var eventBus = app.Services.GetRequiredService<IEventBus>();
@@ -47,12 +50,11 @@ namespace WarehouseServiceAPI
                 app.SeedDatabase();
             }
 
-            app.UseHttpsRedirection();
-
             app.UseAuthorization();
 
-
             app.MapControllers();
+
+            app.UseAuthentication();
 
             app.Run();
         }
